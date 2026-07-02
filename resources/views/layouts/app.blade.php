@@ -298,10 +298,64 @@
         color: #e05585;
         text-decoration: underline;
       }
+      .navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        background: white;
+        padding: 12px 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+        z-index: 1000;
+      }
+      .navbar-brand {
+        font-weight: 700;
+        font-size: 18px;
+        color: #ff6b9d;
+        text-decoration: none;
+      }
+      .navbar-nav {
+        display: flex;
+        gap: 8px;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+      .navbar-nav a {
+        color: #666;
+        text-decoration: none;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 500;
+        transition: all 0.2s;
+      }
+      .navbar-nav a:hover {
+        background: #fff0f5;
+        color: #ff6b9d;
+      }
+      .navbar-nav a.active {
+        background: #ff6b9d;
+        color: white;
+      }
+      body {
+        padding-top: 80px;
+      }
       @yield('styles')
     </style>
 </head>
 <body>
+    <nav class="navbar">
+        <a href="/dashboard" class="navbar-brand">TodoList</a>
+        <ul class="navbar-nav">
+            <li><a href="/dashboard" class="{{ request()->is('dashboard') ? 'active' : '' }}">Dashboard</a></li>
+            <li><a href="/tasks" class="{{ request()->is('tasks') ? 'active' : '' }}">Tugas</a></li>
+            <li><a href="/tasks/completed" class="{{ request()->is('tasks/completed') ? 'active' : '' }}">Selesai</a></li>
+        </ul>
+    </nav>
     <div class="box @yield('box-class')">
         @yield('content')
     </div>

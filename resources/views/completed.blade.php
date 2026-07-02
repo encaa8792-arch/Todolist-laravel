@@ -3,8 +3,6 @@
 @section('title', 'Tugas Selesai')
 
 @section('content')
-    <a href="/tasks" class="back-btn">← Kembali</a>
-
     <h1 style="color: #2ecc71;">Tugas Selesai</h1>
 
     @if(session('success'))

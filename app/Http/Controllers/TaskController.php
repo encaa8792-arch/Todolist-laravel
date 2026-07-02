@@ -7,6 +7,34 @@ use Illuminate\Http\Request;
 
 class TaskController extends Controller
 {
+    public function dashboard()
+    {
+        $totalTasks = Task::count();
+        $completedTasks = Task::where('is_done', 1)->count();
+        $pendingTasks = Task::where('is_done', 0)->count();
+        $overdueTasks = Task::where('is_done', 0)
+            ->whereNotNull('deadline')
+            ->where('deadline', '<', now())
+            ->count();
+
+        $categoryStats = Task::selectRaw('category, COUNT(*) as total, SUM(is_done) as completed')
+            ->groupBy('category')
+            ->get();
+
+        $recentTasks = Task::latest()->take(5)->get();
+        $upcomingDeadlines = Task::where('is_done', 0)
+            ->whereNotNull('deadline')
+            ->where('deadline', '>=', now())
+            ->orderBy('deadline')
+            ->take(5)
+            ->get();
+
+        return view('dashboard', compact(
+            'totalTasks', 'completedTasks', 'pendingTasks', 
+            'overdueTasks', 'categoryStats', 'recentTasks', 'upcomingDeadlines'
+        ));
+    }
+
     public function index()
     {
         $tasks = Task::where('is_done', 0)->latest()->paginate(5);

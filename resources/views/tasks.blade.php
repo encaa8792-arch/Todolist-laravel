@@ -5,10 +5,6 @@
 @section('content')
     <h1 style="color: #ff6b9d;">✨Todo List✨</h1>
 
-    <div class="nav-link">
-        <a href="/tasks/completed">Lihat Tugas Selesai →</a>
-    </div>
-
     @if(session('success'))
         <div class="success">{{ session('success') }}</div>
     @endif

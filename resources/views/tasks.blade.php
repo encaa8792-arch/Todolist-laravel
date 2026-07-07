@@ -62,9 +62,11 @@
             <option value="Sekolah">📓 Sekolah</option>
         </select>
         <input name="task" required placeholder="Mau ngerjain apa hari ini?">
-        <input type="date" name="start_date" class="deadline-input" placeholder="Mulai" style="width: 130px;">
-        <span style="color: #999; font-size: 12px;">→</span>
-        <input type="date" name="deadline" class="deadline-input" placeholder="Selesai" style="width: 130px;">
+        <div class="date-range-input">
+            <input type="date" name="start_date" class="deadline-input" placeholder="Mulai">
+            <span style="color: #999; font-size: 12px;">→</span>
+            <input type="date" name="deadline" class="deadline-input" placeholder="Selesai">
+        </div>
         <button type="submit">+ Tambah</button>
     </form>
 

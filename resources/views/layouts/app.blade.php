@@ -50,7 +50,7 @@
         gap: 10px;
         margin-bottom: 20px;
       }
-      select, input[type="text"], input[type="date"] {
+      select, input[type="text"] {
         flex: 1;
         padding: 12px;
         border: 2px solid #ffc2d1;
@@ -59,6 +59,26 @@
         font-family: 'Poppins', sans-serif;
         outline: none;
         transition: border-color 0.3s;
+      }
+      input[type="date"] {
+        width: auto;
+        min-width: 140px;
+        padding: 12px;
+        border: 2px solid #ffc2d1;
+        border-radius: 10px;
+        font-size: 14px;
+        font-family: 'Poppins', sans-serif;
+        outline: none;
+        transition: border-color 0.3s;
+      }
+      .date-range-input {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        flex-shrink: 0;
+      }
+      .date-range-input input[type="date"] {
+        min-width: 120px;
       }
       select:focus, input[type="text"]:focus, input[type="date"]:focus {
         border-color: #ff6b9d;

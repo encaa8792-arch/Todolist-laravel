@@ -30,7 +30,7 @@
         border-radius: 20px;
         box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         width: 100%;
-        max-width: 650px;
+        max-width: 900px;
       }
       h1 {
         text-align: center;

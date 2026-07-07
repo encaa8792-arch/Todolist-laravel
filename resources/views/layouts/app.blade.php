@@ -99,6 +99,12 @@
         font-size: 14px;
         line-height: 1.6;
       }
+      .task-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-shrink: 0;
+      }
       .badge {
         background: #a0c4ff;
         color: white;
@@ -344,6 +350,112 @@
       body {
         padding-top: 80px;
       }
+      .kebab-wrapper {
+        position: relative;
+        display: inline-block;
+      }
+      .kebab-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 8px;
+        border-radius: 50%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 3px;
+        transition: background 0.2s;
+      }
+      .kebab-btn:hover {
+        background: #fff0f5;
+      }
+      .kebab-btn span {
+        display: block;
+        width: 4px;
+        height: 4px;
+        background: #999;
+        border-radius: 50%;
+      }
+      .kebab-menu {
+        display: none;
+        position: absolute;
+        right: 0;
+        top: 100%;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+        min-width: 200px;
+        z-index: 1001;
+        overflow: hidden;
+        border: 1px solid #f0f0f0;
+      }
+      .kebab-menu.show {
+        display: block;
+      }
+      .kebab-menu form {
+        margin: 0;
+      }
+      .kebab-menu button {
+        width: 100%;
+        text-align: left;
+        background: none;
+        border: none;
+        padding: 12px 18px;
+        font-size: 13px;
+        font-weight: 500;
+        color: #333;
+        cursor: pointer;
+        font-family: 'Poppins', sans-serif;
+        transition: background 0.2s;
+        border-radius: 0;
+        transform: none;
+      }
+      .kebab-menu button:hover {
+        background: #fff0f5;
+        color: #ff6b9d;
+        transform: none;
+      }
+      .kebab-menu button.danger {
+        color: #e74c3c;
+      }
+      .kebab-menu button.danger:hover {
+        background: #ffeaea;
+        color: #c0392b;
+      }
+      .kebab-menu .menu-divider {
+        height: 1px;
+        background: #f0f0f0;
+        margin: 0;
+      }
+      .header-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+      }
+      .header-row h1 {
+        margin-bottom: 0;
+      }
+      .cancel-btn {
+        background: #9ca3af;
+        padding: 8px 14px;
+        font-size: 12px;
+      }
+      .cancel-btn:hover {
+        background: #7f8c8d;
+      }
+      #bulkForm {
+        background: #fff0f5;
+        padding: 12px 15px;
+        border-radius: 10px;
+        margin-bottom: 15px;
+      }
+      .bulk-checkbox {
+        margin-right: 10px;
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+      }
       @yield('styles')
     </style>
 </head>
@@ -354,10 +466,100 @@
             <li><a href="/dashboard" class="{{ request()->is('dashboard') ? 'active' : '' }}">Dashboard</a></li>
             <li><a href="/tasks" class="{{ request()->is('tasks') ? 'active' : '' }}">Tugas</a></li>
             <li><a href="/tasks/completed" class="{{ request()->is('tasks/completed') ? 'active' : '' }}">Selesai</a></li>
+            <li><a href="#" onclick="openGuide(); return false;" title="Panduan">📖</a></li>
         </ul>
     </nav>
+
+    <div id="guideModal" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.5); z-index:2000; justify-content:center; align-items:center;">
+        <div style="background:white; border-radius:20px; padding:30px; max-width:550px; width:90%; max-height:80vh; overflow-y:auto; position:relative;">
+            <button onclick="closeGuide()" style="position:absolute; top:15px; right:15px; background:#ff6b9d; border:none; color:white; width:32px; height:32px; border-radius:50%; cursor:pointer; font-size:18px; display:flex; align-items:center; justify-content:center;">×</button>
+            <div style="text-align:center; margin-bottom:25px;">
+                <span style="font-size:50px;">📘</span>
+                <h2 style="color:#ff6b9d; margin:10px 0 5px;">Panduan TodoList</h2>
+                <p style="color:#999; margin:0;">Langkah-langkah penggunaan aplikasi</p>
+            </div>
+
+            <div style="border-left:3px solid #ffc2d1; padding-left:20px; margin-bottom:20px;">
+                <h4 style="color:#ff6b9d; margin:0 0 8px;">📝 Menambah Tugas</h4>
+                <p style="margin:0; color:#666; font-size:14px;">1. Pilih kategori tugas<br>2. Masukkan nama tugas<br>3. (Opsional) Tambah deadline<br>4. Klik tombol "+ Tambah"</p>
+            </div>
+
+            <div style="border-left:3px solid #ffc2d1; padding-left:20px; margin-bottom:20px;">
+                <h4 style="color:#ff6b9d; margin:0 0 8px;">✓ Menandai Selesai</h4>
+                <p style="margin:0; color:#666; font-size:14px;">Klik tombol <strong>"✓ Done"</strong> pada tugas untuk menandai selesai. Klik <strong>"↩️ Batal"</strong> untuk membatalkan.</p>
+            </div>
+
+            <div style="border-left:3px solid #ffc2d1; padding-left:20px; margin-bottom:20px;">
+                <h4 style="color:#ff6b9d; margin:0 0 8px;">✏️ Mengedit Tugas</h4>
+                <p style="margin:0; color:#666; font-size:14px;">Klik ikon ✏️ pada tugas untuk mengedit nama, kategori, atau deadline.</p>
+            </div>
+
+            <div style="border-left:3px solid #ffc2d1; padding-left:20px; margin-bottom:20px;">
+                <h4 style="color:#ff6b9d; margin:0 0 8px;">🗑️ Menghapus Tugas</h4>
+                <p style="margin:0; color:#666; font-size:14px;">Klik tombol "Hapus" pada tugas, atau gunakan fitur <strong>Bulk Hapus</strong> untuk menghapus banyak tugas sekaligus.</p>
+            </div>
+
+            <div style="border-left:3px solid #ffc2d1; padding-left:20px; margin-bottom:20px;">
+                <h4 style="color:#ff6b9d; margin:0 0 8px;">📋 Bulk Action</h4>
+                <p style="margin:0; color:#666; font-size:14px;">Fitur bulk memungkinkan kamu menandai selesai, membatalkan, atau menghapus banyak tugas sekaligus.<br><br><strong>Cara pakai:</strong><br>1. Klik menu ⋮ (kebab) di halaman<br>2. Pilih "Bulk Action" atau "Hapus"<br>3. Centang tugas yang dipilih<br>4. Klik aksi yang diinginkan</p>
+            </div>
+
+            <div style="border-left:3px solid #ffc2d1; padding-left:20px; margin-bottom:20px;">
+                <h4 style="color:#ff6b9d; margin:0 0 8px;">✓ Done Semua</h4>
+                <p style="margin:0; color:#666; font-size:14px;">Di halaman Tugas, klik menu ⋮ > <strong>"Done Semua"</strong> untuk menandai semua tugas sebagai selesai.</p>
+            </div>
+
+            <div style="border-left:3px solid #ffc2d1; padding-left:20px; margin-bottom:20px;">
+                <h4 style="color:#ff6b9d; margin:0 0 8px;">📊 Dashboard</h4>
+                <p style="margin:0; color:#666; font-size:14px;">Halaman Dashboard menampilkan statistik tugas kamu: total tugas, tugas selesai, tugas tertunda, dan tugas overdue.</p>
+            </div>
+
+            <div style="border-left:3px solid #ffc2d1; padding-left:20px; margin-bottom:20px;">
+                <h4 style="color:#ff6b9d; margin:0 0 8px;">📅 Deadline</h4>
+                <p style="margin:0; color:#666; font-size:14px;">Tugas dengan deadline yang lewat akan muncul dengan <span style="background:#ff6b6b; color:white; padding:2px 8px; border-radius:5px;">tanda peringatan ⚠️</span></p>
+            </div>
+
+            <div style="text-align:center; padding:15px; background:#fff0f5; border-radius:15px;">
+                <p style="margin:0; color:#ff6b9d; font-weight:600;">💡 Tips: Gunakan Bulk Action untuk kerja lebih cepat!</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openGuide() {
+            document.getElementById('guideModal').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+        function closeGuide() {
+            document.getElementById('guideModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+        document.getElementById('guideModal').addEventListener('click', function(e) {
+            if (e.target === this) closeGuide();
+        });
+    </script>
+
     <div class="box @yield('box-class')">
         @yield('content')
     </div>
+    <script>
+        document.addEventListener('click', function(e) {
+            document.querySelectorAll('.kebab-menu.show').forEach(function(menu) {
+                if (!menu.parentElement.contains(e.target)) {
+                    menu.classList.remove('show');
+                }
+            });
+        });
+        document.querySelectorAll('.kebab-btn').forEach(function(btn) {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                var menu = this.nextElementSibling;
+                document.querySelectorAll('.kebab-menu.show').forEach(function(m) {
+                    if (m !== menu) m.classList.remove('show');
+                });
+                menu.classList.toggle('show');
+            });
+        });
+    </script>
 </body>
 </html>

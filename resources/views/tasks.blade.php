@@ -62,7 +62,9 @@
             <option value="Sekolah">📓 Sekolah</option>
         </select>
         <input name="task" required placeholder="Mau ngerjain apa hari ini?">
-        <input type="date" name="deadline" class="deadline-input">
+        <input type="date" name="start_date" class="deadline-input" placeholder="Mulai" style="width: 130px;">
+        <span style="color: #999; font-size: 12px;">→</span>
+        <input type="date" name="deadline" class="deadline-input" placeholder="Selesai" style="width: 130px;">
         <button type="submit">+ Tambah</button>
     </form>
 
@@ -80,9 +82,15 @@
                 {{ $task->task }}
             </span>
             <div class="task-actions">
-                @if($task->deadline)
+                @if($task->start_date || $task->deadline)
                     <span class="deadline-badge {{ $isOverdue ? 'overdue' : '' }}">
-                        {{ $isOverdue ? '⚠️ ' : '📅 ' }}{{ date('d M Y', strtotime($task->deadline)) }}
+                        @if($task->start_date && $task->deadline)
+                            {{ $isOverdue ? '⚠️ ' : '📅 ' }}{{ date('d M', strtotime($task->start_date)) }} - {{ date('d M Y', strtotime($task->deadline)) }}
+                        @elseif($task->deadline)
+                            {{ $isOverdue ? '⚠️ ' : '📅 ' }}{{ date('d M Y', strtotime($task->deadline)) }}
+                        @else
+                            📆 {{ date('d M Y', strtotime($task->start_date)) }}
+                        @endif
                     </span>
                 @endif
                 <form method="POST" action="/tasks/{{ $task->id }}/done" style="display:inline;">

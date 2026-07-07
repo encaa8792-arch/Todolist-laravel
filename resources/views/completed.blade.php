@@ -64,9 +64,15 @@
                     {{ $task->task }}
                 </span>
                 <div class="task-actions">
-                    @if($task->deadline)
+                    @if($task->start_date || $task->deadline)
                         <span class="deadline-badge {{ $isOverdue ? 'overdue' : '' }}">
-                            {{ $isOverdue ? '⚠️ ' : '📅 ' }}{{ date('d M Y', strtotime($task->deadline)) }}
+                            @if($task->start_date && $task->deadline)
+                                {{ $isOverdue ? '⚠️ ' : '📅 ' }}{{ date('d M', strtotime($task->start_date)) }} - {{ date('d M Y', strtotime($task->deadline)) }}
+                            @elseif($task->deadline)
+                                {{ $isOverdue ? '⚠️ ' : '📅 ' }}{{ date('d M Y', strtotime($task->deadline)) }}
+                            @else
+                                📆 {{ date('d M Y', strtotime($task->start_date)) }}
+                            @endif
                         </span>
                     @endif
                     <form method="POST" action="/tasks/{{ $task->id }}/done" style="display:inline;">

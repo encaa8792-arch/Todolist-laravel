@@ -52,7 +52,8 @@ class TaskController extends Controller
         $validated = $request->validate([
             'task' => 'required|string|max:255',
             'category' => 'nullable|string|max:50',
-            'deadline' => 'nullable|date',
+            'start_date' => 'nullable|date',
+            'deadline' => 'nullable|date|after_or_equal:start_date',
         ]);
         Task::create($validated);
         return redirect('/tasks')->with('success', 'Tugas berhasil ditambah! ✨');
@@ -69,7 +70,8 @@ class TaskController extends Controller
         $validated = $request->validate([
             'task' => 'required|string|max:255',
             'category' => 'nullable|string|max:50',
-            'deadline' => 'nullable|date',
+            'start_date' => 'nullable|date',
+            'deadline' => 'nullable|date|after_or_equal:start_date',
         ]);
         $task = Task::findOrFail($id);
         $task->update($validated);

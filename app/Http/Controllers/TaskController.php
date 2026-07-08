@@ -29,15 +29,54 @@ class TaskController extends Controller
             ->take(5)
             ->get();
 
+        $weekStart = now()->startOfWeek();
+        $weekEnd = now()->endOfWeek();
+        $prevWeekStart = now()->subWeek()->startOfWeek();
+        $prevWeekEnd = now()->subWeek()->endOfWeek();
+
+        $weeklyTotal = Task::whereBetween('created_at', [$weekStart, $weekEnd])->count();
+        $weeklyCompleted = Task::where('is_done', 1)
+            ->whereBetween('updated_at', [$weekStart, $weekEnd])->count();
+        $weeklyPending = Task::where('is_done', 0)
+            ->whereBetween('created_at', [$weekStart, $weekEnd])->count();
+
+        $prevWeekCompleted = Task::where('is_done', 1)
+            ->whereBetween('updated_at', [$prevWeekStart, $prevWeekEnd])->count();
+
+        $weeklyTrend = $prevWeekCompleted > 0 
+            ? round((($weeklyCompleted - $prevWeekCompleted) / $prevWeekCompleted) * 100) 
+            : ($weeklyCompleted > 0 ? 100 : 0);
+
+        $dailyStats = [];
+        for ($i = 0; $i < 7; $i++) {
+            $dayStart = $weekStart->copy()->addDays($i)->startOfDay();
+            $dayEnd = $weekStart->copy()->addDays($i)->endOfDay();
+            $dailyStats[] = [
+                'day' => $dayStart->format('D'),
+                'created' => Task::whereBetween('created_at', [$dayStart, $dayEnd])->count(),
+                'completed' => Task::where('is_done', 1)
+                    ->whereBetween('updated_at', [$dayStart, $dayEnd])->count(),
+            ];
+        }
+
         return view('dashboard', compact(
             'totalTasks', 'completedTasks', 'pendingTasks', 
-            'overdueTasks', 'categoryStats', 'recentTasks', 'upcomingDeadlines'
+            'overdueTasks', 'categoryStats', 'recentTasks', 'upcomingDeadlines',
+            'weeklyTotal', 'weeklyCompleted', 'weeklyPending', 'weeklyTrend', 'dailyStats',
+            'weekStart', 'weekEnd'
         ));
     }
 
     public function index()
     {
-        $tasks = Task::where('is_done', 0)->latest()->paginate(5);
+        $tasks = Task::where('is_done', 0)
+            ->orderByRaw("CASE 
+                WHEN deadline IS NOT NULL AND DATE(deadline) <= DATE('+2 days') THEN 0 
+                ELSE 1 
+            END")
+            ->orderBy('deadline')
+            ->latest()
+            ->paginate(5);
         return view('tasks', compact('tasks'));
     }
 

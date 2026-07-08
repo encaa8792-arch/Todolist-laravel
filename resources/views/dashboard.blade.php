@@ -142,12 +142,131 @@
         font-style: italic;
         font-size: 13px;
     }
+    .weekly-report {
+        background: linear-gradient(135deg, #e8f4f8 0%, #d4ecf7 100%);
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 25px;
+    }
+    .weekly-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+    .weekly-header h3 {
+        font-size: 16px;
+        font-weight: 600;
+        color: #333;
+        margin: 0;
+    }
+    .weekly-range {
+        font-size: 12px;
+        color: #6b7280;
+    }
+    .weekly-trend {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 15px;
+        font-size: 12px;
+        font-weight: 500;
+    }
+    .weekly-trend.up { background: #d4edda; color: #2ecc71; }
+    .weekly-trend.down { background: #ffe0e0; color: #ff6b6b; }
+    .weekly-trend.same { background: #e8f4f8; color: #6b7280; }
+    .weekly-stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin-bottom: 15px;
+    }
+    .weekly-stat {
+        text-align: center;
+        padding: 12px;
+        background: white;
+        border-radius: 10px;
+    }
+    .weekly-stat .number {
+        font-size: 24px;
+        font-weight: 700;
+        color: #ff6b9d;
+    }
+    .weekly-stat .label {
+        font-size: 11px;
+        color: #9ca3af;
+    }
+    .weekly-chart {
+        display: flex;
+        justify-content: space-around;
+        align-items: flex-end;
+        height: 80px;
+        padding: 10px 0;
+    }
+    .chart-bar {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 5px;
+    }
+    .bar-container {
+        display: flex;
+        gap: 3px;
+        align-items: flex-end;
+        height: 50px;
+    }
+    .bar {
+        width: 12px;
+        border-radius: 3px 3px 0 0;
+    }
+    .bar.created { background: #ff6b9d; }
+    .bar.completed { background: #2ecc71; }
+    .chart-day {
+        font-size: 10px;
+        color: #9ca3af;
+    }
 @endsection
 
 @section('content')
     <div class="dashboard-header">
         <h1>Dashboard</h1>
         <p>Kelola tugasmu dengan lebih baik</p>
+    </div>
+
+    <div class="weekly-report">
+        <div class="weekly-header">
+            <h3>Laporan Mingguan</h3>
+            <span class="weekly-range">{{ $weekStart->format('d M') }} - {{ $weekEnd->format('d M Y') }}</span>
+        </div>
+        <div style="text-align: right; margin-bottom: 10px;">
+            <span class="weekly-trend {{ $weeklyTrend > 0 ? 'up' : ($weeklyTrend < 0 ? 'down' : 'same') }}">
+                {{ $weeklyTrend > 0 ? '+' : '' }}{{ $weeklyTrend }}% dari minggu lalu
+            </span>
+        </div>
+        <div class="weekly-stats">
+            <div class="weekly-stat">
+                <div class="number">{{ $weeklyTotal }}</div>
+                <div class="label">Dibuat</div>
+            </div>
+            <div class="weekly-stat">
+                <div class="number">{{ $weeklyCompleted }}</div>
+                <div class="label">Diselesaikan</div>
+            </div>
+            <div class="weekly-stat">
+                <div class="number">{{ $weeklyPending }}</div>
+                <div class="label">Belum Selesai</div>
+            </div>
+        </div>
+        <div class="weekly-chart">
+            @foreach($dailyStats as $stat)
+                <div class="chart-bar">
+                    <div class="bar-container">
+                        <div class="bar created" style="height: {{ max($stat['created'] * 10, 4) }}px;"></div>
+                        <div class="bar completed" style="height: {{ max($stat['completed'] * 10, 4) }}px;"></div>
+                    </div>
+                    <span class="chart-day">{{ $stat['day'] }}</span>
+                </div>
+            @endforeach
+        </div>
     </div>
 
     <div class="stats-grid">

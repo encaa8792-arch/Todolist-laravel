@@ -198,6 +198,15 @@
       .task.overdue-task {
         border-left: 4px solid #ff6b6b;
       }
+      .task.urgent-deadline {
+        border-left: 4px solid #e74c3c;
+        background: #fff5f5;
+        animation: pulse-border 2s infinite;
+      }
+      @keyframes pulse-border {
+        0%, 100% { border-left-color: #e74c3c; }
+        50% { border-left-color: #ff8fa3; }
+      }
       .pagination {
         display: flex;
         justify-content: center;

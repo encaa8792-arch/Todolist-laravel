@@ -71,7 +71,7 @@ class TaskController extends Controller
     {
         $tasks = Task::where('is_done', 0)
             ->orderByRaw("CASE 
-                WHEN deadline IS NOT NULL AND DATE(deadline) <= DATE('+2 days') THEN 0 
+                WHEN deadline IS NOT NULL AND DATE(deadline) < CURDATE() THEN 0 
                 ELSE 1 
             END")
             ->orderBy('deadline')

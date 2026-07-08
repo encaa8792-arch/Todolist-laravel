@@ -73,14 +73,8 @@
     @foreach($tasks as $task)
         @php
             $isOverdue = $task->deadline && !$task->is_done && strtotime($task->deadline) < strtotime('today');
-            $isUrgent = $task->deadline && !$task->is_done && !$isOverdue && strtotime($task->deadline) <= strtotime('+2 days');
-            $deadlineTs = $task->deadline ? strtotime($task->deadline) : PHP_INT_MAX;
         @endphp
-        <div class="task {{ $task->is_done ? 'done-box' : '' }} {{ $isOverdue ? 'overdue-task' : '' }} {{ $isUrgent ? 'urgent-deadline' : '' }}" 
-             data-task-id="{{ $task->id }}" 
-             data-deadline="{{ $task->deadline ?? '' }}" 
-             data-deadline-ts="{{ $deadlineTs }}"
-             data-is-done="{{ $task->is_done ? 1 : 0 }}">
+        <div class="task {{ $task->is_done ? 'done-box' : '' }} {{ $isOverdue ? 'overdue-task' : '' }}" data-task-id="{{ $task->id }}">
             <input type="checkbox" name="task_ids[]" value="{{ $task->id }}" class="bulk-checkbox-done" onchange="updateSelectedCount()" form="bulkForm" style="display:none;">
             <input type="checkbox" name="delete_ids[]" value="{{ $task->id }}" class="bulk-checkbox-delete" onchange="updateSelectedDeleteCount()" form="bulkDeleteForm" style="display:none;">
             <span class="{{ $task->is_done ? 'done' : '' }}">
@@ -196,32 +190,5 @@
         function cancelBulkDeleteMode() {
             if (bulkDeleteMode) toggleBulkDeleteMode();
         }
-
-        function sortTasksByDeadline() {
-            const container = document.querySelector('.box');
-            const tasks = Array.from(document.querySelectorAll('.task[data-task-id]'));
-            const now = Math.floor(Date.now() / 1000);
-            const twoDays = 2 * 24 * 60 * 60;
-
-            tasks.sort((a, b) => {
-                const aDone = a.dataset.isDone === '1';
-                const bDone = b.dataset.isDone === '1';
-                if (aDone !== bDone) return aDone ? 1 : -1;
-
-                const aDeadline = parseInt(a.dataset.deadlineTs) || Infinity;
-                const bDeadline = parseInt(b.dataset.deadlineTs) || Infinity;
-                const aUrgent = !aDone && aDeadline <= now + twoDays && aDeadline >= now;
-                const bUrgent = !bDone && bDeadline <= now + twoDays && bDeadline >= now;
-                if (aUrgent !== bUrgent) return aUrgent ? -1 : 1;
-
-                return aDeadline - bDeadline;
-            });
-
-            const form = document.querySelector('form.add');
-            tasks.forEach(task => container.insertBefore(task, form.nextSibling));
-        }
-
-        setInterval(sortTasksByDeadline, 5000);
-        sortTasksByDeadline();
     </script>
 @endsection

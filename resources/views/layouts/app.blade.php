@@ -195,8 +195,41 @@
         background: #ff6b6b;
         color: white;
       }
-      .task.overdue-task {
+      .task.overdue-red {
+        background: #ffe5e5 !important;
         border-left: 4px solid #ff6b6b;
+      }
+      .task.overdue-red span {
+        color: #c0392b !important;
+      }
+      .task.overdue-red .badge {
+        background: #ff6b6b !important;
+        color: white !important;
+      }
+      .task.overdue-red .deadline-badge {
+        background: #ffcccc !important;
+        color: #c0392b !important;
+      }
+      .task.overdue-red .done-btn {
+        background: #ff8fa3 !important;
+        color: white !important;
+      }
+      .task.overdue-red .done-btn:hover {
+        background: #e07088 !important;
+      }
+      .task.overdue-red .edit-btn {
+        background: #ff6b6b !important;
+        color: white !important;
+      }
+      .task.overdue-red .edit-btn:hover {
+        background: #e05585 !important;
+      }
+      .task.overdue-red .delete-btn {
+        background: #ffcccc !important;
+        color: #c0392b !important;
+      }
+      .task.overdue-red .delete-btn:hover {
+        background: #ff9999 !important;
       }
       .task.urgent-deadline {
         border-left: 4px solid #e74c3c;

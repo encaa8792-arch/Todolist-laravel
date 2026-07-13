@@ -518,13 +518,220 @@
         height: 18px;
         cursor: pointer;
       }
+
+      /* Responsive Styles */
+      @media (max-width: 768px) {
+        body {
+          padding: 10px;
+          padding-top: 70px;
+        }
+        .box {
+          padding: 20px 15px;
+          border-radius: 15px;
+        }
+        .navbar {
+          padding: 10px 15px;
+        }
+        .navbar-brand {
+          font-size: 16px;
+        }
+        .navbar-nav {
+          display: none;
+          position: absolute;
+          top: 100%;
+          left: 0;
+          right: 0;
+          background: white;
+          flex-direction: column;
+          padding: 10px;
+          box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+          gap: 5px;
+        }
+        .navbar-nav.show {
+          display: flex;
+        }
+        .navbar-nav a {
+          padding: 10px 15px;
+          text-align: center;
+        }
+        .mobile-menu-btn {
+          display: flex !important;
+        }
+        .form.add {
+          flex-direction: column;
+        }
+        form.add select,
+        form.add input[type="text"] {
+          width: 100%;
+        }
+        form.add .date-range-input {
+          width: 100%;
+          flex-wrap: wrap;
+        }
+        form.add .date-range-input input[type="date"] {
+          flex: 1;
+          min-width: 45%;
+        }
+        form.add button {
+          width: 100%;
+        }
+        .task {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+        .task span {
+          width: 100%;
+          margin-bottom: 10px;
+        }
+        .task-actions {
+          width: 100%;
+          flex-wrap: wrap;
+          gap: 5px;
+        }
+        .task-actions form,
+        .task-actions a {
+          flex: 1;
+          min-width: auto;
+        }
+        .task-actions button,
+        .task-actions .edit-btn {
+          width: 100%;
+          text-align: center;
+        }
+        .deadline-badge {
+          display: block;
+          width: 100%;
+          text-align: center;
+          margin-bottom: 8px;
+        }
+        .stats-grid {
+          grid-template-columns: repeat(2, 1fr) !important;
+          gap: 10px !important;
+        }
+        .stat-card {
+          padding: 15px 10px !important;
+        }
+        .stat-card .number {
+          font-size: 24px !important;
+        }
+        .weekly-stats {
+          grid-template-columns: repeat(3, 1fr) !important;
+        }
+        .weekly-stat {
+          padding: 8px 5px !important;
+        }
+        .weekly-stat .number {
+          font-size: 18px !important;
+        }
+        .weekly-chart {
+          height: 60px !important;
+          overflow-x: auto;
+        }
+        .bar {
+          width: 8px !important;
+        }
+        .header-row {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 10px;
+        }
+        .header-row .kebab-wrapper {
+          align-self: flex-end;
+        }
+        .pagination {
+          flex-wrap: wrap;
+          justify-content: center;
+        }
+        .edit-box {
+          padding: 20px 15px !important;
+        }
+        .edit-box h2 {
+          font-size: 20px !important;
+        }
+        #bulkForm,
+        #bulkDeleteForm {
+          flex-direction: column;
+          gap: 8px;
+        }
+        #bulkForm button,
+        #bulkDeleteForm button {
+          width: 100%;
+        }
+        .success {
+          font-size: 12px;
+          padding: 8px 10px;
+        }
+        #guideModal > div {
+          padding: 20px 15px !important;
+          width: 95% !important;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .box {
+          padding: 15px 12px;
+        }
+        .stats-grid {
+          grid-template-columns: 1fr 1fr !important;
+        }
+        .weekly-stats {
+          grid-template-columns: 1fr !important;
+        }
+        .weekly-stat {
+          padding: 10px !important;
+        }
+        .category-list .category-item {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 8px;
+        }
+        .category-stats {
+          width: 100%;
+        }
+        .chart-bar {
+          min-width: 30px;
+        }
+      }
+
+      .mobile-menu-btn {
+        display: none;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 8px;
+        flex-direction: column;
+        gap: 4px;
+      }
+      .mobile-menu-btn span {
+        display: block;
+        width: 22px;
+        height: 2px;
+        background: #ff6b9d;
+        border-radius: 2px;
+        transition: 0.3s;
+      }
+      .mobile-menu-btn.active span:nth-child(1) {
+        transform: rotate(45deg) translate(4px, 5px);
+      }
+      .mobile-menu-btn.active span:nth-child(2) {
+        opacity: 0;
+      }
+      .mobile-menu-btn.active span:nth-child(3) {
+        transform: rotate(-45deg) translate(4px, -5px);
+      }
+
       @yield('styles')
     </style>
 </head>
 <body>
     <nav class="navbar">
         <a href="/dashboard" class="navbar-brand">TodoList</a>
-        <ul class="navbar-nav">
+        <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <ul class="navbar-nav" id="navbarNav">
             <li><a href="/dashboard" class="{{ request()->is('dashboard') ? 'active' : '' }}">Dashboard</a></li>
             <li><a href="/tasks" class="{{ request()->is('tasks') ? 'active' : '' }}">Tugas</a></li>
             <li><a href="/tasks/completed" class="{{ request()->is('tasks/completed') ? 'active' : '' }}">Selesai</a></li>
@@ -598,6 +805,20 @@
         }
         document.getElementById('guideModal').addEventListener('click', function(e) {
             if (e.target === this) closeGuide();
+        });
+        function toggleMobileMenu() {
+            var nav = document.getElementById('navbarNav');
+            var btn = document.querySelector('.mobile-menu-btn');
+            nav.classList.toggle('show');
+            btn.classList.toggle('active');
+        }
+        document.addEventListener('click', function(e) {
+            var nav = document.getElementById('navbarNav');
+            var btn = document.querySelector('.mobile-menu-btn');
+            if (!nav.contains(e.target) && !btn.contains(e.target) && nav.classList.contains('show')) {
+                nav.classList.remove('show');
+                btn.classList.remove('active');
+            }
         });
     </script>
 

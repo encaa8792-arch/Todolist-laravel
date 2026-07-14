@@ -72,7 +72,7 @@
 
     @foreach($tasks as $task)
         @php
-            $isOverdue = $task->deadline && !$task->is_done && strtotime($task->deadline) < strtotime('today');
+            $isOverdue = $task->deadline && !$task->is_done && strtotime($task->deadline) <= strtotime('today');
         @endphp
         <div class="task {{ $task->is_done ? 'done-box' : '' }} {{ $isOverdue ? 'overdue-red' : '' }}" data-task-id="{{ $task->id }}">
             <input type="checkbox" name="task_ids[]" value="{{ $task->id }}" class="bulk-checkbox-done" onchange="updateSelectedCount()" form="bulkForm" style="display:none;">

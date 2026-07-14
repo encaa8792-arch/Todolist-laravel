@@ -72,7 +72,7 @@
 
     @foreach($tasks as $task)
         @php
-            $isOverdue = $task->deadline && !$task->is_done && strtotime($task->deadline) <= strtotime('today');
+            $isOverdue = $task->deadline && !$task->is_done && (\Carbon\Carbon::parse($task->deadline)->startOfDay()->lt(\Carbon\Carbon::today()));
         @endphp
         <div class="task {{ $task->is_done ? 'done-box' : '' }} {{ $isOverdue ? 'overdue-red' : '' }}" data-task-id="{{ $task->id }}">
             <input type="checkbox" name="task_ids[]" value="{{ $task->id }}" class="bulk-checkbox-done" onchange="updateSelectedCount()" form="bulkForm" style="display:none;">
@@ -87,11 +87,11 @@
                 @if($task->start_date || $task->deadline)
                     <span class="deadline-badge">
                         @if($task->start_date && $task->deadline)
-                            {{ $isOverdue ? '⚠️ ' : '📅 ' }}{{ date('d M', strtotime($task->start_date)) }} - {{ date('d M Y', strtotime($task->deadline)) }}
+                            {{ $isOverdue ? '⚠️ ' : '📅 ' }}{{ \Carbon\Carbon::parse($task->start_date)->format('d M') }} - {{ \Carbon\Carbon::parse($task->deadline)->format('d M Y') }}
                         @elseif($task->deadline)
-                            {{ $isOverdue ? '⚠️ ' : '📅 ' }}{{ date('d M Y', strtotime($task->deadline)) }}
+                            {{ $isOverdue ? '⚠️ ' : '📅 ' }}{{ \Carbon\Carbon::parse($task->deadline)->format('d M Y') }}
                         @else
-                            📆 {{ date('d M Y', strtotime($task->start_date)) }}
+                            📆 {{ \Carbon\Carbon::parse($task->start_date)->format('d M Y') }}
                         @endif
                     </span>
                 @endif

@@ -412,6 +412,9 @@
       body {
         padding-top: 80px;
       }
+      .box-overlay {
+        background: rgba(255,255,255,0.7);
+      }
       .kebab-wrapper {
         position: relative;
         display: inline-block;
@@ -735,6 +738,7 @@
             <li><a href="/dashboard" class="{{ request()->is('dashboard') ? 'active' : '' }}">Dashboard</a></li>
             <li><a href="/tasks" class="{{ request()->is('tasks') ? 'active' : '' }}">Tugas</a></li>
             <li><a href="/tasks/completed" class="{{ request()->is('tasks/completed') ? 'active' : '' }}">Selesai</a></li>
+            <li><a href="#" onclick="openBgModal(); return false;" title="Ganti Background">🎨</a></li>
             <li><a href="#" onclick="openGuide(); return false;" title="Panduan">📖</a></li>
         </ul>
     </nav>
@@ -803,8 +807,70 @@
             document.getElementById('guideModal').style.display = 'none';
             document.body.style.overflow = 'auto';
         }
+        function openBgModal() {
+            document.getElementById('bgModal').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+        function closeBgModal() {
+            document.getElementById('bgModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+        function setBackground(url, name) {
+            document.body.style.backgroundImage = 'url(' + url + ')';
+            document.body.style.backgroundSize = 'cover';
+            document.body.style.backgroundPosition = 'center';
+            document.body.style.backgroundAttachment = 'fixed';
+            localStorage.setItem('bgChoice', JSON.stringify({url: url, name: name}));
+            document.querySelectorAll('.bg-option').forEach(el => el.classList.remove('active'));
+            document.querySelector('.bg-option[data-bg="' + name + '"]')?.classList.add('active');
+            closeBgModal();
+        }
+        function resetBackground() {
+            setBackground('/images/bg-tulip.jpg', 'tulip');
+        }
+        function handleCustomBgUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const base64 = e.target.result;
+                setBackground(base64, 'custom');
+                localStorage.setItem('customBg', base64);
+                document.getElementById('customBgActions').style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+        function deleteCustomBg() {
+            localStorage.removeItem('customBg');
+            document.getElementById('customBgActions').style.display = 'none';
+            resetBackground();
+        }
+        (function() {
+            const customBg = localStorage.getItem('customBg');
+            if (customBg) {
+                document.body.style.backgroundImage = 'url(' + customBg + ')';
+                document.body.style.backgroundSize = 'cover';
+                document.body.style.backgroundPosition = 'center';
+                document.body.style.backgroundAttachment = 'fixed';
+                document.getElementById('customBgActions').style.display = 'block';
+                return;
+            }
+            const saved = localStorage.getItem('bgChoice');
+            if (saved) {
+                try {
+                    const data = JSON.parse(saved);
+                    document.body.style.backgroundImage = 'url(' + data.url + ')';
+                    document.body.style.backgroundSize = 'cover';
+                    document.body.style.backgroundPosition = 'center';
+                    document.body.style.backgroundAttachment = 'fixed';
+                } catch(e) {}
+            }
+        })();
         document.getElementById('guideModal').addEventListener('click', function(e) {
             if (e.target === this) closeGuide();
+        });
+        document.getElementById('bgModal').addEventListener('click', function(e) {
+            if (e.target === this) closeBgModal();
         });
         function toggleMobileMenu() {
             var nav = document.getElementById('navbarNav');
@@ -822,9 +888,51 @@
         });
     </script>
 
-    <div class="box @yield('box-class')">
+    <div class="box box-overlay @yield('box-class')">
         @yield('content')
     </div>
+    <div id="bgModal" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.5); z-index:2000; justify-content:center; align-items:center;">
+        <div style="background:white; border-radius:20px; padding:25px; max-width:400px; width:90%; position:relative;">
+            <button onclick="closeBgModal()" style="position:absolute; top:15px; right:15px; background:#ff6b9d; border:none; color:white; width:32px; height:32px; border-radius:50%; cursor:pointer; font-size:18px; display:flex; align-items:center; justify-content:center;">×</button>
+            <h3 style="color:#ff6b9d; margin:0 0 15px; text-align:center;">🎨 Ganti Background</h3>
+            <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:10px;">
+                <div onclick="setBackground('/images/bg-tulip.jpg', 'tulip')" style="cursor:pointer; border-radius:12px; overflow:hidden; border:3px solid transparent; transition:0.2s;" class="bg-option" data-bg="tulip">
+                    <img src="https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=200&h=120&fit=crop" style="width:100%; height:80px; object-fit:cover;">
+                    <div style="text-align:center; padding:8px; font-size:12px; font-weight:500;">Tulip 🌷</div>
+                </div>
+                <div onclick="setBackground('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800', 'gunung')" style="cursor:pointer; border-radius:12px; overflow:hidden; border:3px solid transparent; transition:0.2s;" class="bg-option" data-bg="gunung">
+                    <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=200&h=120&fit=crop" style="width:100%; height:80px; object-fit:cover;">
+                    <div style="text-align:center; padding:8px; font-size:12px; font-weight:500;">Gunung 🏔️</div>
+                </div>
+                <div onclick="setBackground('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800', 'pantai')" style="cursor:pointer; border-radius:12px; overflow:hidden; border:3px solid transparent; transition:0.2s;" class="bg-option" data-bg="pantai">
+                    <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=200&h=120&fit=crop" style="width:100%; height:80px; object-fit:cover;">
+                    <div style="text-align:center; padding:8px; font-size:12px; font-weight:500;">Pantai 🏖️</div>
+                </div>
+                <div onclick="setBackground('https://images.unsplash.com/photo-1557683316-973673baf926?w=800', 'minimalis')" style="cursor:pointer; border-radius:12px; overflow:hidden; border:3px solid transparent; transition:0.2s;" class="bg-option" data-bg="minimalis">
+                    <img src="https://images.unsplash.com/photo-1557683316-973673baf926?w=200&h=120&fit=crop" style="width:100%; height:80px; object-fit:cover;">
+                    <div style="text-align:center; padding:8px; font-size:12px; font-weight:500;">Minimalis ✨</div>
+                </div>
+                <div onclick="document.getElementById('customBgInput').click()" style="cursor:pointer; border-radius:12px; overflow:hidden; border:3px solid #ff6b9d; transition:0.2s; display:flex; flex-direction:column; align-items:center; justify-content:center; background:#fff0f5; min-height:110px;" class="bg-option" data-bg="custom">
+                    <span style="font-size:28px;">📁</span>
+                    <div style="text-align:center; padding:8px; font-size:12px; font-weight:500;">Upload Foto</div>
+                </div>
+            </div>
+            <input type="file" id="customBgInput" accept=".jpg,.jpeg,.png,.webp" style="display:none;" onchange="handleCustomBgUpload(event)">
+            <div id="customBgActions" style="margin-top:10px; display:none;">
+                <button onclick="deleteCustomBg()" style="width:100%; background:#ff6b6b; color:white; border:none; padding:10px; border-radius:10px; cursor:pointer; font-size:13px; font-weight:500; font-family:'Poppins',sans-serif;">🗑️ Hapus Foto Custom</button>
+            </div>
+            <button onclick="resetBackground()" style="margin-top:10px; width:100%; background:#f0f0f0; color:#666; border:none; padding:10px; border-radius:10px; cursor:pointer; font-size:13px; font-weight:500; font-family:'Poppins',sans-serif;">🔄 Reset ke Default</button>
+        </div>
+    </div>
+    <style>
+        .bg-option:hover {
+            border-color: #ff6b9d !important;
+            transform: scale(1.02);
+        }
+        .bg-option.active {
+            border-color: #ff6b9d !important;
+        }
+    </style>
     <script>
         document.addEventListener('click', function(e) {
             document.querySelectorAll('.kebab-menu.show').forEach(function(menu) {

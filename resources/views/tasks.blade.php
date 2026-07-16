@@ -76,6 +76,7 @@
             $deadlineBg = '';
             $deadlineIcon = '📅';
             $deadlineText = '';
+            $isOverdue = false;
             if ($task->deadline) {
                 $deadline = \Carbon\Carbon::parse($task->deadline)->startOfDay();
                 $today = \Carbon\Carbon::today();
@@ -83,6 +84,7 @@
                     $deadlineBg = 'background: #ffb3c1;';
                     $deadlineIcon = '⚠️';
                     $deadlineText = ' telat';
+                    $isOverdue = true;
                 } elseif ($deadline->eq($today)) {
                     $deadlineBg = 'background: #fff3cd;';
                     $deadlineIcon = '⚠️';
@@ -94,7 +96,7 @@
                 }
             }
         @endphp
-        <div class="task {{ $task->is_done ? 'done-box' : '' }}" data-task-id="{{ $task->id }}">
+        <div class="task {{ $task->is_done ? 'done-box' : '' }} {{ $isOverdue ? 'overdue-border' : '' }}" data-task-id="{{ $task->id }}" style="{{ $isOverdue ? 'border-left: 4px solid #ff6b6b;' : '' }}">
             <input type="checkbox" name="task_ids[]" value="{{ $task->id }}" class="bulk-checkbox-done" onchange="updateSelectedCount()" form="bulkForm" style="display:none;">
             <input type="checkbox" name="delete_ids[]" value="{{ $task->id }}" class="bulk-checkbox-delete" onchange="updateSelectedDeleteCount()" form="bulkDeleteForm" style="display:none;">
             <span class="{{ $task->is_done ? 'done' : '' }}">

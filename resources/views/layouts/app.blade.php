@@ -114,10 +114,13 @@
         box-shadow: 0 4px 12px rgba(255,107,157,0.15);
       }
       .task span {
-        color: #333;
+        color: #000;
         flex: 1;
         font-size: 14px;
         line-height: 1.6;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
       .task-actions {
         display: flex;
@@ -197,7 +200,7 @@
       }
       .task.overdue-red {
         background: #ffe5e5 !important;
-        border-left: 4px solid #ff6b6b;
+        border: 3px solid #e74c3c !important;
       }
       .task.overdue-red span {
         color: #c0392b !important;

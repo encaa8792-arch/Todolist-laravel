@@ -1,5 +1,4 @@
 @extends('layouts.app')
-git int
 @section('title', 'Todo List')
 
 @section('content')
@@ -70,7 +69,7 @@ git int
         @php
             $isOverdue = $task->deadline && !$task->is_done && strtotime($task->deadline) < strtotime('today');
         @endphp
-        <div class="task {{ $task->is_done ? 'done-box' : '' }} {{ $isOverdue ? 'overdue-task' : '' }}" data-task-id="{{ $task->id }}">
+        <div class="task {{ $task->is_done ? 'done-box' : '' }} {{ $isOverdue ? 'overdue-red' : '' }}" data-task-id="{{ $task->id }}">
             <input type="checkbox" name="task_ids[]" value="{{ $task->id }}" class="bulk-checkbox-done" onchange="updateSelectedCount()" form="bulkForm" style="display:none;">
             <input type="checkbox" name="delete_ids[]" value="{{ $task->id }}" class="bulk-checkbox-delete" onchange="updateSelectedDeleteCount()" form="bulkDeleteForm" style="display:none;">
             <span class="{{ $task->is_done ? 'done' : '' }}">
@@ -80,9 +79,19 @@ git int
                 {{ $task->task }}
             </span>
             <div class="task-actions">
-                @if($task->deadline)
-                    <span class="deadline-badge {{ $isOverdue ? 'overdue' : '' }}">
-                        {{ $isOverdue ? '⚠️ ' : '📅 ' }}{{ date('d M Y', strtotime($task->deadline)) }}
+                @if($task->start_date || $task->deadline)
+                    <span class="deadline-badge {{ $isOverdue ? 'overdue-red' : '' }}">
+                        @if($isOverdue && $task->start_date)
+                            ⚠️ TELAT - {{ date('d M', strtotime($task->start_date)) }} - {{ date('d M Y', strtotime($task->deadline)) }}
+                        @elseif($isOverdue)
+                            ⚠️ TELAT - {{ date('d M Y', strtotime($task->deadline)) }}
+                        @elseif($task->start_date && $task->deadline)
+                            📅 {{ date('d M', strtotime($task->start_date)) }} - {{ date('d M Y', strtotime($task->deadline)) }}
+                        @elseif($task->deadline)
+                            📅 {{ date('d M Y', strtotime($task->deadline)) }}
+                        @elseif($task->start_date)
+                            ▶️ {{ date('d M Y', strtotime($task->start_date)) }}
+                        @endif
                     </span>
                 @endif
                 <form method="POST" action="/tasks/{{ $task->id }}/done" style="display:inline;">

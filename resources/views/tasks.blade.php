@@ -72,12 +72,29 @@
 
     @foreach($tasks as $task)
         @php
-            $isOverdue = !$task->is_done && (
-                ($task->deadline && \Carbon\Carbon::parse($task->deadline)->startOfDay()->lt(\Carbon\Carbon::today())) ||
-                (!$task->deadline && $task->start_date && \Carbon\Carbon::parse($task->start_date)->startOfDay()->lt(\Carbon\Carbon::today()))
-            );
+            $deadlineStatus = null;
+            $deadlineBg = '';
+            $deadlineIcon = '📅';
+            $deadlineText = '';
+            if ($task->deadline) {
+                $deadline = \Carbon\Carbon::parse($task->deadline)->startOfDay();
+                $today = \Carbon\Carbon::today();
+                if ($deadline->lt($today)) {
+                    $deadlineBg = 'background: #ffb3c1;';
+                    $deadlineIcon = '⚠️';
+                    $deadlineText = ' telat';
+                } elseif ($deadline->eq($today)) {
+                    $deadlineBg = 'background: #fff3cd;';
+                    $deadlineIcon = '⚠️';
+                    $deadlineText = ' hari ini';
+                } else {
+                    $deadlineBg = 'background: #ffe5b4;';
+                    $deadlineIcon = '📅';
+                    $deadlineText = '';
+                }
+            }
         @endphp
-        <div class="task {{ $task->is_done ? 'done-box' : '' }} {{ $isOverdue ? 'overdue-red' : '' }}" data-task-id="{{ $task->id }}">
+        <div class="task {{ $task->is_done ? 'done-box' : '' }}" data-task-id="{{ $task->id }}">
             <input type="checkbox" name="task_ids[]" value="{{ $task->id }}" class="bulk-checkbox-done" onchange="updateSelectedCount()" form="bulkForm" style="display:none;">
             <input type="checkbox" name="delete_ids[]" value="{{ $task->id }}" class="bulk-checkbox-delete" onchange="updateSelectedDeleteCount()" form="bulkDeleteForm" style="display:none;">
             <span class="{{ $task->is_done ? 'done' : '' }}">
@@ -88,11 +105,11 @@
             </span>
             <div class="task-actions">
                 @if($task->start_date || $task->deadline)
-                    <span class="deadline-badge">
+                    <span class="deadline-badge" style="{{ $deadlineBg }} padding: 3px 8px; border-radius: 12px; font-size: 12px;">
                         @if($task->start_date && $task->deadline)
-                            {{ $isOverdue ? '⚠️ ' : '📅 ' }}{{ \Carbon\Carbon::parse($task->start_date)->format('d M') }} - {{ \Carbon\Carbon::parse($task->deadline)->format('d M Y') }}
+                            {{ $deadlineIcon }}{{ \Carbon\Carbon::parse($task->start_date)->format('d M') }} - {{ \Carbon\Carbon::parse($task->deadline)->format('d M Y') }}{{ $deadlineText }}
                         @elseif($task->deadline)
-                            {{ $isOverdue ? '⚠️ ' : '📅 ' }}{{ \Carbon\Carbon::parse($task->deadline)->format('d M Y') }}
+                            {{ $deadlineIcon }}{{ \Carbon\Carbon::parse($task->deadline)->format('d M Y') }}{{ $deadlineText }}
                         @else
                             📆 {{ \Carbon\Carbon::parse($task->start_date)->format('d M Y') }}
                         @endif

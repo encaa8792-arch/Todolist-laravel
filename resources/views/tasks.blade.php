@@ -1,5 +1,5 @@
 @extends('layouts.app')
-
+git int
 @section('title', 'Todo List')
 
 @section('content')
@@ -62,41 +62,15 @@
             <option value="Sekolah">📓 Sekolah</option>
         </select>
         <input name="task" required placeholder="Mau ngerjain apa hari ini?">
-        <div class="date-range-input">
-            <input type="date" name="start_date" class="deadline-input" placeholder="Mulai">
-            <span style="color: #999; font-size: 12px;">→</span>
-            <input type="date" name="deadline" class="deadline-input" placeholder="Selesai">
-        </div>
+        <input type="date" name="deadline" class="deadline-input">
         <button type="submit">+ Tambah</button>
     </form>
 
     @foreach($tasks as $task)
         @php
-            $deadlineStatus = null;
-            $deadlineBg = '';
-            $deadlineIcon = '📅';
-            $deadlineText = '';
-            $isOverdue = false;
-            if ($task->deadline) {
-                $deadline = \Carbon\Carbon::parse($task->deadline)->startOfDay();
-                $today = \Carbon\Carbon::today();
-                if ($deadline->lt($today)) {
-                    $deadlineBg = 'background: #ffb3c1;';
-                    $deadlineIcon = '⚠️';
-                    $deadlineText = ' telat';
-                    $isOverdue = true;
-                } elseif ($deadline->eq($today)) {
-                    $deadlineBg = 'background: #fff3cd;';
-                    $deadlineIcon = '⚠️';
-                    $deadlineText = ' hari ini';
-                } else {
-                    $deadlineBg = 'background: #ffe5b4;';
-                    $deadlineIcon = '📅';
-                    $deadlineText = '';
-                }
-            }
+            $isOverdue = $task->deadline && !$task->is_done && strtotime($task->deadline) < strtotime('today');
         @endphp
-        <div class="task {{ $task->is_done ? 'done-box' : '' }} {{ $isOverdue ? 'overdue-border' : '' }}" data-task-id="{{ $task->id }}" style="{{ $isOverdue ? 'border-left: 4px solid #ff6b6b;' : '' }}">
+        <div class="task {{ $task->is_done ? 'done-box' : '' }} {{ $isOverdue ? 'overdue-task' : '' }}" data-task-id="{{ $task->id }}">
             <input type="checkbox" name="task_ids[]" value="{{ $task->id }}" class="bulk-checkbox-done" onchange="updateSelectedCount()" form="bulkForm" style="display:none;">
             <input type="checkbox" name="delete_ids[]" value="{{ $task->id }}" class="bulk-checkbox-delete" onchange="updateSelectedDeleteCount()" form="bulkDeleteForm" style="display:none;">
             <span class="{{ $task->is_done ? 'done' : '' }}">
@@ -106,15 +80,9 @@
                 {{ $task->task }}
             </span>
             <div class="task-actions">
-                @if($task->start_date || $task->deadline)
-                    <span class="deadline-badge" style="{{ $deadlineBg }} padding: 3px 8px; border-radius: 12px; font-size: 12px;">
-                        @if($task->start_date && $task->deadline)
-                            {{ $deadlineIcon }}{{ \Carbon\Carbon::parse($task->start_date)->format('d M') }} - {{ \Carbon\Carbon::parse($task->deadline)->format('d M Y') }}{{ $deadlineText }}
-                        @elseif($task->deadline)
-                            {{ $deadlineIcon }}{{ \Carbon\Carbon::parse($task->deadline)->format('d M Y') }}{{ $deadlineText }}
-                        @else
-                            📆 {{ \Carbon\Carbon::parse($task->start_date)->format('d M Y') }}
-                        @endif
+                @if($task->deadline)
+                    <span class="deadline-badge {{ $isOverdue ? 'overdue' : '' }}">
+                        {{ $isOverdue ? '⚠️ ' : '📅 ' }}{{ date('d M Y', strtotime($task->deadline)) }}
                     </span>
                 @endif
                 <form method="POST" action="/tasks/{{ $task->id }}/done" style="display:inline;">

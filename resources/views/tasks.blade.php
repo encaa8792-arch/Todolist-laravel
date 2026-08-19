@@ -1,193 +1,433 @@
 @extends('layouts.app')
 @section('title', 'Todo List')
 
+@section('styles')
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+    .page-header h1 {
+        margin: 0;
+        font-size: 24px;
+        color: #333;
+    }
+    .page-header h1 span {
+        color: #ff6b9d;
+    }
+    .add-form {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+        align-items: flex-end;
+        flex-wrap: wrap;
+        background: white;
+        padding: 20px;
+        border-radius: 16px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        border: 1px solid rgba(255,182,193,0.2);
+    }
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+    .form-group label {
+        font-size: 11px;
+        font-weight: 500;
+        color: #666;
+    }
+    .form-group select,
+    .form-group input {
+        padding: 10px 14px;
+        border: 2px solid #ffc2d1;
+        border-radius: 10px;
+        font-size: 13px;
+        font-family: 'Poppins', sans-serif;
+        outline: none;
+        transition: border-color 0.2s;
+        background: white;
+        height: 42px;
+    }
+    .form-group select:focus,
+    .form-group input:focus {
+        border-color: #ff6b9d;
+    }
+    .form-group select {
+        width: 140px;
+    }
+    .form-group input[type="text"] {
+        flex: 1;
+        min-width: 200px;
+    }
+    .form-group input[type="date"] {
+        width: 145px;
+    }
+    .btn-add {
+        background: #ff6b9d;
+        color: white;
+        border: none;
+        padding: 10px 24px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-weight: 600;
+        font-family: 'Poppins', sans-serif;
+        font-size: 13px;
+        transition: background 0.2s, transform 0.2s;
+        white-space: nowrap;
+        height: 42px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .btn-add:hover {
+        background: #e05585;
+        transform: translateY(-1px);
+    }
+    
+    .task-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    .task-card {
+        background: white;
+        border-radius: 12px;
+        padding: 14px 16px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        transition: 0.2s;
+        border: 1px solid rgba(255,182,193,0.2);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    .task-card:hover {
+        border-color: #ffc2d1;
+        box-shadow: 0 4px 12px rgba(255,107,157,0.1);
+        transform: translateX(3px);
+    }
+    .task-card.overdue {
+        background: #ffe5e5;
+        border-color: #ff6b6b;
+    }
+    .task-card.done {
+        background: #f8f8f8;
+        opacity: 0.75;
+    }
+    .task-content {
+        flex: 1;
+        min-width: 0;
+    }
+    .task-title {
+        font-size: 14px;
+        font-weight: 500;
+        color: #333;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    .task-card.done .task-title {
+        text-decoration: line-through;
+        color: #9ca3af;
+    }
+    .task-card.overdue .task-title {
+        color: #c0392b;
+    }
+    .task-dates {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        font-size: 11px;
+        margin-top: 6px;
+    }
+    .date-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 4px 10px;
+        border-radius: 8px;
+        font-weight: 500;
+    }
+    .date-badge.start {
+        background: rgba(46,204,113,0.15);
+        color: #27ae60;
+    }
+    .date-badge.end {
+        background: rgba(231,76,60,0.15);
+        color: #e74c3c;
+    }
+    .date-badge.overdue {
+        background: #ff6b6b;
+        color: white;
+    }
+    .task-actions {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-shrink: 0;
+    }
+    .task-actions form {
+        display: inline;
+        margin: 0;
+    }
+    .btn-action {
+        background: none;
+        border: none;
+        padding: 6px 10px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: all 0.2s;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .btn-action:hover {
+        transform: scale(1.1);
+    }
+    .btn-done-action {
+        background: #4CAF50;
+        color: white;
+    }
+    .btn-done-action:hover {
+        background: #43a047;
+    }
+    .btn-cancel-action {
+        background: #f39c12;
+        color: white;
+    }
+    .btn-cancel-action:hover {
+        background: #e08e0b;
+    }
+    .btn-edit-action {
+        background: #a0c4ff;
+        color: white;
+    }
+    .btn-edit-action:hover {
+        background: #7eb3f5;
+    }
+    .btn-delete-action {
+        background: #ff8fa3;
+        color: white;
+    }
+    .btn-delete-action:hover {
+        background: #e07088;
+    }
+    .tooltip {
+        position: relative;
+    }
+    .tooltip::after {
+        content: attr(data-tooltip);
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #333;
+        color: white;
+        padding: 4px 8px;
+        border-radius: 6px;
+        font-size: 11px;
+        white-space: nowrap;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s;
+        margin-bottom: 4px;
+        z-index: 10;
+    }
+    .tooltip:hover::after {
+        opacity: 1;
+    }
+    .empty-state {
+        text-align: center;
+        padding: 40px 20px;
+        color: #9ca3af;
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        border: 1px solid rgba(255,182,193,0.2);
+    }
+    .empty-state span {
+        font-size: 40px;
+        opacity: 0.5;
+    }
+    .empty-state p {
+        margin: 10px 0 0;
+        font-size: 14px;
+    }
+    .success {
+        background: #d4edda;
+        color: #155724;
+        padding: 12px 15px;
+        border-radius: 10px;
+        margin-bottom: 15px;
+        text-align: center;
+        font-size: 14px;
+    }
+
+    @media (max-width: 768px) {
+        .add-form {
+            flex-direction: column;
+            align-items: stretch;
+        }
+        .form-group select,
+        .form-group input[type="text"],
+        .form-group input[type="date"] {
+            width: 100%;
+        }
+        .btn-add {
+            width: 100%;
+            justify-content: center;
+        }
+        .page-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        .task-card {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .task-content {
+            width: 100%;
+        }
+        .task-actions {
+            width: 100%;
+            flex-wrap: wrap;
+        }
+        .task-actions > * {
+            flex: 1;
+        }
+        .task-actions form,
+        .task-actions a {
+            min-width: 70px;
+            text-align: center;
+            justify-content: center;
+        }
+    }
+@endsection
+
 @section('content')
-    <div class="header-row">
-        <h1 style="color: #ff6b9d;">✨Todo List✨</h1>
-        <div class="kebab-wrapper">
-            <button class="kebab-btn" type="button">
-                <span></span><span></span><span></span>
-            </button>
-            <div class="kebab-menu">
-                <button type="button" onclick="toggleBulkMode()">📋 Bulk Action</button>
-                <div class="menu-divider"></div>
-                <form method="POST" action="/tasks/mark-all-done">
-                    @csrf
-                    <button type="submit" onclick="return confirm('Tandai semua tugas sebagai selesai?')">✓ Done Semua</button>
-                </form>
-                <div class="menu-divider"></div>
-                <button type="button" onclick="toggleBulkDeleteMode()">🗑️ Hapus</button>
-            </div>
-        </div>
-    </div>
-
-    <form method="POST" action="/tasks/bulk-done" id="bulkForm" style="display:none; margin-bottom: 15px;">
-        @csrf
-        <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-            <label style="display: flex; align-items: center; gap: 5px;">
-                <input type="checkbox" id="selectAll" onchange="toggleSelectAll()"> Pilih Semua
-            </label>
-            <span id="selectedCount">0 dipilih</span>
-            <button type="submit" name="action" value="done" class="done-btn">✓ Done Terpilih</button>
-            <button type="submit" name="action" value="undo" class="done-btn" style="background: #f39c12;">↩️ Batal Terpilih</button>
-            <button type="button" onclick="cancelBulkMode()" class="cancel-btn">✕ Batal</button>
-        </div>
-    </form>
-
-    <form method="POST" action="/tasks/bulk-delete" id="bulkDeleteForm" style="display:none; margin-bottom: 15px;">
-        @csrf
-        @method('DELETE')
-        <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-            <label style="display: flex; align-items: center; gap: 5px;">
-                <input type="checkbox" id="selectAllDelete" onchange="toggleSelectAllDelete()"> Pilih Semua
-            </label>
-            <span id="selectedDeleteCount">0 dipilih</span>
-            <button type="submit" class="delete-btn" onclick="return confirm('Yakin mau hapus tugas terpilih? 🥺')">🗑️ Hapus Terpilih</button>
-            <button type="button" onclick="cancelBulkDeleteMode()" class="cancel-btn">✕ Batal</button>
-        </div>
-    </form>
-
     @if(session('success'))
         <div class="success">{{ session('success') }}</div>
     @endif
 
-    <form method="POST" action="/tasks" class="add">
+    <div class="page-header">
+        <h1><span>Todo</span> List</h1>
+    </div>
+
+    <form method="POST" action="/tasks" class="add-form">
         @csrf
-        <select name="category" required>
-            <option value="">Kategori</option>
-            <option value="Kerja">💼 Kerja</option>
-            <option value="Kuliah">📚 Kuliah</option>
-            <option value="Pribadi">💖 Pribadi</option>
-            <option value="Sekolah">📓 Sekolah</option>
-        </select>
-        <input name="task" required placeholder="Mau ngerjain apa hari ini?">
-        <input type="date" name="deadline" class="deadline-input">
-        <button type="submit">+ Tambah</button>
+        <div class="form-group">
+            <label>Kategori</label>
+            <select name="category" required>
+                <option value="">Pilih</option>
+                <option value="Kerja">💼 Kerja</option>
+                <option value="Kuliah">📚 Kuliah</option>
+                <option value="Pribadi">💖 Pribadi</option>
+                <option value="Sekolah">📓 Sekolah</option>
+            </select>
+        </div>
+        <div class="form-group" style="flex: 1;">
+            <label>Tugas</label>
+            <input name="task" required placeholder="Apa yang perlu dikerjakan?">
+        </div>
+        <div class="form-group">
+            <label>Mulai</label>
+            <input type="date" name="start_date" id="startDate">
+        </div>
+        <div class="form-group">
+            <label>Selesai</label>
+            <input type="date" name="deadline" id="deadline">
+        </div>
+        <button type="submit" class="btn-add">+ Tambah</button>
     </form>
 
-    @foreach($tasks as $task)
-        @php
-            $isOverdue = $task->deadline && !$task->is_done && strtotime($task->deadline) < strtotime('today');
-        @endphp
-        <div class="task {{ $task->is_done ? 'done-box' : '' }} {{ $isOverdue ? 'overdue-red' : '' }}" data-task-id="{{ $task->id }}">
-            <input type="checkbox" name="task_ids[]" value="{{ $task->id }}" class="bulk-checkbox-done" onchange="updateSelectedCount()" form="bulkForm" style="display:none;">
-            <input type="checkbox" name="delete_ids[]" value="{{ $task->id }}" class="bulk-checkbox-delete" onchange="updateSelectedDeleteCount()" form="bulkDeleteForm" style="display:none;">
-            <span class="{{ $task->is_done ? 'done' : '' }}">
-                @if($task->category)
-                    <span class="badge">{{ $task->category }}</span>
-                @endif
-                {{ $task->task }}
-            </span>
-            <div class="task-actions">
-                @if($task->start_date || $task->deadline)
-                    <span class="deadline-badge {{ $isOverdue ? 'overdue-red' : '' }}">
-                        @if($isOverdue && $task->start_date)
-                            ⚠️ TELAT - {{ date('d M', strtotime($task->start_date)) }} - {{ date('d M Y', strtotime($task->deadline)) }}
-                        @elseif($isOverdue)
-                            ⚠️ TELAT - {{ date('d M Y', strtotime($task->deadline)) }}
-                        @elseif($task->start_date && $task->deadline)
-                            📅 {{ date('d M', strtotime($task->start_date)) }} - {{ date('d M Y', strtotime($task->deadline)) }}
-                        @elseif($task->deadline)
-                            📅 {{ date('d M Y', strtotime($task->deadline)) }}
-                        @elseif($task->start_date)
-                            ▶️ {{ date('d M Y', strtotime($task->start_date)) }}
+    <div class="task-list">
+        @forelse($tasks as $task)
+            @php
+                $isOverdue = $task->deadline && !$task->is_done && strtotime($task->deadline) < strtotime('today');
+            @endphp
+            <div class="task-card {{ $task->is_done ? 'done' : '' }} {{ $isOverdue ? 'overdue' : '' }}" data-task-id="{{ $task->id }}">
+                <div class="task-content">
+                    <div class="task-title">
+                        @if($task->category)
+                            <span class="badge">{{ $task->category }}</span>
                         @endif
-                    </span>
-                @endif
-                <form method="POST" action="/tasks/{{ $task->id }}/done" style="display:inline;">
-                    @csrf
-                    <button type="submit" class="done-btn {{ $task->is_done ? 'cancel' : '' }}">
-                        {{ $task->is_done ? '↩️ Batal' : '✓ Done' }}
-                    </button>
-                </form>
-                <a href="/tasks/{{ $task->id }}/edit" class="edit-btn">✏️</a>
-                <form method="POST" action="/tasks/{{ $task->id }}" style="display:inline;">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="delete-btn" onclick="return confirm('Yakin mau hapus? 🥺')">Hapus</button>
-                </form>
+                        {{ $task->task }}
+                    </div>
+                    <div class="task-dates">
+                        @if($task->start_date)
+                            <span class="date-badge start">
+                                🟢 Mulai: {{ date('d M Y', strtotime($task->start_date)) }}
+                            </span>
+                        @endif
+                        @if($task->deadline)
+                            <span class="date-badge end {{ $isOverdue ? 'overdue' : '' }}">
+                                🔴 Selesai: {{ date('d M Y', strtotime($task->deadline)) }}
+                            </span>
+                        @endif
+                    </div>
+                </div>
+                <div class="task-actions">
+                    <form method="POST" action="/tasks/{{ $task->id }}/done" style="display: inline-block; margin: 0;">
+                        @csrf
+                        <button type="submit" class="btn-action {{ $task->is_done ? 'btn-cancel-action' : 'btn-done-action' }} tooltip" data-tooltip="{{ $task->is_done ? 'Batalkan' : 'Tandai Selesai' }}" title="{{ $task->is_done ? 'Batalkan' : 'Tandai Selesai' }}">
+                            {{ $task->is_done ? '↩' : '✓' }}
+                        </button>
+                    </form>
+                    <a href="/tasks/{{ $task->id }}/edit" class="btn-action btn-edit-action tooltip" data-tooltip="Edit Tugas" title="Edit Tugas">✏</a>
+                    <form method="POST" action="/tasks/{{ $task->id }}" style="display: inline-block; margin: 0;">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn-action btn-delete-action tooltip" data-tooltip="Hapus Tugas" title="Hapus Tugas" onclick="return confirm('Yakin mau hapus?')">🗑</button>
+                    </form>
+                </div>
             </div>
-        </div>
-    @endforeach
+        @empty
+            <div class="empty-state">
+                <span>✨</span>
+                <p>Tidak ada tugas. Tambahkan tugas baru!</p>
+            </div>
+        @endforelse
+    </div>
 
     @if($tasks->hasPages())
-        {{ $tasks->links('vendor.pagination.default') }}
+        <div style="margin-top: 15px;">
+            {{ $tasks->links('vendor.pagination.default') }}
+        </div>
     @endif
 
     <script>
-        let bulkMode = false;
-        let bulkDeleteMode = false;
-
-        function closeKebabMenu() {
-            document.querySelectorAll('.kebab-menu.show').forEach(function(menu) {
-                menu.classList.remove('show');
-            });
-        }
-
-        function toggleBulkMode() {
-            closeKebabMenu();
-            cancelBulkDeleteMode();
-            bulkMode = !bulkMode;
-            const form = document.getElementById('bulkForm');
-            const checkboxes = document.querySelectorAll('.bulk-checkbox-done');
-
-            form.style.display = bulkMode ? 'flex' : 'none';
-            checkboxes.forEach(cb => cb.style.display = bulkMode ? 'inline' : 'none');
-
-            if (!bulkMode) {
-                checkboxes.forEach(cb => cb.checked = false);
-                document.getElementById('selectAll').checked = false;
-                updateSelectedCount();
+        document.getElementById('deadline').addEventListener('change', function() {
+            const startDate = document.getElementById('startDate');
+            if (startDate.value && this.value) {
+                if (new Date(startDate.value) > new Date(this.value)) {
+                    alert('Tanggal mulai tidak boleh lebih besar dari tanggal selesai!');
+                    startDate.value = this.value;
+                }
             }
-        }
-
-        function toggleSelectAll() {
-            const selectAll = document.getElementById('selectAll');
-            const checkboxes = document.querySelectorAll('.bulk-checkbox-done');
-            checkboxes.forEach(cb => cb.checked = selectAll.checked);
-            updateSelectedCount();
-        }
-
-        function updateSelectedCount() {
-            const checkboxes = document.querySelectorAll('.bulk-checkbox-done:checked');
-            document.getElementById('selectedCount').textContent = checkboxes.length + ' dipilih';
-        }
-
-        function cancelBulkMode() {
-            if (bulkMode) toggleBulkMode();
-        }
-
-        function toggleBulkDeleteMode() {
-            closeKebabMenu();
-            cancelBulkMode();
-            bulkDeleteMode = !bulkDeleteMode;
-            const form = document.getElementById('bulkDeleteForm');
-            const checkboxes = document.querySelectorAll('.bulk-checkbox-delete');
-
-            form.style.display = bulkDeleteMode ? 'flex' : 'none';
-            checkboxes.forEach(cb => cb.style.display = bulkDeleteMode ? 'inline' : 'none');
-
-            if (!bulkDeleteMode) {
-                checkboxes.forEach(cb => cb.checked = false);
-                document.getElementById('selectAllDelete').checked = false;
-                updateSelectedDeleteCount();
+            if (this.value) {
+                startDate.max = this.value;
+            } else {
+                startDate.removeAttribute('max');
             }
-        }
+        });
 
-        function toggleSelectAllDelete() {
-            const selectAll = document.getElementById('selectAllDelete');
-            const checkboxes = document.querySelectorAll('.bulk-checkbox-delete');
-            checkboxes.forEach(cb => cb.checked = selectAll.checked);
-            updateSelectedDeleteCount();
-        }
-
-        function updateSelectedDeleteCount() {
-            const checkboxes = document.querySelectorAll('.bulk-checkbox-delete:checked');
-            document.getElementById('selectedDeleteCount').textContent = checkboxes.length + ' dipilih';
-        }
-
-        function cancelBulkDeleteMode() {
-            if (bulkDeleteMode) toggleBulkDeleteMode();
-        }
+        document.getElementById('startDate').addEventListener('change', function() {
+            const deadline = document.getElementById('deadline');
+            if (this.value && deadline.value) {
+                if (new Date(this.value) > new Date(deadline.value)) {
+                    alert('Tanggal mulai tidak boleh lebih besar dari tanggal selesai!');
+                    deadline.value = this.value;
+                }
+            }
+            if (this.value) {
+                deadline.min = this.value;
+            } else {
+                deadline.removeAttribute('min');
+            }
+        });
     </script>
 @endsection

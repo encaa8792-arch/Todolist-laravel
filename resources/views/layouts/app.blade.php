@@ -17,20 +17,150 @@
         background-position: center;
         background-attachment: fixed;
         font-family: 'Poppins', sans-serif;
-        display: flex;
-        justify-content: center;
-        align-items: center;
         min-height: 100vh;
         margin: 0;
-        padding: 20px;
+        padding: 0;
+        padding-top: 60px;
+      }
+      .layout-wrapper {
+        display: flex;
+        min-height: calc(100vh - 60px);
+      }
+      .sidebar {
+        position: fixed;
+        left: 0;
+        top: 60px;
+        bottom: 0;
+        width: 240px;
+        background: white;
+        box-shadow: 2px 0 15px rgba(0,0,0,0.08);
+        transition: width 0.3s ease;
+        z-index: 999;
+        overflow: hidden;
+      }
+      .sidebar.collapsed {
+        width: 70px;
+      }
+      .sidebar-header {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        padding: 12px 15px;
+        border-bottom: 1px solid #f0f0f0;
+      }
+      .toggle-btn {
+        background: #fff0f5;
+        border: none;
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+        font-size: 18px;
+      }
+      .toggle-btn:hover {
+        background: #ff6b9d;
+        color: white;
+      }
+      .sidebar.collapsed .toggle-btn {
+        margin: 0 auto;
+      }
+      .sidebar-menu {
+        padding: 15px 0;
+      }
+      .menu-item {
+        display: flex;
+        align-items: center;
+        padding: 12px 20px;
+        color: #666;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+        transition: all 0.2s;
+        white-space: nowrap;
+        position: relative;
+      }
+      .menu-item:hover {
+        background: #fff0f5;
+        color: #ff6b9d;
+      }
+      .menu-item.active {
+        background: #ff6b9d;
+        color: white;
+      }
+      .menu-item .icon {
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        flex-shrink: 0;
+        margin-right: 12px;
+      }
+      .sidebar.collapsed .menu-item .icon {
+        margin-right: 0;
+      }
+      .menu-item .label {
+        transition: opacity 0.3s ease;
+      }
+      .sidebar.collapsed .menu-item .label {
+        opacity: 0;
+        pointer-events: none;
+      }
+      .menu-divider {
+        height: 1px;
+        background: #f0f0f0;
+        margin: 10px 20px;
+      }
+      .sidebar.collapsed .menu-divider {
+        margin: 10px 15px;
+      }
+      .tooltip {
+        position: absolute;
+        left: 75px;
+        background: #333;
+        color: white;
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-size: 12px;
+        white-space: nowrap;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s;
+        z-index: 1001;
+      }
+      .tooltip::before {
+        content: '';
+        position: absolute;
+        right: 100%;
+        top: 50%;
+        transform: translateY(-50%);
+        border: 6px solid transparent;
+        border-right-color: #333;
+      }
+      .sidebar.collapsed .menu-item:hover .tooltip {
+        opacity: 1;
+      }
+      .main-content {
+        flex: 1;
+        padding: 15px;
+        margin-left: 240px;
+        transition: margin-left 0.3s ease;
+      }
+      body.sidebar-collapsed .main-content {
+        margin-left: 70px;
       }
       .box {
         background: white;
-        padding: 30px;
-        border-radius: 20px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        padding: 20px;
+        border-radius: 16px;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.1);
         width: 100%;
-        max-width: 900px;
+        max-width: 95%;
       }
       h1 {
         text-align: center;
@@ -375,7 +505,7 @@
         left: 0;
         right: 0;
         background: white;
-        padding: 12px 30px;
+        padding: 8px 30px;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -390,7 +520,7 @@
       }
       .navbar-nav {
         display: flex;
-        gap: 8px;
+        gap: 6px;
         list-style: none;
         margin: 0;
         padding: 0;
@@ -398,11 +528,14 @@
       .navbar-nav a {
         color: #666;
         text-decoration: none;
-        padding: 8px 16px;
+        padding: 6px 14px;
         border-radius: 20px;
         font-size: 13px;
         font-weight: 500;
         transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
       .navbar-nav a:hover {
         background: #fff0f5;
@@ -411,9 +544,6 @@
       .navbar-nav a.active {
         background: #ff6b9d;
         color: white;
-      }
-      body {
-        padding-top: 80px;
       }
       .box-overlay {
         background: rgba(255,255,255,0.7);
@@ -525,18 +655,29 @@
         cursor: pointer;
       }
 
-      /* Responsive Styles */
       @media (max-width: 768px) {
         body {
           padding: 10px;
-          padding-top: 70px;
+          padding-top: 60px;
+        }
+        .sidebar {
+          transform: translateX(-100%);
+          width: 70px;
+        }
+        .sidebar.mobile-open {
+          transform: translateX(0);
+        }
+        body.sidebar-collapsed .main-content,
+        .main-content {
+          margin-left: 0;
         }
         .box {
-          padding: 20px 15px;
+          padding: 15px 12px;
           border-radius: 15px;
+          max-width: 98%;
         }
         .navbar {
-          padding: 10px 15px;
+          padding: 8px 15px;
         }
         .navbar-brand {
           font-size: 16px;
@@ -671,6 +812,19 @@
           padding: 20px 15px !important;
           width: 95% !important;
         }
+        .mobile-sidebar-overlay {
+          display: none;
+          position: fixed;
+          top: 60px;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: rgba(0,0,0,0.3);
+          z-index: 998;
+        }
+        .mobile-sidebar-overlay.show {
+          display: block;
+        }
       }
 
       @media (max-width: 480px) {
@@ -708,6 +862,15 @@
         flex-direction: column;
         gap: 4px;
       }
+      .guide-icon-btn span:hover {
+        background: #ff6b9d;
+        transform: scale(1.05);
+      }
+      .guide-icon-btn span {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
       .mobile-menu-btn span {
         display: block;
         width: 22px;
@@ -738,13 +901,69 @@
             <span></span>
         </button>
         <ul class="navbar-nav" id="navbarNav">
-            <li><a href="/dashboard" class="{{ request()->is('dashboard') ? 'active' : '' }}">Dashboard</a></li>
-            <li><a href="/tasks" class="{{ request()->is('tasks') ? 'active' : '' }}">Tugas</a></li>
-            <li><a href="/tasks/completed" class="{{ request()->is('tasks/completed') ? 'active' : '' }}">Selesai</a></li>
-            <li><a href="#" onclick="openBgModal(); return false;" title="Ganti Background">🎨</a></li>
-            <li><a href="#" onclick="openGuide(); return false;" title="Panduan">📖</a></li>
+            <li>
+                <a href="#" onclick="openBgModal(); return false;" title="Background" style="padding: 8px 12px;">🖼️</a>
+            </li>
+            <li>
+                <a href="#" onclick="openGuide(); return false;" title="Panduan" class="guide-icon-btn">
+                    <span style="display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; background: #fff0f5; border-radius: 50%; transition: all 0.2s;">📖</span>
+                </a>
+            </li>
         </ul>
     </nav>
+
+    <div class="mobile-sidebar-overlay" id="mobileOverlay" onclick="toggleMobileSidebar()"></div>
+
+    <div class="layout-wrapper">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <button class="toggle-btn" onclick="toggleSidebar()" title="Toggle Sidebar">
+                    <span id="toggleIcon">☰</span>
+                </button>
+            </div>
+            <nav class="sidebar-menu">
+                <a href="/dashboard" class="menu-item {{ request()->is('dashboard') ? 'active' : '' }}">
+                    <span class="icon">🏠</span>
+                    <span class="label">Dashboard</span>
+                    <span class="tooltip">Dashboard</span>
+                </a>
+                <a href="/tasks" class="menu-item {{ request()->is('tasks') ? 'active' : '' }}">
+                    <span class="icon">📋</span>
+                    <span class="label">Tugas</span>
+                    <span class="tooltip">Tugas</span>
+                </a>
+                <a href="/tasks/completed" class="menu-item {{ request()->is('tasks/completed') ? 'active' : '' }}">
+                    <span class="icon">✓</span>
+                    <span class="label">Selesai</span>
+                    <span class="tooltip">Selesai</span>
+                </a>
+                
+                <div class="menu-divider"></div>
+                
+                <a href="/categories" class="menu-item {{ request()->is('categories') ? 'active' : '' }}">
+                    <span class="icon">📁</span>
+                    <span class="label">Kategori</span>
+                    <span class="tooltip">Kategori</span>
+                </a>
+                <a href="/reports" class="menu-item {{ request()->is('reports') ? 'active' : '' }}">
+                    <span class="icon">📊</span>
+                    <span class="label">Laporan</span>
+                    <span class="tooltip">Laporan</span>
+                </a>
+                <a href="/settings" class="menu-item {{ request()->is('settings') ? 'active' : '' }}">
+                    <span class="icon">⚙️</span>
+                    <span class="label">Pengaturan</span>
+                    <span class="tooltip">Pengaturan</span>
+                </a>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <div class="box box-overlay @yield('box-class')">
+                @yield('content')
+            </div>
+        </main>
+    </div>
 
     <div id="guideModal" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.5); z-index:2000; justify-content:center; align-items:center;">
         <div style="background:white; border-radius:20px; padding:30px; max-width:550px; width:90%; max-height:80vh; overflow-y:auto; position:relative;">
@@ -801,7 +1020,65 @@
         </div>
     </div>
 
+    <div id="bgModal" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.5); z-index:2000; justify-content:center; align-items:center;">
+        <div style="background:white; border-radius:20px; padding:25px; max-width:400px; width:90%; position:relative;">
+            <button onclick="closeBgModal()" style="position:absolute; top:15px; right:15px; background:#ff6b9d; border:none; color:white; width:32px; height:32px; border-radius:50%; cursor:pointer; font-size:18px; display:flex; align-items:center; justify-content:center;">×</button>
+            <h3 style="color:#ff6b9d; margin:0 0 15px; text-align:center;">🖼️ Ganti Background</h3>
+            <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:10px;">
+                <div onclick="setBackground('/images/bg-tulip.jpg', 'tulip')" style="cursor:pointer; border-radius:12px; overflow:hidden; border:3px solid transparent; transition:0.2s;" class="bg-option" data-bg="tulip">
+                    <img src="https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=200&h=120&fit=crop" style="width:100%; height:80px; object-fit:cover;">
+                    <div style="text-align:center; padding:8px; font-size:12px; font-weight:500;">Tulip 🌷</div>
+                </div>
+                <div onclick="setBackground('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800', 'gunung')" style="cursor:pointer; border-radius:12px; overflow:hidden; border:3px solid transparent; transition:0.2s;" class="bg-option" data-bg="gunung">
+                    <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=200&h=120&fit=crop" style="width:100%; height:80px; object-fit:cover;">
+                    <div style="text-align:center; padding:8px; font-size:12px; font-weight:500;">Gunung 🏔️</div>
+                </div>
+                <div onclick="setBackground('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800', 'pantai')" style="cursor:pointer; border-radius:12px; overflow:hidden; border:3px solid transparent; transition:0.2s;" class="bg-option" data-bg="pantai">
+                    <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=200&h=120&fit=crop" style="width:100%; height:80px; object-fit:cover;">
+                    <div style="text-align:center; padding:8px; font-size:12px; font-weight:500;">Pantai 🏖️</div>
+                </div>
+                <div onclick="setBackground('https://images.unsplash.com/photo-1557683316-973673baf926?w=800', 'minimalis')" style="cursor:pointer; border-radius:12px; overflow:hidden; border:3px solid transparent; transition:0.2s;" class="bg-option" data-bg="minimalis">
+                    <img src="https://images.unsplash.com/photo-1557683316-973673baf926?w=200&h=120&fit=crop" style="width:100%; height:80px; object-fit:cover;">
+                    <div style="text-align:center; padding:8px; font-size:12px; font-weight:500;">Minimalis ✨</div>
+                </div>
+                <div onclick="document.getElementById('customBgInput').click()" style="cursor:pointer; border-radius:12px; overflow:hidden; border:3px solid #ff6b9d; transition:0.2s; display:flex; flex-direction:column; align-items:center; justify-content:center; background:#fff0f5; min-height:110px;" class="bg-option" data-bg="custom">
+                    <span style="font-size:28px;">📁</span>
+                    <div style="text-align:center; padding:8px; font-size:12px; font-weight:500;">Upload Foto</div>
+                </div>
+            </div>
+            <input type="file" id="customBgInput" accept=".jpg,.jpeg,.png,.webp" style="display:none;" onchange="handleCustomBgUpload(event)">
+            <div id="customBgActions" style="margin-top:10px; display:none;">
+                <button onclick="deleteCustomBg()" style="width:100%; background:#ff6b6b; color:white; border:none; padding:10px; border-radius:10px; cursor:pointer; font-size:13px; font-weight:500; font-family:'Poppins',sans-serif;">🗑️ Hapus Foto Custom</button>
+            </div>
+            <button onclick="resetBackground()" style="margin-top:10px; width:100%; background:#f0f0f0; color:#666; border:none; padding:10px; border-radius:10px; cursor:pointer; font-size:13px; font-weight:500; font-family:'Poppins',sans-serif;">🔄 Reset ke Default</button>
+        </div>
+    </div>
+    <style>
+        .bg-option:hover {
+            border-color: #ff6b9d !important;
+            transform: scale(1.02);
+        }
+        .bg-option.active {
+            border-color: #ff6b9d !important;
+        }
+    </style>
+
     <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const isCollapsed = sidebar.classList.toggle('collapsed');
+            document.body.classList.toggle('sidebar-collapsed', isCollapsed);
+            document.getElementById('toggleIcon').textContent = isCollapsed ? '☰' : '✕';
+            localStorage.setItem('sidebarCollapsed', isCollapsed);
+        }
+
+        function toggleMobileSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('mobileOverlay');
+            sidebar.classList.toggle('mobile-open');
+            overlay.classList.toggle('show');
+        }
+
         function openGuide() {
             document.getElementById('guideModal').style.display = 'flex';
             document.body.style.overflow = 'hidden';
@@ -868,6 +1145,12 @@
                     document.body.style.backgroundAttachment = 'fixed';
                 } catch(e) {}
             }
+            const sidebarCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+            if (sidebarCollapsed) {
+                document.getElementById('sidebar').classList.add('collapsed');
+                document.body.classList.add('sidebar-collapsed');
+                document.getElementById('toggleIcon').textContent = '☰';
+            }
         })();
         document.getElementById('guideModal').addEventListener('click', function(e) {
             if (e.target === this) closeGuide();
@@ -890,52 +1173,6 @@
             }
         });
     </script>
-
-    <div class="box box-overlay @yield('box-class')">
-        @yield('content')
-    </div>
-    <div id="bgModal" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.5); z-index:2000; justify-content:center; align-items:center;">
-        <div style="background:white; border-radius:20px; padding:25px; max-width:400px; width:90%; position:relative;">
-            <button onclick="closeBgModal()" style="position:absolute; top:15px; right:15px; background:#ff6b9d; border:none; color:white; width:32px; height:32px; border-radius:50%; cursor:pointer; font-size:18px; display:flex; align-items:center; justify-content:center;">×</button>
-            <h3 style="color:#ff6b9d; margin:0 0 15px; text-align:center;">🎨 Ganti Background</h3>
-            <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:10px;">
-                <div onclick="setBackground('/images/bg-tulip.jpg', 'tulip')" style="cursor:pointer; border-radius:12px; overflow:hidden; border:3px solid transparent; transition:0.2s;" class="bg-option" data-bg="tulip">
-                    <img src="https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=200&h=120&fit=crop" style="width:100%; height:80px; object-fit:cover;">
-                    <div style="text-align:center; padding:8px; font-size:12px; font-weight:500;">Tulip 🌷</div>
-                </div>
-                <div onclick="setBackground('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800', 'gunung')" style="cursor:pointer; border-radius:12px; overflow:hidden; border:3px solid transparent; transition:0.2s;" class="bg-option" data-bg="gunung">
-                    <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=200&h=120&fit=crop" style="width:100%; height:80px; object-fit:cover;">
-                    <div style="text-align:center; padding:8px; font-size:12px; font-weight:500;">Gunung 🏔️</div>
-                </div>
-                <div onclick="setBackground('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800', 'pantai')" style="cursor:pointer; border-radius:12px; overflow:hidden; border:3px solid transparent; transition:0.2s;" class="bg-option" data-bg="pantai">
-                    <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=200&h=120&fit=crop" style="width:100%; height:80px; object-fit:cover;">
-                    <div style="text-align:center; padding:8px; font-size:12px; font-weight:500;">Pantai 🏖️</div>
-                </div>
-                <div onclick="setBackground('https://images.unsplash.com/photo-1557683316-973673baf926?w=800', 'minimalis')" style="cursor:pointer; border-radius:12px; overflow:hidden; border:3px solid transparent; transition:0.2s;" class="bg-option" data-bg="minimalis">
-                    <img src="https://images.unsplash.com/photo-1557683316-973673baf926?w=200&h=120&fit=crop" style="width:100%; height:80px; object-fit:cover;">
-                    <div style="text-align:center; padding:8px; font-size:12px; font-weight:500;">Minimalis ✨</div>
-                </div>
-                <div onclick="document.getElementById('customBgInput').click()" style="cursor:pointer; border-radius:12px; overflow:hidden; border:3px solid #ff6b9d; transition:0.2s; display:flex; flex-direction:column; align-items:center; justify-content:center; background:#fff0f5; min-height:110px;" class="bg-option" data-bg="custom">
-                    <span style="font-size:28px;">📁</span>
-                    <div style="text-align:center; padding:8px; font-size:12px; font-weight:500;">Upload Foto</div>
-                </div>
-            </div>
-            <input type="file" id="customBgInput" accept=".jpg,.jpeg,.png,.webp" style="display:none;" onchange="handleCustomBgUpload(event)">
-            <div id="customBgActions" style="margin-top:10px; display:none;">
-                <button onclick="deleteCustomBg()" style="width:100%; background:#ff6b6b; color:white; border:none; padding:10px; border-radius:10px; cursor:pointer; font-size:13px; font-weight:500; font-family:'Poppins',sans-serif;">🗑️ Hapus Foto Custom</button>
-            </div>
-            <button onclick="resetBackground()" style="margin-top:10px; width:100%; background:#f0f0f0; color:#666; border:none; padding:10px; border-radius:10px; cursor:pointer; font-size:13px; font-weight:500; font-family:'Poppins',sans-serif;">🔄 Reset ke Default</button>
-        </div>
-    </div>
-    <style>
-        .bg-option:hover {
-            border-color: #ff6b9d !important;
-            transform: scale(1.02);
-        }
-        .bg-option.active {
-            border-color: #ff6b9d !important;
-        }
-    </style>
     <script>
         document.addEventListener('click', function(e) {
             document.querySelectorAll('.kebab-menu.show').forEach(function(menu) {

@@ -92,8 +92,15 @@ class TaskController extends Controller
             'task' => 'required|string|max:255',
             'category' => 'nullable|string|max:50',
             'start_date' => 'nullable|date',
-            'deadline' => 'nullable|date|after_or_equal:start_date',
+            'deadline' => 'nullable|date',
         ]);
+        
+        if ($validated['start_date'] && $validated['deadline']) {
+            if (strtotime($validated['start_date']) > strtotime($validated['deadline'])) {
+                return back()->withErrors(['deadline' => 'Tanggal selesai harus setelah tanggal mulai'])->withInput();
+            }
+        }
+        
         Task::create($validated);
         return redirect('/tasks')->with('success', 'Tugas berhasil ditambah! ✨');
     }
@@ -110,8 +117,15 @@ class TaskController extends Controller
             'task' => 'required|string|max:255',
             'category' => 'nullable|string|max:50',
             'start_date' => 'nullable|date',
-            'deadline' => 'nullable|date|after_or_equal:start_date',
+            'deadline' => 'nullable|date',
         ]);
+        
+        if ($validated['start_date'] && $validated['deadline']) {
+            if (strtotime($validated['start_date']) > strtotime($validated['deadline'])) {
+                return back()->withErrors(['deadline' => 'Tanggal selesai harus setelah tanggal mulai'])->withInput();
+            }
+        }
+        
         $task = Task::findOrFail($id);
         $task->update($validated);
         return redirect('/tasks')->with('success', 'Tugas berhasil diupdate! ✏️');

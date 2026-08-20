@@ -1,7 +1,6 @@
-@extends('layouts.app')
-@section('title', 'Todo List')
+<?php $__env->startSection('title', 'Todo List'); ?>
 
-@section('styles')
+<?php $__env->startSection('styles'); ?>
     .page-header {
         display: flex;
         justify-content: space-between;
@@ -306,19 +305,19 @@
             justify-content: center;
         }
     }
-@endsection
+<?php $__env->stopSection(); ?>
 
-@section('content')
-    @if(session('success'))
-        <div class="success">{{ session('success') }}</div>
-    @endif
+<?php $__env->startSection('content'); ?>
+    <?php if(session('success')): ?>
+        <div class="success"><?php echo e(session('success')); ?></div>
+    <?php endif; ?>
 
     <div class="page-header">
         <h1><span>Todo</span> List</h1>
     </div>
 
     <form method="POST" action="/tasks" class="add-form">
-        @csrf
+        <?php echo csrf_field(); ?>
         <div class="form-group">
             <label>Kategori</label>
             <select name="category" required>
@@ -345,59 +344,63 @@
     </form>
 
     <div class="task-list">
-        @forelse($tasks as $task)
-            @php
+        <?php $__empty_1 = true; $__currentLoopData = $tasks; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $task): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+            <?php
                 $isOverdue = $task->deadline && !$task->is_done && strtotime($task->deadline) < strtotime('today');
-            @endphp
-            <div class="task-card {{ $task->is_done ? 'done' : '' }} {{ $isOverdue ? 'overdue' : '' }}" data-task-id="{{ $task->id }}">
+            ?>
+            <div class="task-card <?php echo e($task->is_done ? 'done' : ''); ?> <?php echo e($isOverdue ? 'overdue' : ''); ?>" data-task-id="<?php echo e($task->id); ?>">
                 <div class="task-content">
                     <div class="task-title">
-                        @if($task->category)
-                            <span class="badge">{{ $task->category }}</span>
-                        @endif
-                        {{ $task->task }}
+                        <?php if($task->category): ?>
+                            <span class="badge"><?php echo e($task->category); ?></span>
+                        <?php endif; ?>
+                        <?php echo e($task->task); ?>
+
                     </div>
                     <div class="task-dates">
-                        @if($task->start_date)
+                        <?php if($task->start_date): ?>
                             <span class="date-badge start">
-                                🟢 Mulai: {{ date('d M Y', strtotime($task->start_date)) }}
+                                🟢 Mulai: <?php echo e(date('d M Y', strtotime($task->start_date))); ?>
+
                             </span>
-                        @endif
-                        @if($task->deadline)
-                            <span class="date-badge end {{ $isOverdue ? 'overdue' : '' }}">
-                                🔴 Selesai: {{ date('d M Y', strtotime($task->deadline)) }}
+                        <?php endif; ?>
+                        <?php if($task->deadline): ?>
+                            <span class="date-badge end <?php echo e($isOverdue ? 'overdue' : ''); ?>">
+                                🔴 Selesai: <?php echo e(date('d M Y', strtotime($task->deadline))); ?>
+
                             </span>
-                        @endif
+                        <?php endif; ?>
                     </div>
                 </div>
                 <div class="task-actions">
-                    <form method="POST" action="/tasks/{{ $task->id }}/done" style="display: inline-block; margin: 0;">
-                        @csrf
-                        <button type="submit" class="btn-action {{ $task->is_done ? 'btn-cancel-action' : 'btn-done-action' }} tooltip" data-tooltip="{{ $task->is_done ? 'Batalkan' : 'Tandai Selesai' }}" title="{{ $task->is_done ? 'Batalkan' : 'Tandai Selesai' }}">
+                    <form method="POST" action="/tasks/<?php echo e($task->id); ?>/done" style="display: inline-block; margin: 0;">
+                        <?php echo csrf_field(); ?>
+                        <button type="submit" class="btn-action <?php echo e($task->is_done ? 'btn-cancel-action' : 'btn-done-action'); ?> tooltip" data-tooltip="<?php echo e($task->is_done ? 'Batalkan' : 'Tandai Selesai'); ?>" title="<?php echo e($task->is_done ? 'Batalkan' : 'Tandai Selesai'); ?>">
                             Done
                         </button>
                     </form>
-                    <a href="/tasks/{{ $task->id }}/edit" class="btn-action btn-edit-action tooltip" data-tooltip="Edit Tugas" title="Edit Tugas">Edit</a>
-                    <form method="POST" action="/tasks/{{ $task->id }}" style="display: inline-block; margin: 0;">
-                        @csrf
-                        @method('DELETE')
+                    <a href="/tasks/<?php echo e($task->id); ?>/edit" class="btn-action btn-edit-action tooltip" data-tooltip="Edit Tugas" title="Edit Tugas">Edit</a>
+                    <form method="POST" action="/tasks/<?php echo e($task->id); ?>" style="display: inline-block; margin: 0;">
+                        <?php echo csrf_field(); ?>
+                        <?php echo method_field('DELETE'); ?>
                         <button type="submit" class="btn-action btn-delete-action tooltip" data-tooltip="Hapus Tugas" title="Hapus Tugas" onclick="return confirm('Yakin mau hapus?')">Hapus</button>
                     </form>
                 </div>
             </div>
-        @empty
+        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
             <div class="empty-state">
                 <span>✨</span>
                 <p>Tidak ada tugas. Tambahkan tugas baru!</p>
             </div>
-        @endforelse
+        <?php endif; ?>
     </div>
 
-    @if($tasks->hasPages())
+    <?php if($tasks->hasPages()): ?>
         <div style="margin-top: 15px;">
-            {{ $tasks->links('vendor.pagination.default') }}
+            <?php echo e($tasks->links('vendor.pagination.default')); ?>
+
         </div>
-    @endif
+    <?php endif; ?>
 
     <script>
         document.getElementById('deadline').addEventListener('change', function() {
@@ -430,4 +433,6 @@
             }
         });
     </script>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\laragon\www\Todolist\resources\views/tasks.blade.php ENDPATH**/ ?>

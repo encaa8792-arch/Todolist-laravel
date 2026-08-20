@@ -2,402 +2,394 @@
 @section('title', 'Todo List')
 
 @section('styles')
-    .page-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 20px;
+    .todo-container {
+        background: rgba(255,255,255,0.95);
+        border-radius: 20px;
+        padding: 24px;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.08);
     }
-    .page-header h1 {
-        margin: 0;
-        font-size: 24px;
+    .todo-header {
+        text-align: center;
+        margin-bottom: 24px;
+    }
+    .todo-header h1 {
+        font-size: 26px;
+        font-weight: 700;
         color: #333;
+        margin: 0;
     }
-    .page-header h1 span {
+    .todo-header h1 span {
         color: #ff6b9d;
     }
-    .add-form {
+    .todo-form {
         display: flex;
         gap: 10px;
         margin-bottom: 20px;
         align-items: flex-end;
         flex-wrap: wrap;
-        background: white;
-        padding: 20px;
-        border-radius: 16px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        border: 1px solid rgba(255,182,193,0.2);
     }
-    .form-group {
+    .todo-form .form-group {
         display: flex;
         flex-direction: column;
         gap: 4px;
     }
-    .form-group label {
+    .todo-form label {
         font-size: 11px;
-        font-weight: 500;
-        color: #666;
+        font-weight: 600;
+        color: #888;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
     }
-    .form-group select,
-    .form-group input {
+    .todo-form select,
+    .todo-form input {
         padding: 10px 14px;
-        border: 2px solid #ffc2d1;
+        border: 2px solid #f0f0f0;
         border-radius: 10px;
         font-size: 13px;
         font-family: 'Poppins', sans-serif;
         outline: none;
-        transition: border-color 0.2s;
-        background: white;
-        height: 42px;
+        transition: all 0.2s;
+        background: #fafafa;
     }
-    .form-group select:focus,
-    .form-group input:focus {
+    .todo-form select:focus,
+    .todo-form input:focus {
         border-color: #ff6b9d;
+        background: white;
     }
-    .form-group select {
+    .todo-form select {
+        width: 130px;
+    }
+    .todo-form input[type="text"] {
+        flex: 1;
+        min-width: 180px;
+    }
+    .todo-form input[type="date"] {
         width: 140px;
     }
-    .form-group input[type="text"] {
-        flex: 1;
-        min-width: 200px;
-    }
-    .form-group input[type="date"] {
-        width: 145px;
-    }
-    .btn-add {
-        background: #ff6b9d;
+    .btn-tambah {
+        background: linear-gradient(135deg, #ff6b9d, #ff8fa3);
         color: white;
         border: none;
-        padding: 10px 24px;
+        padding: 10px 22px;
         border-radius: 10px;
         cursor: pointer;
         font-weight: 600;
         font-family: 'Poppins', sans-serif;
         font-size: 13px;
-        transition: background 0.2s, transform 0.2s;
+        transition: all 0.2s;
         white-space: nowrap;
         height: 42px;
         display: flex;
         align-items: center;
         gap: 6px;
+        box-shadow: 0 4px 12px rgba(255,107,157,0.3);
     }
-    .btn-add:hover {
-        background: #e05585;
-        transform: translateY(-1px);
+    .btn-tambah:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(255,107,157,0.4);
     }
-    
     .task-list {
         display: flex;
         flex-direction: column;
         gap: 10px;
     }
-    .task-card {
-        background: white;
-        border-radius: 12px;
-        padding: 14px 16px;
+    .task-item {
         display: flex;
         align-items: center;
-        gap: 12px;
-        transition: 0.2s;
-        border: 1px solid rgba(255,182,193,0.2);
-        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        justify-content: space-between;
+        gap: 16px;
+        padding: 14px 18px;
+        background: white;
+        border-radius: 12px;
+        border: 1px solid #f0f0f0;
+        transition: all 0.2s;
     }
-    .task-card:hover {
+    .task-item:hover {
         border-color: #ffc2d1;
-        box-shadow: 0 4px 12px rgba(255,107,157,0.1);
-        transform: translateX(3px);
+        box-shadow: 0 4px 16px rgba(255,107,157,0.1);
+        transform: translateX(4px);
     }
-    .task-card.overdue {
-        background: #ffe5e5;
-        border-color: #ff6b6b;
-    }
-    .task-card.done {
+    .task-item.done {
         background: #f8f8f8;
-        opacity: 0.75;
+        opacity: 0.7;
     }
-    .task-content {
+    .task-item.done .task-name {
+        text-decoration: line-through;
+        color: #aaa;
+    }
+    .task-item.overdue {
+        background: #fff5f5;
+        border-color: #ffcdd2;
+    }
+    .task-info {
         flex: 1;
         min-width: 0;
     }
-    .task-title {
+    .task-top {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+    .task-category {
+        background: linear-gradient(135deg, #a0c4ff, #c8d8ff);
+        color: white;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+    .task-name {
         font-size: 14px;
         font-weight: 500;
         color: #333;
-        display: flex;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 8px;
     }
-    .task-card.done .task-title {
-        text-decoration: line-through;
-        color: #9ca3af;
-    }
-    .task-card.overdue .task-title {
-        color: #c0392b;
+    .task-item.overdue .task-name {
+        color: #e74c3c;
     }
     .task-dates {
         display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        font-size: 11px;
+        gap: 12px;
         margin-top: 6px;
+        font-size: 11px;
+        color: #888;
     }
-    .date-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
-        padding: 4px 10px;
-        border-radius: 8px;
-        font-weight: 500;
-    }
-    .date-badge.start {
-        background: rgba(46,204,113,0.15);
-        color: #27ae60;
-    }
-    .date-badge.end {
-        background: rgba(231,76,60,0.15);
-        color: #e74c3c;
-    }
-    .date-badge.overdue {
-        background: #ff6b6b;
-        color: white;
-    }
-    .task-actions {
+    .task-date {
         display: flex;
         align-items: center;
+        gap: 4px;
+    }
+    .task-date.mulai {
+        color: #27ae60;
+    }
+    .task-date.selesai {
+        color: #e74c3c;
+    }
+    .task-date.selesai.overdue {
+        color: #c0392b;
+        font-weight: 600;
+    }
+    .task-btns {
+        display: flex;
         gap: 6px;
         flex-shrink: 0;
     }
-    .task-actions form {
-        display: inline;
-        margin: 0;
-    }
-    .btn-action {
-        background: none;
+    .btn-icon {
+        width: 36px;
+        height: 36px;
         border: none;
-        padding: 6px 10px;
-        border-radius: 8px;
+        border-radius: 10px;
         cursor: pointer;
-        font-size: 14px;
-        transition: all 0.2s;
-        display: inline-flex;
+        font-size: 15px;
+        display: flex;
         align-items: center;
         justify-content: center;
-    }
-    .btn-action:hover {
-        transform: scale(1.1);
-    }
-    .btn-done-action {
-        background: #4CAF50;
-        color: white;
-    }
-    .btn-done-action:hover {
-        background: #43a047;
-    }
-    .btn-cancel-action {
-        background: #f39c12;
-        color: white;
-    }
-    .btn-cancel-action:hover {
-        background: #e08e0b;
-    }
-    .btn-edit-action {
-        background: #a0c4ff;
-        color: white;
-    }
-    .btn-edit-action:hover {
-        background: #7eb3f5;
-    }
-    .btn-delete-action {
-        background: #ff8fa3;
-        color: white;
-    }
-    .btn-delete-action:hover {
-        background: #e07088;
-    }
-    .tooltip {
+        transition: all 0.2s;
         position: relative;
     }
-    .tooltip::after {
-        content: attr(data-tooltip);
+    .btn-icon:hover {
+        transform: scale(1.1);
+    }
+    .btn-icon.selesai {
+        background: #e8f5e9;
+        color: #4caf50;
+    }
+    .btn-icon.selesai:hover {
+        background: #4caf50;
+        color: white;
+    }
+    .btn-icon.batal {
+        background: #fff3e0;
+        color: #ff9800;
+    }
+    .btn-icon.batal:hover {
+        background: #ff9800;
+        color: white;
+    }
+    .btn-icon.edit {
+        background: #e3f2fd;
+        color: #2196f3;
+    }
+    .btn-icon.edit:hover {
+        background: #2196f3;
+        color: white;
+    }
+    .btn-icon.hapus {
+        background: #fce4ec;
+        color: #e91e63;
+    }
+    .btn-icon.hapus:hover {
+        background: #e91e63;
+        color: white;
+    }
+    .btn-icon::after {
+        content: attr(data-tip);
         position: absolute;
-        bottom: 100%;
+        bottom: calc(100% + 8px);
         left: 50%;
         transform: translateX(-50%);
         background: #333;
         color: white;
-        padding: 4px 8px;
+        padding: 5px 10px;
         border-radius: 6px;
         font-size: 11px;
         white-space: nowrap;
         opacity: 0;
         pointer-events: none;
         transition: opacity 0.2s;
-        margin-bottom: 4px;
-        z-index: 10;
     }
-    .tooltip:hover::after {
+    .btn-icon:hover::after {
         opacity: 1;
     }
     .empty-state {
         text-align: center;
-        padding: 40px 20px;
-        color: #9ca3af;
-        background: white;
-        border-radius: 16px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        border: 1px solid rgba(255,182,193,0.2);
+        padding: 50px 20px;
+        color: #bbb;
     }
     .empty-state span {
-        font-size: 40px;
-        opacity: 0.5;
+        font-size: 50px;
+        display: block;
+        margin-bottom: 10px;
     }
     .empty-state p {
-        margin: 10px 0 0;
         font-size: 14px;
+        margin: 0;
     }
-    .success {
-        background: #d4edda;
+    .success-msg {
+        background: linear-gradient(135deg, #d4edda, #c3e6cb);
         color: #155724;
-        padding: 12px 15px;
+        padding: 12px 18px;
         border-radius: 10px;
-        margin-bottom: 15px;
+        margin-bottom: 16px;
         text-align: center;
-        font-size: 14px;
+        font-size: 13px;
+        font-weight: 500;
     }
-
     @media (max-width: 768px) {
-        .add-form {
+        .todo-form {
             flex-direction: column;
             align-items: stretch;
         }
-        .form-group select,
-        .form-group input[type="text"],
-        .form-group input[type="date"] {
+        .todo-form select,
+        .todo-form input[type="text"],
+        .todo-form input[type="date"] {
             width: 100%;
         }
-        .btn-add {
+        .btn-tambah {
             width: 100%;
             justify-content: center;
         }
-        .page-header {
+        .task-item {
             flex-direction: column;
             align-items: flex-start;
-            gap: 10px;
+            gap: 12px;
         }
-        .task-card {
-            flex-direction: column;
-            align-items: flex-start;
-        }
-        .task-content {
+        .task-info {
             width: 100%;
         }
-        .task-actions {
+        .task-btns {
             width: 100%;
+            justify-content: flex-end;
+        }
+        .task-dates {
             flex-wrap: wrap;
-        }
-        .task-actions > * {
-            flex: 1;
-        }
-        .task-actions form,
-        .task-actions a {
-            min-width: 70px;
-            text-align: center;
-            justify-content: center;
         }
     }
 @endsection
 
 @section('content')
     @if(session('success'))
-        <div class="success">{{ session('success') }}</div>
+        <div class="success-msg">{{ session('success') }}</div>
     @endif
 
-    <div class="page-header">
-        <h1><span>Todo</span> List</h1>
-    </div>
+    <div class="todo-container">
+        <div class="todo-header">
+            <h1><span>Todo</span> List</h1>
+        </div>
 
-    <form method="POST" action="/tasks" class="add-form">
-        @csrf
-        <div class="form-group">
-            <label>Kategori</label>
-            <select name="category" required>
-                <option value="">Pilih</option>
-                <option value="Kerja">💼 Kerja</option>
-                <option value="Kuliah">📚 Kuliah</option>
-                <option value="Pribadi">💖 Pribadi</option>
-                <option value="Sekolah">📓 Sekolah</option>
-            </select>
-        </div>
-        <div class="form-group" style="flex: 1;">
-            <label>Tugas</label>
-            <input name="task" required placeholder="Apa yang perlu dikerjakan?">
-        </div>
-        <div class="form-group">
-            <label>Mulai</label>
-            <input type="date" name="start_date" id="startDate">
-        </div>
-        <div class="form-group">
-            <label>Selesai</label>
-            <input type="date" name="deadline" id="deadline">
-        </div>
-        <button type="submit" class="btn-add">+ Tambah</button>
-    </form>
+        <form method="POST" action="/tasks" class="todo-form">
+            @csrf
+            <div class="form-group">
+                <label>Kategori</label>
+                <select name="category" required>
+                    <option value="">Pilih</option>
+                    <option value="Kerja">💼 Kerja</option>
+                    <option value="Kuliah">📚 Kuliah</option>
+                    <option value="Pribadi">💖 Pribadi</option>
+                    <option value="Sekolah">📓 Sekolah</option>
+                </select>
+            </div>
+            <div class="form-group" style="flex: 1;">
+                <label>Tugas</label>
+                <input name="task" required placeholder="Apa yang perlu dikerjakan?">
+            </div>
+            <div class="form-group">
+                <label>Mulai</label>
+                <input type="date" name="start_date" id="startDate">
+            </div>
+            <div class="form-group">
+                <label>Selesai</label>
+                <input type="date" name="deadline" id="deadline">
+            </div>
+            <button type="submit" class="btn-tambah">+ Tambah</button>
+        </form>
 
-    <div class="task-list">
-        @forelse($tasks as $task)
-            @php
-                $isOverdue = $task->deadline && !$task->is_done && strtotime($task->deadline) < strtotime('today');
-            @endphp
-            <div class="task-card {{ $task->is_done ? 'done' : '' }} {{ $isOverdue ? 'overdue' : '' }}" data-task-id="{{ $task->id }}">
-                <div class="task-content">
-                    <div class="task-title">
-                        @if($task->category)
-                            <span class="badge">{{ $task->category }}</span>
-                        @endif
-                        {{ $task->task }}
+        <div class="task-list">
+            @forelse($tasks as $task)
+                @php
+                    $isOverdue = $task->deadline && !$task->is_done && strtotime($task->deadline) < strtotime('today');
+                @endphp
+                <div class="task-item {{ $task->is_done ? 'done' : '' }} {{ $isOverdue ? 'overdue' : '' }}">
+                    <div class="task-info">
+                        <div class="task-top">
+                            @if($task->category)
+                                <span class="task-category">{{ $task->category }}</span>
+                            @endif
+                            <span class="task-name">{{ $task->task }}</span>
+                        </div>
+                        <div class="task-dates">
+                            @if($task->start_date)
+                                <span class="task-date mulai">
+                                    🟢 Mulai: {{ date('d M Y', strtotime($task->start_date)) }}
+                                </span>
+                            @endif
+                            @if($task->deadline)
+                                <span class="task-date selesai {{ $isOverdue ? 'overdue' : '' }}">
+                                    🔴 Selesai: {{ date('d M Y', strtotime($task->deadline)) }}
+                                </span>
+                            @endif
+                        </div>
                     </div>
-                    <div class="task-dates">
-                        @if($task->start_date)
-                            <span class="date-badge start">
-                                🟢 Mulai: {{ date('d M Y', strtotime($task->start_date)) }}
-                            </span>
-                        @endif
-                        @if($task->deadline)
-                            <span class="date-badge end {{ $isOverdue ? 'overdue' : '' }}">
-                                🔴 Selesai: {{ date('d M Y', strtotime($task->deadline)) }}
-                            </span>
-                        @endif
+                    <div class="task-btns">
+                        <form method="POST" action="/tasks/{{ $task->id }}/done">
+                            @csrf
+                            <button type="submit" class="btn-icon {{ $task->is_done ? 'batal' : 'selesai' }}" data-tip="{{ $task->is_done ? 'Batalkan' : 'Tandai Selesai' }}" title="{{ $task->is_done ? 'Batalkan' : 'Tandai Selesai' }}">
+                                ✓
+                            </button>
+                        </form>
+                        <a href="/tasks/{{ $task->id }}/edit" class="btn-icon edit" data-tip="Edit Tugas" title="Edit Tugas">✏</a>
+                        <form method="POST" action="/tasks/{{ $task->id }}">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn-icon hapus" data-tip="Hapus Tugas" title="Hapus Tugas" onclick="return confirm('Yakin mau hapus?')">🗑</button>
+                        </form>
                     </div>
                 </div>
-                <div class="task-actions">
-                    <form method="POST" action="/tasks/{{ $task->id }}/done" style="display: inline-block; margin: 0;">
-                        @csrf
-                        <button type="submit" class="btn-action {{ $task->is_done ? 'btn-cancel-action' : 'btn-done-action' }} tooltip" data-tooltip="{{ $task->is_done ? 'Batalkan' : 'Tandai Selesai' }}" title="{{ $task->is_done ? 'Batalkan' : 'Tandai Selesai' }}">
-                            Done
-                        </button>
-                    </form>
-                    <a href="/tasks/{{ $task->id }}/edit" class="btn-action btn-edit-action tooltip" data-tooltip="Edit Tugas" title="Edit Tugas">Edit</a>
-                    <form method="POST" action="/tasks/{{ $task->id }}" style="display: inline-block; margin: 0;">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn-action btn-delete-action tooltip" data-tooltip="Hapus Tugas" title="Hapus Tugas" onclick="return confirm('Yakin mau hapus?')">Hapus</button>
-                    </form>
+            @empty
+                <div class="empty-state">
+                    <span>✨</span>
+                    <p>Belum ada tugas. Yuk tambah tugas baru!</p>
                 </div>
-            </div>
-        @empty
-            <div class="empty-state">
-                <span>✨</span>
-                <p>Tidak ada tugas. Tambahkan tugas baru!</p>
-            </div>
-        @endforelse
-    </div>
-
-    @if($tasks->hasPages())
-        <div style="margin-top: 15px;">
-            {{ $tasks->links('vendor.pagination.default') }}
+            @endforelse
         </div>
-    @endif
+
+        @if($tasks->hasPages())
+            <div style="margin-top: 20px;">
+                {{ $tasks->links('vendor.pagination.default') }}
+            </div>
+        @endif
+    </div>
 
     <script>
         document.getElementById('deadline').addEventListener('change', function() {

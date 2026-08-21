@@ -20,45 +20,48 @@
         min-height: 100vh;
         margin: 0;
         padding: 0;
-        padding-top: 60px;
+        padding-top: 75px;
       }
       .layout-wrapper {
         display: flex;
-        min-height: calc(100vh - 60px);
+        min-height: calc(100vh - 75px);
       }
       .sidebar {
         position: fixed;
-        left: 0;
-        top: 60px;
-        bottom: 0;
+        left: 8px;
+        top: 75px;
+        bottom: 8px;
         width: 240px;
         background: white;
-        box-shadow: 2px 0 15px rgba(0,0,0,0.08);
+        box-shadow: 0 8px 32px rgba(0,0,0,0.08);
         transition: width 0.3s ease;
         z-index: 999;
         overflow: visible;
+        border-radius: 20px;
       }
       .sidebar.collapsed {
-        width: 70px;
+        width: 72px;
+        border-radius: 20px;
       }
       .sidebar-header {
         display: flex;
         justify-content: flex-end;
         align-items: center;
-        padding: 12px 15px;
-        border-bottom: 1px solid #f0f0f0;
+        padding: 15px;
+        border-bottom: 1px solid #f5f5f5;
       }
       .toggle-btn {
         background: #fff0f5;
         border: none;
-        width: 36px;
-        height: 36px;
-        border-radius: 10px;
+        width: 40px;
+        height: 40px;
+        border-radius: 14px;
         cursor: pointer;
         display: flex;
         align-items: center;
         justify-content: center;
         font-size: 18px;
+        transition: all 0.3s ease;
       }
       .sidebar.collapsed .toggle-btn {
         margin: 0 auto;
@@ -72,12 +75,15 @@
         display: flex;
         align-items: center;
         padding: 12px 20px;
+        margin: 4px 12px;
         color: #666;
         text-decoration: none;
         font-size: 14px;
         font-weight: 500;
         white-space: nowrap;
         overflow: visible;
+        border-radius: 14px;
+        transition: all 0.3s ease;
       }
       .menu-item:hover {
         background: #fff0f5;
@@ -86,6 +92,7 @@
       .menu-item.active {
         background: #ff6b9d;
         color: white;
+        box-shadow: 0 4px 15px rgba(255,107,157,0.3);
       }
       .menu-item .icon {
         width: 32px;
@@ -145,17 +152,17 @@
       .main-content {
         flex: 1;
         padding: 15px;
-        margin-left: 240px;
+        margin-left: 248px;
         transition: margin-left 0.3s ease;
       }
       body.sidebar-collapsed .main-content {
-        margin-left: 70px;
+        margin-left: 80px;
       }
       .box {
         background: white;
-        padding: 20px;
-        border-radius: 16px;
-        box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+        padding: 24px;
+        border-radius: 20px;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.08);
         width: 100%;
         max-width: 95%;
       }
@@ -498,16 +505,17 @@
       }
       .navbar {
         position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
+        top: 8px;
+        left: 8px;
+        right: 8px;
         background: white;
-        padding: 8px 30px;
+        padding: 10px 24px;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
         z-index: 1000;
+        border-radius: 20px;
       }
       .navbar-brand {
         font-weight: 700;
@@ -517,7 +525,7 @@
       }
       .navbar-nav {
         display: flex;
-        gap: 6px;
+        gap: 8px;
         list-style: none;
         margin: 0;
         padding: 0;
@@ -525,11 +533,11 @@
       .navbar-nav a {
         color: #666;
         text-decoration: none;
-        padding: 6px 14px;
-        border-radius: 20px;
+        padding: 8px 16px;
+        border-radius: 24px;
         font-size: 13px;
         font-weight: 500;
-        transition: all 0.2s;
+        transition: all 0.3s ease;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -857,7 +865,7 @@
         cursor: pointer;
         padding: 8px;
         flex-direction: column;
-        gap: 4px;
+        gap: 5px;
       }
       .guide-icon-btn span:hover {
         background: #ff6b9d;

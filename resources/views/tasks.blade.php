@@ -224,7 +224,7 @@
         color: white;
     }
     .btn-icon::after {
-        content: attr(data-tip);
+        content: attr(data-tooltip);
         position: absolute;
         bottom: calc(100% + 8px);
         left: 50%;
@@ -364,15 +364,15 @@
                     <div class="task-btns">
                         <form method="POST" action="/tasks/{{ $task->id }}/done">
                             @csrf
-                            <button type="submit" class="btn-icon {{ $task->is_done ? 'batal' : 'selesai' }}" data-tip="{{ $task->is_done ? 'Batalkan' : 'Tandai Selesai' }}" title="{{ $task->is_done ? 'Batalkan' : 'Tandai Selesai' }}">
+                            <button type="submit" class="btn-icon {{ $task->is_done ? 'batal' : 'selesai' }}" data-tooltip="{{ $task->is_done ? 'Batalkan' : 'Tandai Selesai' }}">
                                 ✓
                             </button>
                         </form>
-                        <a href="/tasks/{{ $task->id }}/edit" class="btn-icon edit" data-tip="Edit Tugas" title="Edit Tugas">✏</a>
+                        <a href="/tasks/{{ $task->id }}/edit" class="btn-icon edit" data-tooltip="Edit Tugas">✏</a>
                         <form method="POST" action="/tasks/{{ $task->id }}">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn-icon hapus" data-tip="Hapus Tugas" title="Hapus Tugas" onclick="return confirm('Yakin mau hapus?')">🗑</button>
+                            <button type="submit" class="btn-icon hapus" data-tooltip="Hapus Tugas" onclick="return confirm('Yakin mau hapus?')">🗑</button>
                         </form>
                     </div>
                 </div>

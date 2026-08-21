@@ -36,7 +36,7 @@
         box-shadow: 2px 0 15px rgba(0,0,0,0.08);
         transition: width 0.3s ease;
         z-index: 999;
-        overflow: hidden;
+        overflow: visible;
       }
       .sidebar.collapsed {
         width: 70px;
@@ -58,20 +58,17 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        transition: all 0.2s;
         font-size: 18px;
-      }
-      .toggle-btn:hover {
-        background: #ff6b9d;
-        color: white;
       }
       .sidebar.collapsed .toggle-btn {
         margin: 0 auto;
       }
       .sidebar-menu {
         padding: 15px 0;
+        overflow: visible;
       }
       .menu-item {
+        position: relative;
         display: flex;
         align-items: center;
         padding: 12px 20px;
@@ -79,9 +76,8 @@
         text-decoration: none;
         font-size: 14px;
         font-weight: 500;
-        transition: all 0.2s;
         white-space: nowrap;
-        position: relative;
+        overflow: visible;
       }
       .menu-item:hover {
         background: #fff0f5;
@@ -97,19 +93,46 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 18px;
+        font-size: 20px;
         flex-shrink: 0;
         margin-right: 12px;
       }
-      .sidebar.collapsed .menu-item .icon {
-        margin-right: 0;
-      }
       .menu-item .label {
-        transition: opacity 0.3s ease;
+        opacity: 1;
+        pointer-events: auto;
+      }
+      .sidebar.collapsed .menu-item {
+        justify-content: center;
+        padding: 12px 0;
+      }
+      .sidebar.collapsed .menu-item .icon {
+        margin-left: auto;
+        margin-right: auto;
       }
       .sidebar.collapsed .menu-item .label {
+        display: none;
+      }
+      .sidebar.collapsed .menu-item::after {
+        content: attr(data-tooltip);
+        position: absolute;
+        left: calc(100% + 10px);
+        top: 50%;
+        transform: translateY(-50%);
+        background: #333;
+        color: white;
+        padding: 6px 10px;
+        border-radius: 6px;
+        font-size: 12px;
+        white-space: nowrap;
         opacity: 0;
+        visibility: hidden;
         pointer-events: none;
+        z-index: 99999;
+        transition: opacity 0.2s ease;
+      }
+      .sidebar.collapsed .menu-item:hover::after {
+        opacity: 1;
+        visibility: visible;
       }
       .menu-divider {
         height: 1px;
@@ -118,32 +141,6 @@
       }
       .sidebar.collapsed .menu-divider {
         margin: 10px 15px;
-      }
-      .tooltip {
-        position: absolute;
-        left: 75px;
-        background: #333;
-        color: white;
-        padding: 6px 12px;
-        border-radius: 8px;
-        font-size: 12px;
-        white-space: nowrap;
-        opacity: 0;
-        pointer-events: none;
-        transition: opacity 0.2s;
-        z-index: 1001;
-      }
-      .tooltip::before {
-        content: '';
-        position: absolute;
-        right: 100%;
-        top: 50%;
-        transform: translateY(-50%);
-        border: 6px solid transparent;
-        border-right-color: #333;
-      }
-      .sidebar.collapsed .menu-item:hover .tooltip {
-        opacity: 1;
       }
       .main-content {
         flex: 1;
@@ -902,10 +899,10 @@
         </button>
         <ul class="navbar-nav" id="navbarNav">
             <li>
-                <a href="#" onclick="openBgModal(); return false;" title="Background" style="padding: 8px 12px;">🖼️</a>
+                <a href="#" onclick="openBgModal(); return false;" style="padding: 8px 12px;">🖼️</a>
             </li>
             <li>
-                <a href="#" onclick="openGuide(); return false;" title="Panduan" class="guide-icon-btn">
+                <a href="#" onclick="openGuide(); return false;" class="guide-icon-btn">
                     <span style="display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; background: #fff0f5; border-radius: 50%; transition: all 0.2s;">📖</span>
                 </a>
             </li>
@@ -917,43 +914,37 @@
     <div class="layout-wrapper">
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
-                <button class="toggle-btn" onclick="toggleSidebar()" title="Toggle Sidebar">
+                <button class="toggle-btn" onclick="toggleSidebar()">
                     <span id="toggleIcon">☰</span>
                 </button>
             </div>
             <nav class="sidebar-menu">
-                <a href="/dashboard" class="menu-item {{ request()->is('dashboard') ? 'active' : '' }}">
+                <a href="/dashboard" class="menu-item {{ request()->is('dashboard') ? 'active' : '' }}" data-tooltip="Dashboard">
                     <span class="icon">🏠</span>
                     <span class="label">Dashboard</span>
-                    <span class="tooltip">Dashboard</span>
                 </a>
-                <a href="/tasks" class="menu-item {{ request()->is('tasks') ? 'active' : '' }}">
+                <a href="/tasks" class="menu-item {{ request()->is('tasks') ? 'active' : '' }}" data-tooltip="Tugas">
                     <span class="icon">📋</span>
                     <span class="label">Tugas</span>
-                    <span class="tooltip">Tugas</span>
                 </a>
-                <a href="/tasks/completed" class="menu-item {{ request()->is('tasks/completed') ? 'active' : '' }}">
+                <a href="/tasks/completed" class="menu-item {{ request()->is('tasks/completed') ? 'active' : '' }}" data-tooltip="Tugas Selesai">
                     <span class="icon">✓</span>
                     <span class="label">Selesai</span>
-                    <span class="tooltip">Selesai</span>
                 </a>
                 
                 <div class="menu-divider"></div>
                 
-                <a href="/categories" class="menu-item {{ request()->is('categories') ? 'active' : '' }}">
+                <a href="/categories" class="menu-item {{ request()->is('categories') ? 'active' : '' }}" data-tooltip="Kategori">
                     <span class="icon">📁</span>
                     <span class="label">Kategori</span>
-                    <span class="tooltip">Kategori</span>
                 </a>
-                <a href="/reports" class="menu-item {{ request()->is('reports') ? 'active' : '' }}">
+                <a href="/reports" class="menu-item {{ request()->is('reports') ? 'active' : '' }}" data-tooltip="Laporan">
                     <span class="icon">📊</span>
                     <span class="label">Laporan</span>
-                    <span class="tooltip">Laporan</span>
                 </a>
-                <a href="/settings" class="menu-item {{ request()->is('settings') ? 'active' : '' }}">
+                <a href="/settings" class="menu-item {{ request()->is('settings') ? 'active' : '' }}" data-tooltip="Pengaturan">
                     <span class="icon">⚙️</span>
                     <span class="label">Pengaturan</span>
-                    <span class="tooltip">Pengaturan</span>
                 </a>
             </nav>
         </aside>

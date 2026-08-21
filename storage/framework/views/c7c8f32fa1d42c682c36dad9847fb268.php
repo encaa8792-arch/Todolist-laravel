@@ -223,7 +223,7 @@
         color: white;
     }
     .btn-icon::after {
-        content: attr(data-tip);
+        content: attr(data-tooltip);
         position: absolute;
         bottom: calc(100% + 8px);
         left: 50%;
@@ -365,15 +365,15 @@
                     <div class="task-btns">
                         <form method="POST" action="/tasks/<?php echo e($task->id); ?>/done">
                             <?php echo csrf_field(); ?>
-                            <button type="submit" class="btn-icon <?php echo e($task->is_done ? 'batal' : 'selesai'); ?>" data-tip="<?php echo e($task->is_done ? 'Batalkan' : 'Tandai Selesai'); ?>" title="<?php echo e($task->is_done ? 'Batalkan' : 'Tandai Selesai'); ?>">
+                            <button type="submit" class="btn-icon <?php echo e($task->is_done ? 'batal' : 'selesai'); ?>" data-tooltip="<?php echo e($task->is_done ? 'Batalkan' : 'Tandai Selesai'); ?>">
                                 ✓
                             </button>
                         </form>
-                        <a href="/tasks/<?php echo e($task->id); ?>/edit" class="btn-icon edit" data-tip="Edit Tugas" title="Edit Tugas">✏</a>
+                        <a href="/tasks/<?php echo e($task->id); ?>/edit" class="btn-icon edit" data-tooltip="Edit Tugas">✏</a>
                         <form method="POST" action="/tasks/<?php echo e($task->id); ?>">
                             <?php echo csrf_field(); ?>
                             <?php echo method_field('DELETE'); ?>
-                            <button type="submit" class="btn-icon hapus" data-tip="Hapus Tugas" title="Hapus Tugas" onclick="return confirm('Yakin mau hapus?')">🗑</button>
+                            <button type="submit" class="btn-icon hapus" data-tooltip="Hapus Tugas" onclick="return confirm('Yakin mau hapus?')">🗑</button>
                         </form>
                     </div>
                 </div>

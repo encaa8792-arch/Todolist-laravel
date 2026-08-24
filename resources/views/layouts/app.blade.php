@@ -20,7 +20,6 @@
         min-height: 100vh;
         margin: 0;
         padding: 0;
-        padding-top: 75px;
       }
       .layout-wrapper {
         display: flex;
@@ -28,46 +27,47 @@
       }
       .sidebar {
         position: fixed;
-        left: 8px;
-        top: 75px;
-        bottom: 8px;
+        left: 0;
+        top: 0;
+        bottom: 0;
         width: 240px;
         background: white;
         box-shadow: 0 8px 32px rgba(0,0,0,0.08);
         transition: width 0.3s ease;
         z-index: 999;
         overflow: visible;
-        border-radius: 20px;
+        border-radius: 0 20px 20px 0;
       }
       .sidebar.collapsed {
         width: 72px;
         border-radius: 20px;
       }
-      .sidebar-header {
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-        padding: 15px;
-        border-bottom: 1px solid #f5f5f5;
-      }
       .toggle-btn {
-        background: #fff0f5;
+        position: fixed;
+        top: 155px;
+        left: 12px;
+        background: white;
         border: none;
         width: 40px;
         height: 40px;
-        border-radius: 14px;
+        border-radius: 50%;
         cursor: pointer;
         display: flex;
         align-items: center;
         justify-content: center;
         font-size: 18px;
         transition: all 0.3s ease;
+        z-index: 9999;
+        box-shadow: 0 2px 12px rgba(255,107,157,0.25);
+        color: #ff6b9d;
       }
-      .sidebar.collapsed .toggle-btn {
-        margin: 0 auto;
+      .toggle-btn:hover {
+        background: #fff0f5;
+        transform: scale(1.1);
+        box-shadow: 0 4px 16px rgba(255,107,157,0.35);
       }
       .sidebar-menu {
-        padding: 15px 0;
+        padding: 0;
         overflow: visible;
       }
       .menu-item {
@@ -134,7 +134,7 @@
         opacity: 0;
         visibility: hidden;
         pointer-events: none;
-        z-index: 99999;
+        z-index: 1003;
         transition: opacity 0.2s ease;
       }
       .sidebar.collapsed .menu-item:hover::after {
@@ -505,17 +505,17 @@
       }
       .navbar {
         position: fixed;
-        top: 8px;
-        left: 8px;
-        right: 8px;
+        top: 0;
+        left: 0;
+        right: 0;
         background: white;
         padding: 10px 24px;
         display: flex;
         justify-content: space-between;
         align-items: center;
         box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-        z-index: 1000;
-        border-radius: 20px;
+        z-index: 1001;
+        border-radius: 0 0 20px 20px;
       }
       .navbar-brand {
         font-weight: 700;
@@ -668,6 +668,9 @@
         .sidebar {
           transform: translateX(-100%);
           width: 70px;
+          top: 0;
+          bottom: 0;
+          border-radius: 0 20px 20px 0;
         }
         .sidebar.mobile-open {
           transform: translateX(0);
@@ -698,6 +701,7 @@
           padding: 10px;
           box-shadow: 0 4px 15px rgba(0,0,0,0.1);
           gap: 5px;
+          border-radius: 0 0 15px 15px;
         }
         .navbar-nav.show {
           display: flex;
@@ -820,7 +824,7 @@
         .mobile-sidebar-overlay {
           display: none;
           position: fixed;
-          top: 60px;
+          top: 0;
           left: 0;
           right: 0;
           bottom: 0;
@@ -921,12 +925,10 @@
 
     <div class="layout-wrapper">
         <aside class="sidebar" id="sidebar">
-            <div class="sidebar-header">
+            <nav class="sidebar-menu">
                 <button class="toggle-btn" onclick="toggleSidebar()">
                     <span id="toggleIcon">☰</span>
                 </button>
-            </div>
-            <nav class="sidebar-menu">
                 <a href="/dashboard" class="menu-item {{ request()->is('dashboard') ? 'active' : '' }}" data-tooltip="Dashboard">
                     <span class="icon">🏠</span>
                     <span class="label">Dashboard</span>

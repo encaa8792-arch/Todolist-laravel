@@ -389,7 +389,7 @@
 @endsection
 
 @section('content')
-    <div class="dashboard-container">
+    <div class="dashboard-container" style="padding-top: 60px;">
         <div class="dashboard-header">
             <div>
                 <h1>Dashboard <span>TodoList</span></h1>
@@ -423,8 +423,6 @@
                 <div class="sublabel">Melewati deadline</div>
             </div>
         </div>
-
-
 
         <div class="content-grid">
             <div class="card">
@@ -495,57 +493,6 @@
                             <p>Tidak ada deadline mendatang</p>
                         </div>
                     @endforelse
-                </div>
-            </div>
-        </div>
-
-        <div class="content-grid">
-            <div class="card">
-                <div class="card-header">
-                    <h3><span>📈</span> Grafik Mingguan</h3>
-                    <span class="badge">7 Hari Terakhir</span>
-                </div>
-                
-                <div class="weekly-chart">
-                    @forelse($dailyStats as $stat)
-                        <div class="chart-day">
-                            <div class="chart-bars">
-                                <div class="chart-bar created" style="height: {{ max($stat['created'] * 8, 6) }}px;"></div>
-                                <div class="chart-bar completed" style="height: {{ max($stat['completed'] * 8, 6) }}px;"></div>
-                            </div>
-                            <span class="chart-label">{{ $stat['day'] }}</span>
-                        </div>
-                    @empty
-                        <div class="empty-state" style="width: 100%;">
-                            <span>📊</span>
-                            <p>Belum ada data untuk ditampilkan</p>
-                        </div>
-                    @endforelse
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-header">
-                    <h3><span>⚡</span> Aksi Cepat</h3>
-                </div>
-                
-                <div class="quick-actions">
-                    <a href="/tasks" class="quick-action">
-                        <div class="action-icon pink">➕</div>
-                        <span class="action-text">Tambah Tugas</span>
-                    </a>
-                    <a href="/tasks/completed" class="quick-action">
-                        <div class="action-icon green">✓</div>
-                        <span class="action-text">Lihat Selesai</span>
-                    </a>
-                    <a href="/categories" class="quick-action">
-                        <div class="action-icon orange">📁</div>
-                        <span class="action-text">Kategori</span>
-                    </a>
-                    <a href="/reports" class="quick-action">
-                        <div class="action-icon blue">📊</div>
-                        <span class="action-text">Laporan</span>
-                    </a>
                 </div>
             </div>
         </div>

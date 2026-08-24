@@ -1,8 +1,6 @@
-@extends('layouts.app')
+<?php $__env->startSection('title', 'Tugas Selesai'); ?>
 
-@section('title', 'Tugas Selesai')
-
-@section('styles')
+<?php $__env->startSection('styles'); ?>
     .completed-container {
         background: rgba(255,255,255,0.95);
         border-radius: 20px;
@@ -310,9 +308,9 @@
             width: 100%;
         }
     }
-@endsection
+<?php $__env->stopSection(); ?>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
     <div class="completed-container">
         <div class="completed-header">
             <h1>Tugas <span>Selesai</span></h1>
@@ -332,7 +330,7 @@
         </div>
 
         <form method="POST" action="/tasks/bulk-done" id="bulkForm" class="bulk-actions" style="display:none;">
-            @csrf
+            <?php echo csrf_field(); ?>
             <input type="hidden" name="action" value="undo">
             <label>
                 <input type="checkbox" id="selectAll" onchange="toggleSelectAll()"> Pilih Semua
@@ -343,8 +341,8 @@
         </form>
 
         <form method="POST" action="/tasks/bulk-delete" id="bulkDeleteForm" class="bulk-actions" style="display:none;">
-            @csrf
-            @method('DELETE')
+            <?php echo csrf_field(); ?>
+            <?php echo method_field('DELETE'); ?>
             <label>
                 <input type="checkbox" id="selectAllDelete" onchange="toggleSelectAllDelete()"> Pilih Semua
             </label>
@@ -353,63 +351,67 @@
             <button type="button" onclick="cancelBulkDeleteMode()" class="btn-bulk batal">✕ Batal</button>
         </form>
 
-        @if(session('success'))
+        <?php if(session('success')): ?>
             <div class="success" style="background: linear-gradient(135deg, #d4edda, #c3e6cb); color: #155724; padding: 12px 18px; border-radius: 10px; margin-bottom: 16px; text-align: center; font-size: 13px; font-weight: 500;">
-                {{ session('success') }}
+                <?php echo e(session('success')); ?>
+
             </div>
-        @endif
+        <?php endif; ?>
 
         <div class="completed-list">
-            @forelse($tasks as $task)
-                <div class="completed-item" data-task-id="{{ $task->id }}">
-                    <input type="checkbox" name="task_ids[]" value="{{ $task->id }}" class="bulk-checkbox-done" onchange="updateSelectedCount()" form="bulkForm" style="display:none;">
-                    <input type="checkbox" name="delete_ids[]" value="{{ $task->id }}" class="bulk-checkbox-delete" onchange="updateSelectedDeleteCount()" form="bulkDeleteForm" style="display:none;">
+            <?php $__empty_1 = true; $__currentLoopData = $tasks; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $task): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                <div class="completed-item" data-task-id="<?php echo e($task->id); ?>">
+                    <input type="checkbox" name="task_ids[]" value="<?php echo e($task->id); ?>" class="bulk-checkbox-done" onchange="updateSelectedCount()" form="bulkForm" style="display:none;">
+                    <input type="checkbox" name="delete_ids[]" value="<?php echo e($task->id); ?>" class="bulk-checkbox-delete" onchange="updateSelectedDeleteCount()" form="bulkDeleteForm" style="display:none;">
                     <div class="completed-info">
                         <div class="completed-top">
-                            @if($task->category)
-                                <span class="completed-category">{{ $task->category }}</span>
-                            @endif
-                            <span class="completed-name">{{ $task->task }}</span>
+                            <?php if($task->category): ?>
+                                <span class="completed-category"><?php echo e($task->category); ?></span>
+                            <?php endif; ?>
+                            <span class="completed-name"><?php echo e($task->task); ?></span>
                         </div>
                         <div class="completed-dates">
-                            @if($task->deadline)
+                            <?php if($task->deadline): ?>
                                 <span class="completed-date selesai">
-                                    ✓ Selesai: {{ date('d M Y', strtotime($task->deadline)) }}
+                                    ✓ Selesai: <?php echo e(date('d M Y', strtotime($task->deadline))); ?>
+
                                 </span>
-                            @endif
-                            @if($task->updated_at)
+                            <?php endif; ?>
+                            <?php if($task->updated_at): ?>
                                 <span class="completed-date waktu">
-                                    🕐 {{ date('H:i', strtotime($task->updated_at)) }}
+                                    🕐 <?php echo e(date('H:i', strtotime($task->updated_at))); ?>
+
                                 </span>
-                            @endif
+                            <?php endif; ?>
                         </div>
                     </div>
                     <div class="completed-btns">
-                        <form method="POST" action="/tasks/{{ $task->id }}/done" style="display:inline;">
-                            @csrf
+                        <form method="POST" action="/tasks/<?php echo e($task->id); ?>/done" style="display:inline;">
+                            <?php echo csrf_field(); ?>
                             <button type="submit" class="btn-icon batal" data-tooltip="Batalkan">↩️</button>
                         </form>
-                        <a href="/tasks/{{ $task->id }}/edit" class="btn-icon edit" data-tooltip="Edit">✏️</a>
-                        <form method="POST" action="/tasks/{{ $task->id }}?from=completed" style="display:inline;">
-                            @csrf
-                            @method('DELETE')
+                        <a href="/tasks/<?php echo e($task->id); ?>/edit" class="btn-icon edit" data-tooltip="Edit">✏️</a>
+                        <form method="POST" action="/tasks/<?php echo e($task->id); ?>?from=completed" style="display:inline;">
+                            <?php echo csrf_field(); ?>
+                            <?php echo method_field('DELETE'); ?>
                             <button type="submit" class="btn-icon hapus" data-tooltip="Hapus" onclick="return confirm('Yakin mau hapus?')">🗑️</button>
                         </form>
                     </div>
                 </div>
-            @empty
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                 <div class="empty-state">
                     <span>✨</span>
                     <p>Belum ada tugas yang selesai</p>
                 </div>
-            @endempty
+            <?php endif; ?>
         </div>
 
-        @if($tasks->hasPages())
+        <?php if($tasks->hasPages()): ?>
             <div style="margin-top: 20px;">
-                {{ $tasks->links('vendor.pagination.default') }}
+                <?php echo e($tasks->links('vendor.pagination.default')); ?>
+
             </div>
-        @endif
+        <?php endif; ?>
     </div>
 
     <script>
@@ -502,4 +504,6 @@
             }
         });
     </script>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\laragon\www\Todolist\resources\views/completed.blade.php ENDPATH**/ ?>

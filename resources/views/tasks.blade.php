@@ -1,5 +1,6 @@
 @extends('layouts.app')
 @section('title', 'Todo List')
+@section('page-title', 'Daftar Tugas')
 
 @section('styles')
     .todo-container {
@@ -304,11 +305,7 @@
     @endif
 
     <div class="todo-container">
-        <div class="todo-header">
-            <h1><span>Todo</span> List</h1>
-        </div>
-
-        <form method="POST" action="/tasks" class="todo-form">
+        <form method="POST" action="/tasks" class="todo-form" style="margin-top: 0;">
             @csrf
             <div class="form-group">
                 <label>Kategori</label>

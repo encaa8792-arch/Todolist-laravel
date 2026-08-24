@@ -1,4 +1,5 @@
 <?php $__env->startSection('title', 'Todo List'); ?>
+<?php $__env->startSection('page-title', 'Daftar Tugas'); ?>
 
 <?php $__env->startSection('styles'); ?>
     .todo-container {
@@ -303,11 +304,7 @@
     <?php endif; ?>
 
     <div class="todo-container">
-        <div class="todo-header">
-            <h1><span>Todo</span> List</h1>
-        </div>
-
-        <form method="POST" action="/tasks" class="todo-form">
+        <form method="POST" action="/tasks" class="todo-form" style="margin-top: 0;">
             <?php echo csrf_field(); ?>
             <div class="form-group">
                 <label>Kategori</label>

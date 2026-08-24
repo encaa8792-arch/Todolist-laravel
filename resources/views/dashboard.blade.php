@@ -2,6 +2,8 @@
 
 @section('title', 'Dashboard')
 
+@section('page-title', 'Dashboard TodoList')
+
 @section('styles')
     .dashboard-container {
         display: flex;
@@ -389,14 +391,7 @@
 @endsection
 
 @section('content')
-    <div class="dashboard-container" style="padding-top: 60px;">
-        <div class="dashboard-header">
-            <div>
-                <h1>Dashboard <span>TodoList</span></h1>
-                <p class="greeting">Selamat datang! Berikut ringkasan tugas kamu.</p>
-            </div>
-        </div>
-
+    <div class="dashboard-container">
         <div class="stats-grid">
             <div class="stat-card total">
                 <span class="icon-bg">📋</span>
@@ -477,13 +472,13 @@
                             </div>
                             <span class="deadline-date">
                                 @if($daysLeft < 0)
-                                    Terlambat {{ abs($daysLeft) }} hari
+                                    Terlambat {{ round(abs($daysLeft)) }} hari
                                 @elseif($daysLeft == 0)
                                     Hari ini
                                 @elseif($daysLeft == 1)
                                     Besok
                                 @else
-                                    {{ $daysLeft }} hari
+                                    {{ round($daysLeft) }} hari
                                 @endif
                             </span>
                         </div>

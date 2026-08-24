@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'Tugas Selesai')
+@section('page-title', 'Tugas Selesai')
 
 @section('styles')
     .completed-container {
@@ -314,10 +315,6 @@
 
 @section('content')
     <div class="completed-container">
-        <div class="completed-header">
-            <h1>Tugas <span>Selesai</span></h1>
-        </div>
-
         <div style="display: flex; justify-content: flex-end; margin-bottom: 16px;">
             <div class="kebab-wrapper">
                 <button class="kebab-btn" type="button" onclick="toggleKebabMenu(this)">

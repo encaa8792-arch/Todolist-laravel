@@ -1,4 +1,5 @@
 <?php $__env->startSection('title', 'Tugas Selesai'); ?>
+<?php $__env->startSection('page-title', 'Tugas Selesai'); ?>
 
 <?php $__env->startSection('styles'); ?>
     .completed-container {
@@ -312,10 +313,6 @@
 
 <?php $__env->startSection('content'); ?>
     <div class="completed-container">
-        <div class="completed-header">
-            <h1>Tugas <span>Selesai</span></h1>
-        </div>
-
         <div style="display: flex; justify-content: flex-end; margin-bottom: 16px;">
             <div class="kebab-wrapper">
                 <button class="kebab-btn" type="button" onclick="toggleKebabMenu(this)">

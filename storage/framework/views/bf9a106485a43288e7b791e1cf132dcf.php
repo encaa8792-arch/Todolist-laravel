@@ -1,5 +1,7 @@
 <?php $__env->startSection('title', 'Dashboard'); ?>
 
+<?php $__env->startSection('page-title', 'Dashboard TodoList'); ?>
+
 <?php $__env->startSection('styles'); ?>
     .dashboard-container {
         display: flex;
@@ -387,14 +389,7 @@
 <?php $__env->stopSection(); ?>
 
 <?php $__env->startSection('content'); ?>
-    <div class="dashboard-container" style="padding-top: 60px;">
-        <div class="dashboard-header">
-            <div>
-                <h1>Dashboard <span>TodoList</span></h1>
-                <p class="greeting">Selamat datang! Berikut ringkasan tugas kamu.</p>
-            </div>
-        </div>
-
+    <div class="dashboard-container">
         <div class="stats-grid">
             <div class="stat-card total">
                 <span class="icon-bg">📋</span>
@@ -475,13 +470,13 @@
                             </div>
                             <span class="deadline-date">
                                 <?php if($daysLeft < 0): ?>
-                                    Terlambat <?php echo e(abs($daysLeft)); ?> hari
+                                    Terlambat <?php echo e(round(abs($daysLeft))); ?> hari
                                 <?php elseif($daysLeft == 0): ?>
                                     Hari ini
                                 <?php elseif($daysLeft == 1): ?>
                                     Besok
                                 <?php else: ?>
-                                    <?php echo e($daysLeft); ?> hari
+                                    <?php echo e(round($daysLeft)); ?> hari
                                 <?php endif; ?>
                             </span>
                         </div>

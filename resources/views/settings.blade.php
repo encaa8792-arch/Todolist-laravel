@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'Pengaturan')
+@section('page-title', 'Pengaturan')
 
 @section('styles')
     .settings-container {

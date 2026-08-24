@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'Edit Tugas')
+@section('page-title', 'Edit Tugas')
 
 @section('box-class', 'edit-box')
 

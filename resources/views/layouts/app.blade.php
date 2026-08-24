@@ -23,7 +23,7 @@
       }
       .layout-wrapper {
         display: flex;
-        min-height: calc(100vh - 75px);
+        min-height: 100vh;
       }
       .sidebar {
         position: fixed;
@@ -36,20 +36,47 @@
         transition: width 0.3s ease;
         z-index: 999;
         overflow: visible;
-        border-radius: 0 20px 20px 0;
+        border-radius: 0 24px 24px 0;
       }
       .sidebar.collapsed {
         width: 72px;
-        border-radius: 20px;
+        border-radius: 16px;
+      }
+      .sidebar.collapsed .sidebar-header {
+        display: none;
+      }
+      .sidebar-header {
+        padding: 16px;
+        border-bottom: 1px solid #f5f5f5;
+      }
+      .sidebar-brand {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .sidebar-brand a {
+        font-weight: 700;
+        font-size: 18px;
+        color: #ff6b9d;
+        text-decoration: none;
+      }
+      .sidebar.collapsed .sidebar-header {
+        display: flex;
+        justify-content: center;
+        padding: 16px 8px;
+      }
+      .sidebar.collapsed .sidebar-brand {
+        flex-direction: column;
+        gap: 12px;
+      }
+      .sidebar.collapsed .sidebar-logo-text {
+        display: none;
       }
       .toggle-btn {
-        position: fixed;
-        top: 155px;
-        left: 12px;
-        background: white;
-        border: none;
-        width: 40px;
-        height: 40px;
+        background: #fff5f8;
+        border: 2px solid #ffc2d1;
+        width: 36px;
+        height: 36px;
         border-radius: 50%;
         cursor: pointer;
         display: flex;
@@ -57,17 +84,16 @@
         justify-content: center;
         font-size: 18px;
         transition: all 0.3s ease;
-        z-index: 9999;
-        box-shadow: 0 2px 12px rgba(255,107,157,0.25);
+        box-shadow: 0 2px 8px rgba(255,107,157,0.2);
         color: #ff6b9d;
       }
       .toggle-btn:hover {
         background: #fff0f5;
-        transform: scale(1.1);
-        box-shadow: 0 4px 16px rgba(255,107,157,0.35);
+        transform: scale(1.05);
+        box-shadow: 0 4px 12px rgba(255,107,157,0.3);
       }
       .sidebar-menu {
-        padding: 0;
+        padding: 0 0 15px 0;
         overflow: visible;
       }
       .menu-item {
@@ -154,6 +180,80 @@
         padding: 15px;
         margin-left: 248px;
         transition: margin-left 0.3s ease;
+      }
+      .page-topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 20px;
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        margin-bottom: 20px;
+      }
+      .page-topbar-left {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .page-topbar-left .page-title {
+        font-weight: 600;
+        font-size: 16px;
+        color: #333;
+      }
+      .page-topbar-right {
+        display: flex;
+        gap: 8px;
+      }
+      .topbar-btn {
+        position: relative;
+        background: #fff0f5;
+        border: none;
+        width: 38px;
+        height: 38px;
+        border-radius: 12px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        transition: all 0.2s;
+        color: #ff6b9d;
+      }
+      .topbar-btn:hover {
+        background: #ffe0eb;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(255,107,157,0.2);
+      }
+      .topbar-btn .tooltip-text {
+        position: absolute;
+        bottom: calc(100% + 8px);
+        left: 50%;
+        transform: translateX(-50%);
+        background: #333;
+        color: white;
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-size: 12px;
+        white-space: nowrap;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.2s;
+        pointer-events: none;
+        z-index: 100;
+      }
+      .topbar-btn .tooltip-text::after {
+        content: '';
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        border: 6px solid transparent;
+        border-top-color: #333;
+      }
+      .topbar-btn:hover .tooltip-text {
+        opacity: 1;
+        visibility: visible;
       }
       body.sidebar-collapsed .main-content {
         margin-left: 80px;
@@ -663,14 +763,14 @@
       @media (max-width: 768px) {
         body {
           padding: 10px;
-          padding-top: 60px;
         }
         .sidebar {
           transform: translateX(-100%);
-          width: 70px;
+          width: 240px;
           top: 0;
           bottom: 0;
           border-radius: 0 20px 20px 0;
+          z-index: 1000;
         }
         .sidebar.mobile-open {
           transform: translateX(0);
@@ -684,31 +784,17 @@
           border-radius: 15px;
           max-width: 98%;
         }
-        .navbar {
-          padding: 8px 15px;
+        .sidebar-header {
+          padding: 12px;
         }
-        .navbar-brand {
+        .sidebar-brand a {
           font-size: 16px;
         }
-        .navbar-nav {
+        .sidebar-icons {
           display: none;
-          position: absolute;
-          top: 100%;
-          left: 0;
-          right: 0;
-          background: white;
-          flex-direction: column;
-          padding: 10px;
-          box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-          gap: 5px;
-          border-radius: 0 0 15px 15px;
         }
-        .navbar-nav.show {
+        .sidebar.mobile-open .sidebar-icons {
           display: flex;
-        }
-        .navbar-nav a {
-          padding: 10px 15px;
-          text-align: center;
         }
         .mobile-menu-btn {
           display: flex !important;
@@ -902,33 +988,17 @@
     </style>
 </head>
 <body>
-    <nav class="navbar">
-        <a href="/dashboard" class="navbar-brand">TodoList</a>
-        <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
-            <span></span>
-            <span></span>
-            <span></span>
-        </button>
-        <ul class="navbar-nav" id="navbarNav">
-            <li>
-                <a href="#" onclick="openBgModal(); return false;" style="padding: 8px 12px;">🖼️</a>
-            </li>
-            <li>
-                <a href="#" onclick="openGuide(); return false;" class="guide-icon-btn">
-                    <span style="display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; background: #fff0f5; border-radius: 50%; transition: all 0.2s;">📖</span>
-                </a>
-            </li>
-        </ul>
-    </nav>
-
-    <div class="mobile-sidebar-overlay" id="mobileOverlay" onclick="toggleMobileSidebar()"></div>
-
     <div class="layout-wrapper">
         <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-brand">
+                    <a href="/dashboard" class="sidebar-logo-text">TodoList</a>
+                    <button class="toggle-btn" onclick="toggleSidebar()">
+                        <span id="toggleIcon">✕</span>
+                    </button>
+                </div>
+            </div>
             <nav class="sidebar-menu">
-                <button class="toggle-btn" onclick="toggleSidebar()">
-                    <span id="toggleIcon">☰</span>
-                </button>
                 <a href="/dashboard" class="menu-item {{ request()->is('dashboard') ? 'active' : '' }}" data-tooltip="Dashboard">
                     <span class="icon">🏠</span>
                     <span class="label">Dashboard</span>
@@ -960,6 +1030,21 @@
         </aside>
 
         <main class="main-content">
+            <div class="page-topbar">
+                <div class="page-topbar-left">
+                    <span class="page-title">@yield('page-title', 'Dashboard TodoList')</span>
+                </div>
+                <div class="page-topbar-right">
+                    <button class="topbar-btn" onclick="openBgModal()" title="Ganti Latar Belakang">
+                        🖼️
+                        <span class="tooltip-text">Ganti Latar Belakang</span>
+                    </button>
+                    <button class="topbar-btn" onclick="openGuide()" title="Buku Panduan">
+                        📖
+                        <span class="tooltip-text">Buku Panduan</span>
+                    </button>
+                </div>
+            </div>
             <div class="box box-overlay @yield('box-class')">
                 @yield('content')
             </div>
@@ -1073,13 +1158,6 @@
             localStorage.setItem('sidebarCollapsed', isCollapsed);
         }
 
-        function toggleMobileSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('mobileOverlay');
-            sidebar.classList.toggle('mobile-open');
-            overlay.classList.toggle('show');
-        }
-
         function openGuide() {
             document.getElementById('guideModal').style.display = 'flex';
             document.body.style.overflow = 'hidden';
@@ -1151,6 +1229,8 @@
                 document.getElementById('sidebar').classList.add('collapsed');
                 document.body.classList.add('sidebar-collapsed');
                 document.getElementById('toggleIcon').textContent = '☰';
+            } else {
+                document.getElementById('toggleIcon').textContent = '✕';
             }
         })();
         document.getElementById('guideModal').addEventListener('click', function(e) {
@@ -1158,20 +1238,6 @@
         });
         document.getElementById('bgModal').addEventListener('click', function(e) {
             if (e.target === this) closeBgModal();
-        });
-        function toggleMobileMenu() {
-            var nav = document.getElementById('navbarNav');
-            var btn = document.querySelector('.mobile-menu-btn');
-            nav.classList.toggle('show');
-            btn.classList.toggle('active');
-        }
-        document.addEventListener('click', function(e) {
-            var nav = document.getElementById('navbarNav');
-            var btn = document.querySelector('.mobile-menu-btn');
-            if (!nav.contains(e.target) && !btn.contains(e.target) && nav.classList.contains('show')) {
-                nav.classList.remove('show');
-                btn.classList.remove('active');
-            }
         });
     </script>
     <script>
@@ -1195,3 +1261,4 @@
     </script>
 </body>
 </html>
+

@@ -1,8 +1,7 @@
-@extends('layouts.app')
-@section('title', 'Pengaturan')
-@section('page-title', 'Pengaturan')
+<?php $__env->startSection('title', 'Pengaturan'); ?>
+<?php $__env->startSection('page-title', 'Pengaturan'); ?>
 
-@section('styles')
+<?php $__env->startSection('styles'); ?>
     .settings-container {
         display: flex;
         flex-direction: column;
@@ -240,9 +239,9 @@
             gap: 10px;
         }
     }
-@endsection
+<?php $__env->stopSection(); ?>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
     <div class="settings-container">
         <div class="settings-header">
             <h1>Pengaturan <span>TodoList</span></h1>
@@ -256,15 +255,15 @@
                 </div>
                 <div class="settings-card-body">
                     <form method="POST" action="/settings/profile">
-                        @csrf
-                        @method('PUT')
+                        <?php echo csrf_field(); ?>
+                        <?php echo method_field('PUT'); ?>
                         <div class="form-group">
                             <label>Nama</label>
-                            <input type="text" name="name" value="{{ auth()->user()->name ?? 'Pengguna' }}">
+                            <input type="text" name="name" value="<?php echo e(auth()->user()->name ?? 'Pengguna'); ?>">
                         </div>
                         <div class="form-group">
                             <label>Email</label>
-                            <input type="email" name="email" value="{{ auth()->user()->email ?? 'email@contoh.com' }}">
+                            <input type="email" name="email" value="<?php echo e(auth()->user()->email ?? 'email@contoh.com'); ?>">
                         </div>
                         <button type="submit" class="btn-simpan">💾 Simpan</button>
                     </form>
@@ -340,7 +339,7 @@
                     🚪 Logout
                 </a>
                 <form id="logout-form" action="/logout" method="POST" style="display: none;">
-                    @csrf
+                    <?php echo csrf_field(); ?>
                 </form>
             </div>
         </div>
@@ -354,4 +353,6 @@
             });
         });
     </script>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\laragon\www\Todolist\resources\views/settings.blade.php ENDPATH**/ ?>

@@ -200,6 +200,7 @@
         font-weight: 600;
         font-size: 16px;
         color: #333;
+        transition: color 0.3s;
       }
       .page-topbar-right {
         display: flex;

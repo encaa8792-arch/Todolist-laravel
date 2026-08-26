@@ -28,6 +28,9 @@ Route::put('/tasks/{id}', [TaskController::class, 'update'])->name('tasks.update
 Route::delete('/tasks/{id}', [TaskController::class, 'destroy']);
 Route::get('/', fn() => redirect('/dashboard'));
 Route::get('/dashboard', [TaskController::class, 'dashboard'])->name('dashboard');
+Route::get('/categories', function() {
+    return view('categories');
+})->name('categories');
 Route::post('/tasks/{id}/done', [TaskController::class, 'done'])->name('tasks.done');
 Route::post('/tasks/bulk-done', [TaskController::class, 'bulkDone'])->name('tasks.bulkDone');
 Route::delete('/tasks/bulk-delete', [TaskController::class, 'bulkDelete'])->name('tasks.bulkDelete');

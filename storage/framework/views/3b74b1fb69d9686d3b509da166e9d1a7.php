@@ -93,28 +93,6 @@
         .form-group input::placeholder {
             color: #bbb;
         }
-        .password-wrapper {
-            position: relative;
-        }
-        .password-wrapper input {
-            padding-right: 48px;
-        }
-        .password-toggle {
-            position: absolute;
-            right: 14px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 18px;
-            opacity: 0.5;
-            transition: opacity 0.2s;
-            padding: 0;
-        }
-        .password-toggle:hover {
-            opacity: 1;
-        }
         .remember-row {
             display: flex;
             justify-content: space-between;
@@ -236,30 +214,29 @@
                 <p class="login-subtitle">Kelola tugasmu dengan lebih mudah</p>
             </div>
 
-            @if($errors->any())
+            <?php if($errors->any()): ?>
                 <div class="alert alert-error">
-                    {{ $errors->first() }}
-                </div>
-            @endif
+                    <?php echo e($errors->first()); ?>
 
-            @if(session('success'))
-                <div class="alert alert-success">
-                    {{ session('success') }}
                 </div>
-            @endif
+            <?php endif; ?>
+
+            <?php if(session('success')): ?>
+                <div class="alert alert-success">
+                    <?php echo e(session('success')); ?>
+
+                </div>
+            <?php endif; ?>
 
             <form method="POST" action="/login">
-                @csrf
+                <?php echo csrf_field(); ?>
                 <div class="form-group">
                     <label>Email atau Username</label>
-                    <input type="text" name="email" placeholder="Masukkan email atau username" value="{{ old('email') }}" required autofocus>
+                    <input type="text" name="email" placeholder="Masukkan email atau username" value="<?php echo e(old('email')); ?>" required autofocus>
                 </div>
                 <div class="form-group">
                     <label>Password</label>
-                    <div class="password-wrapper">
-                        <input type="password" name="password" id="passwordInput" placeholder="Masukkan password" required>
-                        <button type="button" class="password-toggle" onclick="togglePassword()">👁️</button>
-                    </div>
+                    <input type="password" name="password" placeholder="Masukkan password" required>
                 </div>
                 <div class="remember-row">
                     <label class="remember-me">
@@ -282,19 +259,6 @@
             </p>
         </div>
     </div>
-
-    <script>
-        function togglePassword() {
-            const input = document.getElementById('passwordInput');
-            const toggle = document.querySelector('.password-toggle');
-            if (input.type === 'password') {
-                input.type = 'text';
-                toggle.textContent = '🙈';
-            } else {
-                input.type = 'password';
-                toggle.textContent = '👁️';
-            }
-        }
-    </script>
 </body>
 </html>
+<?php /**PATH C:\laragon\www\Todolist\resources\views/login.blade.php ENDPATH**/ ?>

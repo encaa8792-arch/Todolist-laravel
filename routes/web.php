@@ -1,6 +1,7 @@
 <?php
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\AuthController;
 Route::get('/debug-tasks', function() {
     $tasks = \App\Models\Task::where('is_done', 0)->paginate(5);
     $html = '<h1>DEBUG - Task Actions Test</h1>';
@@ -17,28 +18,33 @@ Route::get('/debug-tasks', function() {
     $html .= '<style>.btn-action{padding:8px 12px;border:none;border-radius:5px;cursor:pointer;margin-right:5px;}.btn-done-action{background:#4CAF50;color:white;}.btn-edit-action{background:#a0c4ff;color:white;}.btn-delete-action{background:#ff8fa3;color:white;}</style>';
     return $html;
 });
-Route::get('/tasks', [TaskController::class, 'index']);
-Route::get('/tasks/completed', [TaskController::class, 'completed'])->name('tasks.completed');
-Route::post('/tasks', [TaskController::class, 'store']);
-Route::post('/tasks/clear-completed', [TaskController::class, 'clearCompleted'])->name('tasks.clearCompleted');
-Route::post('/tasks/mark-all-done', [TaskController::class, 'markAllDone'])->name('tasks.markAllDone');
-Route::delete('/tasks/delete-all', [TaskController::class, 'deleteAll'])->name('tasks.deleteAll');
-Route::get('/tasks/{id}/edit', [TaskController::class, 'edit'])->name('tasks.edit');
-Route::put('/tasks/{id}', [TaskController::class, 'update'])->name('tasks.update');
-Route::delete('/tasks/{id}', [TaskController::class, 'destroy']);
-Route::get('/', fn() => redirect('/dashboard'));
-Route::get('/dashboard', [TaskController::class, 'dashboard'])->name('dashboard');
-Route::get('/categories', function() {
-    return view('categories');
-})->name('categories');
-Route::get('/settings', function() {
-    return view('settings');
-})->name('settings');
-Route::post('/logout', function() {
-    auth()->logout();
-    return redirect('/login');
-})->name('logout');
-Route::post('/tasks/{id}/done', [TaskController::class, 'done'])->name('tasks.done');
-Route::post('/tasks/bulk-done', [TaskController::class, 'bulkDone'])->name('tasks.bulkDone');
-Route::delete('/tasks/bulk-delete', [TaskController::class, 'bulkDelete'])->name('tasks.bulkDelete');
-Route::get('/reports', [TaskController::class, 'reports'])->name('reports');
+Route::get('/login', function() {
+    return view('login');
+})->name('login');
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::get('/', function() {
+    return redirect(auth()->check() ? '/dashboard' : '/login');
+});
+Route::middleware(['auth'])->group(function () {
+    Route::get('/tasks', [TaskController::class, 'index']);
+    Route::get('/tasks/completed', [TaskController::class, 'completed'])->name('tasks.completed');
+    Route::post('/tasks', [TaskController::class, 'store']);
+    Route::post('/tasks/clear-completed', [TaskController::class, 'clearCompleted'])->name('tasks.clearCompleted');
+    Route::post('/tasks/mark-all-done', [TaskController::class, 'markAllDone'])->name('tasks.markAllDone');
+    Route::delete('/tasks/delete-all', [TaskController::class, 'deleteAll'])->name('tasks.deleteAll');
+    Route::get('/tasks/{id}/edit', [TaskController::class, 'edit'])->name('tasks.edit');
+    Route::put('/tasks/{id}', [TaskController::class, 'update'])->name('tasks.update');
+    Route::delete('/tasks/{id}', [TaskController::class, 'destroy']);
+    Route::get('/dashboard', [TaskController::class, 'dashboard'])->name('dashboard');
+    Route::get('/categories', function() {
+        return view('categories');
+    })->name('categories');
+    Route::get('/settings', function() {
+        return view('settings');
+    })->name('settings');
+    Route::post('/tasks/{id}/done', [TaskController::class, 'done'])->name('tasks.done');
+    Route::post('/tasks/bulk-done', [TaskController::class, 'bulkDone'])->name('tasks.bulkDone');
+    Route::delete('/tasks/bulk-delete', [TaskController::class, 'bulkDelete'])->name('tasks.bulkDelete');
+    Route::get('/reports', [TaskController::class, 'reports'])->name('reports');
+});

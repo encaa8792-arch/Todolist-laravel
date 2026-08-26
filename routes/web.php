@@ -34,3 +34,4 @@ Route::get('/categories', function() {
 Route::post('/tasks/{id}/done', [TaskController::class, 'done'])->name('tasks.done');
 Route::post('/tasks/bulk-done', [TaskController::class, 'bulkDone'])->name('tasks.bulkDone');
 Route::delete('/tasks/bulk-delete', [TaskController::class, 'bulkDelete'])->name('tasks.bulkDelete');
+Route::get('/reports', [TaskController::class, 'reports'])->name('reports');

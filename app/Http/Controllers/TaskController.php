@@ -204,4 +204,19 @@ class TaskController extends Controller
         $count = Task::whereIn('id', $taskIds)->delete();
         return redirect('/tasks')->with('success', "{$count} tugas berhasil dihapus! 🗑️");
     }
+
+    public function reports()
+    {
+        $totalTasks = Task::count();
+        $completedTasks = Task::where('is_done', 1)->count();
+        $pendingTasks = Task::where('is_done', 0)->count();
+        $overdueTasks = Task::where('is_done', 0)
+            ->whereNotNull('deadline')
+            ->where('deadline', '<', now())
+            ->count();
+
+        return view('reports', compact(
+            'totalTasks', 'completedTasks', 'pendingTasks', 'overdueTasks'
+        ));
+    }
 }

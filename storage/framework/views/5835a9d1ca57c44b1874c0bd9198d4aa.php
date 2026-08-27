@@ -18,9 +18,9 @@
         color: #333;
     }
     .settings-header h1 span {
-        color: #ff6b9d;
+        color: var(--theme-primary);
     }
-    .settings-grid {
+    .settings-section {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         gap: 16px;
@@ -30,14 +30,17 @@
         padding: 20px;
         border-radius: 16px;
         box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        border: 1px solid rgba(255,182,193,0.2);
+        border: 1px solid var(--theme-border);
         transition: transform 0.2s, box-shadow 0.2s;
         display: flex;
         flex-direction: column;
     }
     .settings-card:hover {
         transform: translateY(-3px);
-        box-shadow: 0 8px 25px rgba(255,107,157,0.15);
+        box-shadow: 0 8px 25px var(--theme-shadow);
+    }
+    .settings-card.full-width {
+        grid-column: 1 / -1;
     }
     .settings-card-header {
         display: flex;
@@ -45,7 +48,7 @@
         gap: 12px;
         margin-bottom: 16px;
         padding-bottom: 12px;
-        border-bottom: 2px solid #fff0f5;
+        border-bottom: 2px solid var(--theme-bg);
     }
     .settings-card-icon {
         width: 44px;
@@ -56,10 +59,12 @@
         justify-content: center;
         font-size: 22px;
     }
-    .settings-card-icon.pink { background: rgba(255,107,157,0.15); }
+    .settings-card-icon.pink { background: var(--theme-bg); }
     .settings-card-icon.blue { background: rgba(160,196,255,0.15); }
     .settings-card-icon.green { background: rgba(46,204,113,0.15); }
-    .settings-card-icon.red { background: rgba(255,107,107,0.15); }
+    .settings-card-icon.purple { background: rgba(155,89,182,0.15); }
+    .settings-card-icon.orange { background: rgba(255,165,0,0.15); }
+    .settings-card-icon.gray { background: rgba(150,150,150,0.15); }
     .settings-card-title {
         font-size: 15px;
         font-weight: 600;
@@ -85,7 +90,7 @@
     .form-group select {
         width: 100%;
         padding: 10px 12px;
-        border: 2px solid #ffc2d1;
+        border: 2px solid var(--theme-border);
         border-radius: 10px;
         font-size: 13px;
         font-family: 'Poppins', sans-serif;
@@ -95,11 +100,11 @@
     }
     .form-group input:focus,
     .form-group select:focus {
-        border-color: #ff6b9d;
+        border-color: var(--theme-primary);
     }
     .btn-simpan {
         width: 100%;
-        background: #ff6b9d;
+        background: var(--theme-primary);
         color: white;
         border: none;
         padding: 10px;
@@ -108,11 +113,11 @@
         font-weight: 600;
         font-family: 'Poppins', sans-serif;
         cursor: pointer;
-        transition: background 0.2s;
+        transition: filter 0.2s;
         margin-top: 14px;
     }
     .btn-simpan:hover {
-        background: #e05585;
+        filter: brightness(0.9);
     }
     .toggle-row {
         display: flex;
@@ -160,45 +165,10 @@
         border-radius: 50%;
     }
     .toggle-switch input:checked + .toggle-slider {
-        background-color: #ff6b9d;
+        background-color: var(--theme-primary);
     }
     .toggle-switch input:checked + .toggle-slider:before {
         transform: translateX(20px);
-    }
-    .theme-options {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 10px;
-    }
-    .theme-option {
-        padding: 14px 10px;
-        border: 2px solid #f0f0f0;
-        border-radius: 10px;
-        text-align: center;
-        cursor: pointer;
-        transition: all 0.2s;
-    }
-    .theme-option:hover {
-        border-color: #ffc2d1;
-    }
-    .theme-option.active {
-        border-color: #ff6b9d;
-        background: #fff0f5;
-    }
-    .theme-preview {
-        width: 36px;
-        height: 36px;
-        border-radius: 50%;
-        margin: 0 auto 8px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 18px;
-    }
-    .theme-name {
-        font-size: 11px;
-        font-weight: 500;
-        color: #555;
     }
     .logout-btn {
         display: flex;
@@ -208,7 +178,7 @@
         width: 100%;
         background: white;
         color: #ff6b6b;
-        border: 2px solid #ff8fa3;
+        border: 2px solid var(--theme-danger);
         padding: 12px;
         border-radius: 12px;
         font-size: 14px;
@@ -223,14 +193,109 @@
         background: #ffeaea;
         border-color: #ff6b6b;
     }
+    .preference-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+    .preference-item {
+        background: var(--theme-bg);
+        padding: 14px;
+        border-radius: 12px;
+        transition: background 0.2s;
+    }
+    .preference-item:hover {
+        background: var(--theme-hover);
+    }
+    .preference-label {
+        font-size: 12px;
+        font-weight: 500;
+        color: #555;
+        margin-bottom: 8px;
+    }
+    .preference-select {
+        width: 100%;
+        padding: 8px 10px;
+        border: 2px solid var(--theme-border);
+        border-radius: 8px;
+        font-size: 12px;
+        font-family: 'Poppins', sans-serif;
+        background: white;
+        outline: none;
+        cursor: pointer;
+    }
+    .preference-select:focus {
+        border-color: var(--theme-primary);
+    }
+    .about-info {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+    }
+    .about-item {
+        text-align: center;
+        padding: 20px 16px;
+        background: var(--theme-bg);
+        border-radius: 14px;
+        transition: transform 0.2s;
+    }
+    .about-item:hover {
+        transform: translateY(-2px);
+    }
+    .about-icon {
+        font-size: 32px;
+        margin-bottom: 10px;
+    }
+    .about-title {
+        font-size: 13px;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 4px;
+    }
+    .about-value {
+        font-size: 11px;
+        color: #888;
+    }
+    .about-desc {
+        grid-column: 1 / -1;
+        background: var(--theme-bg);
+        padding: 16px;
+        border-radius: 14px;
+        text-align: center;
+    }
+    .about-desc p {
+        margin: 0;
+        font-size: 13px;
+        color: #666;
+        line-height: 1.6;
+    }
+    .btn-panduan {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: var(--theme-primary);
+        color: white;
+        border: none;
+        padding: 10px 18px;
+        border-radius: 10px;
+        font-size: 12px;
+        font-weight: 600;
+        font-family: 'Poppins', sans-serif;
+        cursor: pointer;
+        transition: filter 0.2s;
+        margin-top: 14px;
+    }
+    .btn-panduan:hover {
+        filter: brightness(0.9);
+    }
 
     @media (max-width: 1200px) {
-        .settings-grid {
+        .settings-section {
             grid-template-columns: repeat(2, 1fr);
         }
     }
     @media (max-width: 768px) {
-        .settings-grid {
+        .settings-section {
             grid-template-columns: 1fr;
         }
         .settings-header {
@@ -238,16 +303,31 @@
             align-items: flex-start;
             gap: 10px;
         }
+        .preference-grid {
+            grid-template-columns: 1fr;
+        }
+        .about-info {
+            grid-template-columns: 1fr;
+        }
+        .about-desc {
+            grid-column: 1;
+        }
     }
 <?php $__env->stopSection(); ?>
 
 <?php $__env->startSection('content'); ?>
     <div class="settings-container">
+        <?php if(session('success')): ?>
+            <div class="success-message" style="background:#d4edda; color:#155724; padding:12px 16px; border-radius:12px; margin-bottom:10px; font-size:13px; display:flex; align-items:center; gap:8px;">
+                <span>✓</span> <?php echo e(session('success')); ?>
+
+            </div>
+        <?php endif; ?>
         <div class="settings-header">
             <h1>Pengaturan <span>TodoList</span></h1>
         </div>
 
-        <div class="settings-grid">
+        <div class="settings-section">
             <div class="settings-card">
                 <div class="settings-card-header">
                     <div class="settings-card-icon pink">👤</div>
@@ -265,7 +345,29 @@
                             <label>Email</label>
                             <input type="email" name="email" value="<?php echo e(auth()->user()->email ?? 'email@contoh.com'); ?>">
                         </div>
-                        <button type="submit" class="btn-simpan">💾 Simpan</button>
+                        <button type="submit" class="btn-simpan">💾 Simpan Profil</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="settings-card">
+                <div class="settings-card-header">
+                    <div class="settings-card-icon purple">🔒</div>
+                    <div class="settings-card-title">Ubah Password</div>
+                </div>
+                <div class="settings-card-body">
+                    <form method="POST" action="/settings/password">
+                        <?php echo csrf_field(); ?>
+                        <?php echo method_field('PUT'); ?>
+                        <div class="form-group">
+                            <label>Password Baru</label>
+                            <input type="password" name="password" placeholder="Masukkan password baru">
+                        </div>
+                        <div class="form-group">
+                            <label>Konfirmasi Password</label>
+                            <input type="password" name="password_confirmation" placeholder="Ulangi password baru">
+                        </div>
+                        <button type="submit" class="btn-simpan">🔑 Update Password</button>
                     </form>
                 </div>
             </div>
@@ -279,28 +381,28 @@
                     <div class="toggle-row">
                         <span class="toggle-label">Pengingat Deadline</span>
                         <label class="toggle-switch">
-                            <input type="checkbox" checked>
+                            <input type="checkbox" id="notif_deadline" checked>
                             <span class="toggle-slider"></span>
                         </label>
                     </div>
                     <div class="toggle-row">
                         <span class="toggle-label">Tugas Baru</span>
                         <label class="toggle-switch">
-                            <input type="checkbox" checked>
+                            <input type="checkbox" id="notif_new" checked>
                             <span class="toggle-slider"></span>
                         </label>
                     </div>
                     <div class="toggle-row">
                         <span class="toggle-label">Tugas Selesai</span>
                         <label class="toggle-switch">
-                            <input type="checkbox">
+                            <input type="checkbox" id="notif_done">
                             <span class="toggle-slider"></span>
                         </label>
                     </div>
                     <div class="toggle-row">
                         <span class="toggle-label">Notifikasi Email</span>
                         <label class="toggle-switch">
-                            <input type="checkbox" checked>
+                            <input type="checkbox" id="notif_email" checked>
                             <span class="toggle-slider"></span>
                         </label>
                     </div>
@@ -309,29 +411,76 @@
 
             <div class="settings-card">
                 <div class="settings-card-header">
-                    <div class="settings-card-icon green">🎨</div>
-                    <div class="settings-card-title">Tampilan</div>
+                    <div class="settings-card-icon pink">⚙️</div>
+                    <div class="settings-card-title">Preferensi Todo List</div>
                 </div>
                 <div class="settings-card-body">
-                    <div class="form-group">
-                        <label>Tema</label>
-                        <div class="theme-options">
-                            <div class="theme-option active">
-                                <div class="theme-preview" style="background: linear-gradient(135deg, #ff6b9d, #ff8fa3);">🌸</div>
-                                <div class="theme-name">Pink</div>
-                            </div>
-                            <div class="theme-option">
-                                <div class="theme-preview" style="background: linear-gradient(135deg, #667eea, #764ba2);">💜</div>
-                                <div class="theme-name">Ungu</div>
-                            </div>
-                            <div class="theme-option">
-                                <div class="theme-preview" style="background: linear-gradient(135deg, #4facfe, #00f2fe);">💙</div>
-                                <div class="theme-name">Biru</div>
-                            </div>
-                            <div class="theme-option">
-                                <div class="theme-preview" style="background: linear-gradient(135deg, #43e97b, #38f9d7);">💚</div>
-                                <div class="theme-name">Hijau</div>
-                            </div>
+                    <div class="preference-grid">
+                        <div class="preference-item">
+                            <div class="preference-label">Urutan Tugas</div>
+                            <select class="preference-select" id="taskSort">
+                                <option value="newest">Terbaru</option>
+                                <option value="oldest">Terlama</option>
+                                <option value="deadline">Deadline</option>
+                                <option value="az">A-Z</option>
+                                <option value="za">Z-A</option>
+                            </select>
+                        </div>
+                        <div class="preference-item">
+                            <div class="preference-label">Tampilkan Tugas Selesai</div>
+                            <select class="preference-select" id="showCompleted">
+                                <option value="always">Selalu</option>
+                                <option value="page">Halaman Terpisah</option>
+                                <option value="never">Tidak Pernah</option>
+                            </select>
+                        </div>
+                        <div class="preference-item">
+                            <div class="preference-label">Konfirmasi Hapus</div>
+                            <select class="preference-select" id="confirmDelete">
+                                <option value="yes">Ya, selalu konfirmasi</option>
+                                <option value="no">Tidak, hapus langsung</option>
+                            </select>
+                        </div>
+                        <div class="preference-item">
+                            <div class="preference-label">Tugas per Halaman</div>
+                            <select class="preference-select" id="perPage">
+                                <option value="5">5</option>
+                                <option value="10">10</option>
+                                <option value="15">15</option>
+                                <option value="25">25</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings-card full-width">
+                <div class="settings-card-header">
+                    <div class="settings-card-icon gray">ℹ️</div>
+                    <div class="settings-card-title">Tentang Aplikasi</div>
+                </div>
+                <div class="settings-card-body">
+                    <div class="about-info">
+                        <div class="about-item">
+                            <div class="about-icon">📝</div>
+                            <div class="about-title">TodoList</div>
+                            <div class="about-value">Manajer Tugas Harian</div>
+                        </div>
+                        <div class="about-item">
+                            <div class="about-icon">📌</div>
+                            <div class="about-title">Versi</div>
+                            <div class="about-value">1.0.0</div>
+                        </div>
+                        <div class="about-item">
+                            <div class="about-icon">👨‍💻</div>
+                            <div class="about-title">Developer</div>
+                            <div class="about-value">TodoList Team</div>
+                        </div>
+                        <div class="about-desc">
+                            <p>Aplikasi TodoList membantu Anda mengelola tugas harian dengan mudah. Buat, edit, dan selesaikan tugas dengan fitur deadline, kategori, dan statistik lengkap.</p>
+                            <button type="button" class="btn-panduan" onclick="openGuide()">
+                                📖 Lihat Panduan
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -344,15 +493,6 @@
             </div>
         </div>
     </div>
-
-    <script>
-        document.querySelectorAll('.theme-option').forEach(option => {
-            option.addEventListener('click', function() {
-                document.querySelectorAll('.theme-option').forEach(opt => opt.classList.remove('active'));
-                this.classList.add('active');
-            });
-        });
-    </script>
 <?php $__env->stopSection(); ?>
 
 <?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\laragon\www\Todolist\resources\views/settings.blade.php ENDPATH**/ ?>

@@ -48,4 +48,6 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/tasks/bulk-delete', [TaskController::class, 'bulkDelete'])->name('tasks.bulkDelete');
     Route::get('/reports', [TaskController::class, 'reports'])->name('reports');
     Route::post('/profile/photo', [AuthController::class, 'updateProfilePhoto'])->name('profile.photo');
+    Route::put('/settings/profile', [AuthController::class, 'updateProfile'])->name('settings.profile');
+    Route::put('/settings/password', [AuthController::class, 'updatePassword'])->name('settings.password');
 });

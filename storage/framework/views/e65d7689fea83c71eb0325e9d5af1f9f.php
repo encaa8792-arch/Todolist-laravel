@@ -8,6 +8,54 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+      :root {
+        --theme-primary: #ff6b9d;
+        --theme-secondary: #ff8fa3;
+        --theme-bg: #fff0f5;
+        --theme-bg-light: #fff5f8;
+        --theme-border: #ffc2d1;
+        --theme-hover: #ffe0eb;
+        --theme-shadow: rgba(255,107,157,0.2);
+        --theme-shadow-dark: rgba(255,107,157,0.3);
+        --theme-danger: #ff8fa3;
+        --theme-danger-dark: #e07088;
+      }
+      .theme-purple {
+        --theme-primary: #667eea;
+        --theme-secondary: #764ba2;
+        --theme-bg: #f3f0ff;
+        --theme-bg-light: #f8f5ff;
+        --theme-border: #c4b5fd;
+        --theme-hover: #e9e3ff;
+        --theme-shadow: rgba(102,126,234,0.2);
+        --theme-shadow-dark: rgba(102,126,234,0.3);
+        --theme-danger: #f87171;
+        --theme-danger-dark: #dc2626;
+      }
+      .theme-blue {
+        --theme-primary: #4facfe;
+        --theme-secondary: #00f2fe;
+        --theme-bg: #f0f9ff;
+        --theme-bg-light: #f5fcff;
+        --theme-border: #7dd3fc;
+        --theme-hover: #e0f2fe;
+        --theme-shadow: rgba(79,172,254,0.2);
+        --theme-shadow-dark: rgba(79,172,254,0.3);
+        --theme-danger: #f87171;
+        --theme-danger-dark: #dc2626;
+      }
+      .theme-green {
+        --theme-primary: #43e97b;
+        --theme-secondary: #38f9d7;
+        --theme-bg: #f0fff4;
+        --theme-bg-light: #f5fff9;
+        --theme-border: #86efac;
+        --theme-hover: #dcfce7;
+        --theme-shadow: rgba(67,233,123,0.2);
+        --theme-shadow-dark: rgba(67,233,123,0.3);
+        --theme-danger: #f87171;
+        --theme-danger-dark: #dc2626;
+      }
       * {
         box-sizing: border-box;
       }
@@ -57,7 +105,7 @@
       .sidebar-brand a {
         font-weight: 700;
         font-size: 18px;
-        color: #ff6b9d;
+        color: var(--theme-primary);
         text-decoration: none;
       }
       .sidebar.collapsed .sidebar-header {
@@ -73,8 +121,8 @@
         display: none;
       }
       .toggle-btn {
-        background: #fff5f8;
-        border: 2px solid #ffc2d1;
+        background: var(--theme-bg);
+        border: 2px solid var(--theme-border);
         width: 36px;
         height: 36px;
         border-radius: 50%;
@@ -84,13 +132,13 @@
         justify-content: center;
         font-size: 18px;
         transition: all 0.3s ease;
-        box-shadow: 0 2px 8px rgba(255,107,157,0.2);
-        color: #ff6b9d;
+        box-shadow: 0 2px 8px var(--theme-shadow);
+        color: var(--theme-primary);
       }
       .toggle-btn:hover {
-        background: #fff0f5;
+        background: var(--theme-hover);
         transform: scale(1.05);
-        box-shadow: 0 4px 12px rgba(255,107,157,0.3);
+        box-shadow: 0 4px 12px var(--theme-shadow-dark);
       }
       .sidebar-menu {
         padding: 0 0 15px 0;
@@ -112,13 +160,13 @@
         transition: all 0.3s ease;
       }
       .menu-item:hover {
-        background: #fff0f5;
-        color: #ff6b9d;
+        background: var(--theme-bg);
+        color: var(--theme-primary);
       }
       .menu-item.active {
-        background: #ff6b9d;
+        background: var(--theme-primary);
         color: white;
-        box-shadow: 0 4px 15px rgba(255,107,157,0.3);
+        box-shadow: 0 4px 15px var(--theme-shadow-dark);
       }
       .menu-item .icon {
         width: 32px;
@@ -209,7 +257,7 @@
       }
       .topbar-btn {
         position: relative;
-        background: #fff0f5;
+        background: var(--theme-bg);
         border: none;
         width: 38px;
         height: 38px;
@@ -220,12 +268,16 @@
         justify-content: center;
         font-size: 18px;
         transition: all 0.2s;
-        color: #ff6b9d;
+        color: var(--theme-primary);
       }
       .topbar-btn:hover {
-        background: #ffe0eb;
+        background: var(--theme-hover);
         transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(255,107,157,0.2);
+        box-shadow: 0 4px 12px var(--theme-shadow);
+      }
+      .topbar-btn.active {
+        background: var(--theme-primary);
+        color: white;
       }
       .topbar-btn .tooltip-text {
         position: absolute;
@@ -257,12 +309,72 @@
         opacity: 1;
         visibility: visible;
       }
+      .theme-palette {
+        position: relative;
+      }
+      .theme-dropdown {
+        position: absolute;
+        top: calc(100% + 8px);
+        right: 0;
+        background: white;
+        border-radius: 14px;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+        padding: 12px;
+        z-index: 1004;
+        display: none;
+        min-width: 180px;
+      }
+      .theme-dropdown.show {
+        display: block;
+      }
+      .theme-dropdown-title {
+        font-size: 11px;
+        font-weight: 600;
+        color: #999;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+        padding-left: 4px;
+      }
+      .theme-colors {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+      }
+      .theme-color-btn {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 10px;
+        border: 2px solid transparent;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.2s;
+        background: #f9f9f9;
+      }
+      .theme-color-btn:hover {
+        background: var(--theme-bg);
+      }
+      .theme-color-btn.active {
+        border-color: var(--theme-primary);
+        background: var(--theme-bg);
+      }
+      .theme-color-preview {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+      .theme-color-name {
+        font-size: 12px;
+        font-weight: 500;
+        color: #555;
+      }
       .user-profile {
         display: flex;
         align-items: center;
         gap: 10px;
         padding: 6px 12px 6px 6px;
-        background: #fff0f5;
+        background: var(--theme-bg);
         border-radius: 30px;
         cursor: pointer;
         transition: all 0.2s;
@@ -271,14 +383,14 @@
         z-index: 1002;
       }
       .user-profile:hover {
-        background: #ffe0eb;
+        background: var(--theme-hover);
         transform: translateY(-1px);
-        box-shadow: 0 2px 10px rgba(255,107,157,0.15);
+        box-shadow: 0 2px 10px var(--theme-shadow);
       }
       .user-avatar {
         width: 32px;
         height: 32px;
-        background: linear-gradient(135deg, #ff6b9d, #ff8fa3);
+        background: linear-gradient(135deg, var(--theme-primary), var(--theme-secondary));
         border-radius: 50%;
         display: flex;
         align-items: center;
@@ -319,7 +431,7 @@
         z-index: 1003;
         overflow: hidden;
         display: none;
-        border: 1px solid rgba(255,182,193,0.3);
+        border: 1px solid var(--theme-border);
       }
       .user-dropdown.show {
         display: block;
@@ -342,8 +454,8 @@
         cursor: pointer;
       }
       .dropdown-item:hover {
-        background: linear-gradient(135deg, #fff0f5, #fff5f8);
-        color: #ff6b9d;
+        background: linear-gradient(135deg, var(--theme-bg), var(--theme-bg-light));
+        color: var(--theme-primary);
       }
       .dropdown-item.logout:hover {
         background: linear-gradient(135deg, #ffeaea, #fff0f0);
@@ -386,7 +498,7 @@
       select, input[type="text"] {
         flex: 1;
         padding: 12px;
-        border: 2px solid #ffc2d1;
+        border: 2px solid var(--theme-border);
         border-radius: 10px;
         font-size: 14px;
         font-family: 'Poppins', sans-serif;
@@ -397,7 +509,7 @@
         width: auto;
         min-width: 140px;
         padding: 12px;
-        border: 2px solid #ffc2d1;
+        border: 2px solid var(--theme-border);
         border-radius: 10px;
         font-size: 14px;
         font-family: 'Poppins', sans-serif;
@@ -414,10 +526,10 @@
         min-width: 120px;
       }
       select:focus, input[type="text"]:focus, input[type="date"]:focus {
-        border-color: #ff6b9d;
+        border-color: var(--theme-primary);
       }
       button {
-        background: #ff6b9d;
+        background: var(--theme-primary);
         color: white;
         border: none;
         padding: 12px 20px;
@@ -429,11 +541,11 @@
         transition: background 0.2s, transform 0.2s;
       }
       button:hover {
-        background: #e05585;
+        filter: brightness(0.9);
         transform: translateY(-1px);
       }
       .task {
-        background: #fff0f5;
+        background: var(--theme-bg);
         padding: 15px;
         border-radius: 15px;
         margin-bottom: 10px;
@@ -444,7 +556,7 @@
         transition: 0.3s;
       }
       .task:hover {
-        box-shadow: 0 4px 12px rgba(255,107,157,0.15);
+        box-shadow: 0 4px 12px var(--theme-shadow);
       }
       .task span {
         color: #000;
@@ -462,7 +574,7 @@
         flex-shrink: 0;
       }
       .badge {
-        background: #a0c4ff;
+        background: var(--theme-primary);
         color: white;
         padding: 3px 10px;
         border-radius: 8px;
@@ -495,15 +607,15 @@
         background: #e08e0b;
       }
       .delete-btn {
-        background: #ff8fa3;
+        background: var(--theme-danger);
         padding: 8px 14px;
         font-size: 12px;
       }
       .delete-btn:hover {
-        background: #e07088;
+        background: var(--theme-danger-dark);
       }
       .edit-btn {
-        background: #a0c4ff;
+        background: var(--theme-primary);
         color: white;
         padding: 8px 12px;
         border-radius: 10px;
@@ -513,7 +625,7 @@
         transition: background 0.2s;
       }
       .edit-btn:hover {
-        background: #7eb3f5;
+        filter: brightness(0.9);
       }
       .deadline-input {
         max-width: 140px;
@@ -574,7 +686,7 @@
       }
       @keyframes pulse-border {
         0%, 100% { border-left-color: #e74c3c; }
-        50% { border-left-color: #ff8fa3; }
+        50% { border-left-color: var(--theme-secondary); }
       }
       .pagination {
         display: flex;
@@ -587,18 +699,18 @@
       .pagination li a, .pagination li span {
         padding: 8px 14px;
         border-radius: 8px;
-        background: #fff0f5;
-        color: #ff6b9d;
+        background: var(--theme-bg);
+        color: var(--theme-primary);
         text-decoration: none;
         font-size: 13px;
         transition: 0.2s;
       }
       .pagination li a:hover {
-        background: #ff6b9d;
+        background: var(--theme-primary);
         color: white;
       }
       .pagination li.active span {
-        background: #ff6b9d;
+        background: var(--theme-primary);
         color: white;
       }
       .pagination li.disabled span {
@@ -620,7 +732,7 @@
       }
       .back-btn {
         display: inline-block;
-        background: #ff6b9d;
+        background: var(--theme-primary);
         color: white;
         text-decoration: none;
         padding: 10px 20px;
@@ -631,7 +743,7 @@
         transition: background 0.2s;
       }
       .back-btn:hover {
-        background: #e05585;
+        filter: brightness(0.9);
       }
       .empty {
         text-align: center;
@@ -660,7 +772,7 @@
       .edit-box select, .edit-box input[type="text"], .edit-box input[type="date"] {
         width: 100%;
         padding: 12px;
-        border: 2px solid #ffc2d1;
+        border: 2px solid var(--theme-border);
         border-radius: 10px;
         font-size: 14px;
         font-family: 'Poppins', sans-serif;
@@ -668,12 +780,12 @@
         transition: border-color 0.3s;
       }
       .edit-box select:focus, .edit-box input:focus {
-        border-color: #ff6b9d;
+        border-color: var(--theme-primary);
       }
       .btn-update {
         width: 100%;
         padding: 14px;
-        background: #ff6b9d;
+        background: var(--theme-primary);
         color: white;
         border: none;
         border-radius: 10px;
@@ -685,21 +797,21 @@
         transition: background 0.2s, transform 0.2s;
       }
       .btn-update:hover {
-        background: #e05585;
+        filter: brightness(0.9);
         transform: translateY(-2px);
       }
       .btn-back {
         display: block;
         text-align: center;
         margin-top: 15px;
-        color: #ff6b9d;
+        color: var(--theme-primary);
         text-decoration: none;
         font-weight: 500;
         font-size: 14px;
         transition: color 0.2s;
       }
       .btn-back:hover {
-        color: #e05585;
+        color: var(--theme-secondary);
         text-decoration: underline;
       }
       .navbar {
@@ -719,7 +831,7 @@
       .navbar-brand {
         font-weight: 700;
         font-size: 18px;
-        color: #ff6b9d;
+        color: var(--theme-primary);
         text-decoration: none;
       }
       .navbar-nav {
@@ -742,11 +854,11 @@
         justify-content: center;
       }
       .navbar-nav a:hover {
-        background: #fff0f5;
-        color: #ff6b9d;
+        background: var(--theme-bg);
+        color: var(--theme-primary);
       }
       .navbar-nav a.active {
-        background: #ff6b9d;
+        background: var(--theme-primary);
         color: white;
       }
       .box-overlay {
@@ -769,7 +881,7 @@
         transition: background 0.2s;
       }
       .kebab-btn:hover {
-        background: #fff0f5;
+        background: var(--theme-bg);
       }
       .kebab-btn span {
         display: block;
@@ -813,8 +925,8 @@
         transform: none;
       }
       .kebab-menu button:hover {
-        background: #fff0f5;
-        color: #ff6b9d;
+        background: var(--theme-bg);
+        color: var(--theme-primary);
         transform: none;
       }
       .kebab-menu button.danger {
@@ -847,7 +959,7 @@
         background: #7f8c8d;
       }
       #bulkForm {
-        background: #fff0f5;
+        background: var(--theme-bg);
         padding: 12px 15px;
         border-radius: 10px;
         margin-bottom: 15px;
@@ -1028,22 +1140,11 @@
         .stats-grid {
           grid-template-columns: 1fr 1fr !important;
         }
-        .weekly-stats {
-          grid-template-columns: 1fr !important;
+        .stat-card {
+          padding: 14px 12px;
         }
-        .weekly-stat {
-          padding: 10px !important;
-        }
-        .category-list .category-item {
-          flex-direction: column;
-          align-items: flex-start;
-          gap: 8px;
-        }
-        .category-stats {
-          width: 100%;
-        }
-        .chart-bar {
-          min-width: 30px;
+        .stat-card .number {
+          font-size: 22px;
         }
       }
 
@@ -1057,7 +1158,7 @@
         gap: 5px;
       }
       .guide-icon-btn span:hover {
-        background: #ff6b9d;
+        background: var(--theme-primary);
         transform: scale(1.05);
       }
       .guide-icon-btn span {
@@ -1069,7 +1170,7 @@
         display: block;
         width: 22px;
         height: 2px;
-        background: #ff6b9d;
+        background: var(--theme-primary);
         border-radius: 2px;
         transition: 0.3s;
       }
@@ -1081,6 +1182,14 @@
       }
       .mobile-menu-btn.active span:nth-child(3) {
         transform: rotate(-45deg) translate(4px, -5px);
+      }
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      @keyframes fadeOut {
+        from { opacity: 1; transform: translateY(0); }
+        to { opacity: 0; transform: translateY(10px); }
       }
 
       <?php echo $__env->yieldContent('styles'); ?>
@@ -1142,6 +1251,33 @@
                         📖
                         <span class="tooltip-text">Buku Panduan</span>
                     </button>
+                    <div class="theme-palette">
+                        <button class="topbar-btn" id="themeBtn" onclick="toggleThemeDropdown()" title="Tema">
+                            🎨
+                            <span class="tooltip-text">Tema</span>
+                        </button>
+                        <div class="theme-dropdown" id="themeDropdown">
+                            <div class="theme-dropdown-title">Pilih Tema</div>
+                            <div class="theme-colors">
+                                <div class="theme-color-btn active" data-theme="pink" onclick="setTheme('pink')">
+                                    <div class="theme-color-preview" style="background: linear-gradient(135deg, #ff6b9d, #ff8fa3);"></div>
+                                    <span class="theme-color-name">Pink</span>
+                                </div>
+                                <div class="theme-color-btn" data-theme="purple" onclick="setTheme('purple')">
+                                    <div class="theme-color-preview" style="background: linear-gradient(135deg, #667eea, #764ba2);"></div>
+                                    <span class="theme-color-name">Ungu</span>
+                                </div>
+                                <div class="theme-color-btn" data-theme="blue" onclick="setTheme('blue')">
+                                    <div class="theme-color-preview" style="background: linear-gradient(135deg, #4facfe, #00f2fe);"></div>
+                                    <span class="theme-color-name">Biru</span>
+                                </div>
+                                <div class="theme-color-btn" data-theme="green" onclick="setTheme('green')">
+                                    <div class="theme-color-preview" style="background: linear-gradient(135deg, #43e97b, #38f9d7);"></div>
+                                    <span class="theme-color-name">Hijau</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="user-profile" id="userProfileBtn">
                         <?php if(auth()->user()->profile_photo): ?>
                             <img src="<?php echo e(asset('storage/' . auth()->user()->profile_photo)); ?>" class="user-avatar-img" alt="Profil">
@@ -1176,17 +1312,17 @@
 
     <div id="photoModal" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.5); z-index:2000; justify-content:center; align-items:center;">
         <div style="background:white; border-radius:20px; padding:30px; max-width:400px; width:90%; position:relative;">
-            <button onclick="closePhotoModal()" style="position:absolute; top:15px; right:15px; background:#ff6b9d; border:none; color:white; width:32px; height:32px; border-radius:50%; cursor:pointer; font-size:18px; display:flex; align-items:center; justify-content:center;">×</button>
+            <button onclick="closePhotoModal()" style="position:absolute; top:15px; right:15px; background:var(--theme-primary); border:none; color:white; width:32px; height:32px; border-radius:50%; cursor:pointer; font-size:18px; display:flex; align-items:center; justify-content:center;">×</button>
             <div style="text-align:center; margin-bottom:20px;">
                 <span style="font-size:40px;">📷</span>
-                <h3 style="color:#ff6b9d; margin:10px 0 5px;">Foto Profil</h3>
+                <h3 style="color:var(--theme-primary); margin:10px 0 5px;">Foto Profil</h3>
                 <p style="color:#999; margin:0; font-size:13px;">Pilih foto dari komputer Anda</p>
             </div>
             <div style="text-align:center;">
                 <?php if(auth()->user()->profile_photo): ?>
-                    <img id="photoPreview" src="<?php echo e(asset('storage/' . auth()->user()->profile_photo)); ?>" style="width:100px; height:100px; border-radius:50%; object-fit:cover; margin-bottom:20px; border:3px solid #ffc2d1;">
+                    <img id="photoPreview" src="<?php echo e(asset('storage/' . auth()->user()->profile_photo)); ?>" style="width:100px; height:100px; border-radius:50%; object-fit:cover; margin-bottom:20px; border:3px solid var(--theme-border);">
                 <?php else: ?>
-                    <div id="photoPreview" style="width:100px; height:100px; border-radius:50%; background:linear-gradient(135deg, #ff6b9d, #ff8fa3); margin:0 auto 20px; display:flex; align-items:center; justify-content:center; color:white; font-size:36px; font-weight:600; border:3px solid #ffc2d1;">
+                    <div id="photoPreview" style="width:100px; height:100px; border-radius:50%; background:linear-gradient(135deg, var(--theme-primary), var(--theme-secondary)); margin:0 auto 20px; display:flex; align-items:center; justify-content:center; color:white; font-size:36px; font-weight:600; border:3px solid var(--theme-border);">
                         <?php echo e(substr(auth()->user()->name ?? 'U', 0, 1)); ?>
 
                     </div>
@@ -1194,10 +1330,10 @@
                 <form id="photoForm" enctype="multipart/form-data">
                     <?php echo csrf_field(); ?>
                     <input type="file" id="photoInput" name="profile_photo" accept="image/*" style="display:none;" onchange="previewImage(this);">
-                    <button type="button" onclick="document.getElementById('photoInput').click()" style="background:#fff0f5; color:#ff6b9d; border:2px dashed #ffc2d1; padding:12px 20px; border-radius:10px; font-size:13px; font-weight:500; font-family:'Poppins',sans-serif; cursor:pointer; width:100%; margin-bottom:15px; transition:all 0.2s;">
+                    <button type="button" onclick="document.getElementById('photoInput').click()" style="background:var(--theme-bg); color:var(--theme-primary); border:2px dashed var(--theme-border); padding:12px 20px; border-radius:10px; font-size:13px; font-weight:500; font-family:'Poppins',sans-serif; cursor:pointer; width:100%; margin-bottom:15px; transition:all 0.2s;">
                         📁 Pilih Foto
                     </button>
-                    <button type="submit" id="uploadBtn" style="background:#ff6b9d; color:white; border:none; padding:12px 20px; border-radius:10px; font-size:14px; font-weight:600; font-family:'Poppins',sans-serif; cursor:pointer; width:100%; transition:all 0.2s; opacity:0.5; pointer-events:none;">
+                    <button type="submit" id="uploadBtn" style="background:var(--theme-primary); color:white; border:none; padding:12px 20px; border-radius:10px; font-size:14px; font-weight:600; font-family:'Poppins',sans-serif; cursor:pointer; width:100%; transition:all 0.2s; opacity:0.5; pointer-events:none;">
                         💾 Simpan Foto
                     </button>
                 </form>
@@ -1207,63 +1343,63 @@
 
     <div id="guideModal" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.5); z-index:2000; justify-content:center; align-items:center;">
         <div style="background:white; border-radius:20px; padding:30px; max-width:550px; width:90%; max-height:80vh; overflow-y:auto; position:relative;">
-            <button onclick="closeGuide()" style="position:absolute; top:15px; right:15px; background:#ff6b9d; border:none; color:white; width:32px; height:32px; border-radius:50%; cursor:pointer; font-size:18px; display:flex; align-items:center; justify-content:center;">×</button>
+            <button onclick="closeGuide()" style="position:absolute; top:15px; right:15px; background:var(--theme-primary); border:none; color:white; width:32px; height:32px; border-radius:50%; cursor:pointer; font-size:18px; display:flex; align-items:center; justify-content:center;">×</button>
             <div style="text-align:center; margin-bottom:25px;">
                 <span style="font-size:50px;">📘</span>
-                <h2 style="color:#ff6b9d; margin:10px 0 5px;">Panduan TodoList</h2>
+                <h2 style="color:var(--theme-primary); margin:10px 0 5px;">Panduan TodoList</h2>
                 <p style="color:#999; margin:0;">Langkah-langkah penggunaan aplikasi</p>
             </div>
 
-            <div style="border-left:3px solid #ffc2d1; padding-left:20px; margin-bottom:20px;">
-                <h4 style="color:#ff6b9d; margin:0 0 8px;">📝 Menambah Tugas</h4>
+            <div style="border-left:3px solid var(--theme-border); padding-left:20px; margin-bottom:20px;">
+                <h4 style="color:var(--theme-primary); margin:0 0 8px;">📝 Menambah Tugas</h4>
                 <p style="margin:0; color:#666; font-size:14px;">1. Pilih kategori tugas<br>2. Masukkan nama tugas<br>3. (Opsional) Tambah deadline<br>4. Klik tombol "+ Tambah"</p>
             </div>
 
-            <div style="border-left:3px solid #ffc2d1; padding-left:20px; margin-bottom:20px;">
-                <h4 style="color:#ff6b9d; margin:0 0 8px;">✓ Menandai Selesai</h4>
+            <div style="border-left:3px solid var(--theme-border); padding-left:20px; margin-bottom:20px;">
+                <h4 style="color:var(--theme-primary); margin:0 0 8px;">✓ Menandai Selesai</h4>
                 <p style="margin:0; color:#666; font-size:14px;">Klik tombol <strong>"✓ Done"</strong> pada tugas untuk menandai selesai. Klik <strong>"↩️ Batal"</strong> untuk membatalkan.</p>
             </div>
 
-            <div style="border-left:3px solid #ffc2d1; padding-left:20px; margin-bottom:20px;">
-                <h4 style="color:#ff6b9d; margin:0 0 8px;">✏️ Mengedit Tugas</h4>
+            <div style="border-left:3px solid var(--theme-border); padding-left:20px; margin-bottom:20px;">
+                <h4 style="color:var(--theme-primary); margin:0 0 8px;">✏️ Mengedit Tugas</h4>
                 <p style="margin:0; color:#666; font-size:14px;">Klik ikon ✏️ pada tugas untuk mengedit nama, kategori, atau deadline.</p>
             </div>
 
-            <div style="border-left:3px solid #ffc2d1; padding-left:20px; margin-bottom:20px;">
-                <h4 style="color:#ff6b9d; margin:0 0 8px;">🗑️ Menghapus Tugas</h4>
+            <div style="border-left:3px solid var(--theme-border); padding-left:20px; margin-bottom:20px;">
+                <h4 style="color:var(--theme-primary); margin:0 0 8px;">🗑️ Menghapus Tugas</h4>
                 <p style="margin:0; color:#666; font-size:14px;">Klik tombol "Hapus" pada tugas, atau gunakan fitur <strong>Bulk Hapus</strong> untuk menghapus banyak tugas sekaligus.</p>
             </div>
 
-            <div style="border-left:3px solid #ffc2d1; padding-left:20px; margin-bottom:20px;">
-                <h4 style="color:#ff6b9d; margin:0 0 8px;">📋 Bulk Action</h4>
+            <div style="border-left:3px solid var(--theme-border); padding-left:20px; margin-bottom:20px;">
+                <h4 style="color:var(--theme-primary); margin:0 0 8px;">📋 Bulk Action</h4>
                 <p style="margin:0; color:#666; font-size:14px;">Fitur bulk memungkinkan kamu menandai selesai, membatalkan, atau menghapus banyak tugas sekaligus.<br><br><strong>Cara pakai:</strong><br>1. Klik menu ⋮ (kebab) di halaman<br>2. Pilih "Bulk Action" atau "Hapus"<br>3. Centang tugas yang dipilih<br>4. Klik aksi yang diinginkan</p>
             </div>
 
-            <div style="border-left:3px solid #ffc2d1; padding-left:20px; margin-bottom:20px;">
-                <h4 style="color:#ff6b9d; margin:0 0 8px;">✓ Done Semua</h4>
+            <div style="border-left:3px solid var(--theme-border); padding-left:20px; margin-bottom:20px;">
+                <h4 style="color:var(--theme-primary); margin:0 0 8px;">✓ Done Semua</h4>
                 <p style="margin:0; color:#666; font-size:14px;">Di halaman Tugas, klik menu ⋮ > <strong>"Done Semua"</strong> untuk menandai semua tugas sebagai selesai.</p>
             </div>
 
-            <div style="border-left:3px solid #ffc2d1; padding-left:20px; margin-bottom:20px;">
-                <h4 style="color:#ff6b9d; margin:0 0 8px;">📊 Dashboard</h4>
+            <div style="border-left:3px solid var(--theme-border); padding-left:20px; margin-bottom:20px;">
+                <h4 style="color:var(--theme-primary); margin:0 0 8px;">📊 Dashboard</h4>
                 <p style="margin:0; color:#666; font-size:14px;">Halaman Dashboard menampilkan statistik tugas kamu: total tugas, tugas selesai, tugas tertunda, dan tugas overdue.</p>
             </div>
 
-            <div style="border-left:3px solid #ffc2d1; padding-left:20px; margin-bottom:20px;">
-                <h4 style="color:#ff6b9d; margin:0 0 8px;">📅 Deadline</h4>
+            <div style="border-left:3px solid var(--theme-border); padding-left:20px; margin-bottom:20px;">
+                <h4 style="color:var(--theme-primary); margin:0 0 8px;">📅 Deadline</h4>
                 <p style="margin:0; color:#666; font-size:14px;">Tugas dengan deadline yang lewat akan muncul dengan <span style="background:#ff6b6b; color:white; padding:2px 8px; border-radius:5px;">tanda peringatan ⚠️</span></p>
             </div>
 
-            <div style="text-align:center; padding:15px; background:#fff0f5; border-radius:15px;">
-                <p style="margin:0; color:#ff6b9d; font-weight:600;">💡 Tips: Gunakan Bulk Action untuk kerja lebih cepat!</p>
+            <div style="text-align:center; padding:15px; background:var(--theme-bg); border-radius:15px;">
+                <p style="margin:0; color:var(--theme-primary); font-weight:600;">💡 Tips: Gunakan Bulk Action untuk kerja lebih cepat!</p>
             </div>
         </div>
     </div>
 
     <div id="bgModal" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.5); z-index:2000; justify-content:center; align-items:center;">
         <div style="background:white; border-radius:20px; padding:25px; max-width:400px; width:90%; position:relative;">
-            <button onclick="closeBgModal()" style="position:absolute; top:15px; right:15px; background:#ff6b9d; border:none; color:white; width:32px; height:32px; border-radius:50%; cursor:pointer; font-size:18px; display:flex; align-items:center; justify-content:center;">×</button>
-            <h3 style="color:#ff6b9d; margin:0 0 15px; text-align:center;">🖼️ Ganti Background</h3>
+            <button onclick="closeBgModal()" style="position:absolute; top:15px; right:15px; background:var(--theme-primary); border:none; color:white; width:32px; height:32px; border-radius:50%; cursor:pointer; font-size:18px; display:flex; align-items:center; justify-content:center;">×</button>
+            <h3 style="color:var(--theme-primary); margin:0 0 15px; text-align:center;">🖼️ Ganti Background</h3>
             <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:10px;">
                 <div onclick="setBackground('/images/bg-tulip.jpg', 'tulip')" style="cursor:pointer; border-radius:12px; overflow:hidden; border:3px solid transparent; transition:0.2s;" class="bg-option" data-bg="tulip">
                     <img src="https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=200&h=120&fit=crop" style="width:100%; height:80px; object-fit:cover;">
@@ -1279,9 +1415,9 @@
                 </div>
                 <div onclick="setBackground('https://images.unsplash.com/photo-1557683316-973673baf926?w=800', 'minimalis')" style="cursor:pointer; border-radius:12px; overflow:hidden; border:3px solid transparent; transition:0.2s;" class="bg-option" data-bg="minimalis">
                     <img src="https://images.unsplash.com/photo-1557683316-973673baf926?w=200&h=120&fit=crop" style="width:100%; height:80px; object-fit:cover;">
-                    <div style="text-align:center; padding:8px; font-size:12px; font-weight:500;">Minimalis ✨</div>
+                    <div style="text-align:center; padding:8px; font-size:12px; font-weight:500;">Minimal ✨</div>
                 </div>
-                <div onclick="document.getElementById('customBgInput').click()" style="cursor:pointer; border-radius:12px; overflow:hidden; border:3px solid #ff6b9d; transition:0.2s; display:flex; flex-direction:column; align-items:center; justify-content:center; background:#fff0f5; min-height:110px;" class="bg-option" data-bg="custom">
+                <div onclick="document.getElementById('customBgInput').click()" style="cursor:pointer; border-radius:12px; overflow:hidden; border:3px solid var(--theme-primary); transition:0.2s; display:flex; flex-direction:column; align-items:center; justify-content:center; background:var(--theme-bg); min-height:110px;" class="bg-option" data-bg="custom">
                     <span style="font-size:28px;">📁</span>
                     <div style="text-align:center; padding:8px; font-size:12px; font-weight:500;">Upload Foto</div>
                 </div>
@@ -1295,15 +1431,37 @@
     </div>
     <style>
         .bg-option:hover {
-            border-color: #ff6b9d !important;
+            border-color: var(--theme-primary) !important;
             transform: scale(1.02);
         }
         .bg-option.active {
-            border-color: #ff6b9d !important;
+            border-color: var(--theme-primary) !important;
         }
     </style>
 
     <script>
+        function toggleThemeDropdown() {
+            var dropdown = document.getElementById('themeDropdown');
+            dropdown.classList.toggle('show');
+        }
+        
+        function setTheme(theme) {
+            document.body.className = theme === 'pink' ? '' : 'theme-' + theme;
+            localStorage.setItem('appTheme', theme);
+            
+            document.querySelectorAll('.theme-color-btn').forEach(function(btn) {
+                btn.classList.remove('active');
+            });
+            document.querySelector('.theme-color-btn[data-theme="' + theme + '"]').classList.add('active');
+            
+            document.getElementById('themeDropdown').classList.remove('show');
+        }
+        
+        function loadTheme() {
+            var savedTheme = localStorage.getItem('appTheme') || 'pink';
+            setTheme(savedTheme);
+        }
+
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             const isCollapsed = sidebar.classList.toggle('collapsed');
@@ -1387,11 +1545,17 @@
                 document.getElementById('toggleIcon').textContent = '✕';
             }
         })();
+        loadTheme();
         document.getElementById('guideModal').addEventListener('click', function(e) {
             if (e.target === this) closeGuide();
         });
         document.getElementById('bgModal').addEventListener('click', function(e) {
             if (e.target === this) closeBgModal();
+        });
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.theme-palette')) {
+                document.getElementById('themeDropdown').classList.remove('show');
+            }
         });
         var userDropdown = document.getElementById('userDropdown');
         var userProfileBtn = document.getElementById('userProfileBtn');
@@ -1407,7 +1571,9 @@
             }
         });
         function openPhotoModal() {
-            alert('Fitur upload foto profil akan segera hadir!');
+            document.getElementById('photoModal').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            closeUserDropdown();
         }
         function closeUserDropdown() {
             userDropdown.classList.remove('show');
@@ -1428,11 +1594,6 @@
             }
             closeUserDropdown();
         }
-        function openPhotoModal() {
-            document.getElementById('photoModal').style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-            closeUserDropdown();
-        }
         function closePhotoModal() {
             document.getElementById('photoModal').style.display = 'none';
             document.body.style.overflow = 'auto';
@@ -1445,7 +1606,7 @@
                 var reader = new FileReader();
                 reader.onload = function(e) {
                     var preview = document.getElementById('photoPreview');
-                    preview.innerHTML = '<img src="' + e.target.result + '" style="width:100px; height:100px; border-radius:50%; object-fit:cover; border:3px solid #ffc2d1;">';
+                    preview.innerHTML = '<img src="' + e.target.result + '" style="width:100px; height:100px; border-radius:50%; object-fit:cover; border:3px solid var(--theme-border);">';
                     document.getElementById('uploadBtn').style.opacity = '1';
                     document.getElementById('uploadBtn').style.pointerEvents = 'auto';
                 };
@@ -1496,7 +1657,7 @@
                     }
                     var photoPreview = document.getElementById('photoPreview');
                     if (photoPreview) {
-                        photoPreview.innerHTML = '<img src="' + result.data.photo_url + '" style="width:100px; height:100px; border-radius:50%; object-fit:cover; border:3px solid #ffc2d1;">';
+                        photoPreview.innerHTML = '<img src="' + result.data.photo_url + '" style="width:100px; height:100px; border-radius:50%; object-fit:cover; border:3px solid var(--theme-border);">';
                     }
                     closePhotoModal();
                     alert('Foto profil berhasil diperbarui!');
@@ -1548,5 +1709,4 @@
     </script>
 </body>
 </html>
-
 <?php /**PATH C:\laragon\www\Todolist\resources\views/layouts/app.blade.php ENDPATH**/ ?>

@@ -47,4 +47,5 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/tasks/bulk-done', [TaskController::class, 'bulkDone'])->name('tasks.bulkDone');
     Route::delete('/tasks/bulk-delete', [TaskController::class, 'bulkDelete'])->name('tasks.bulkDelete');
     Route::get('/reports', [TaskController::class, 'reports'])->name('reports');
+    Route::post('/profile/photo', [AuthController::class, 'updateProfilePhoto'])->name('profile.photo');
 });

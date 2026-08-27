@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\JsonResponse;
 
 class AuthController extends Controller
 {
@@ -30,5 +32,66 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         return redirect('/login');
+    }
+
+    public function updateProfilePhoto(Request $request): JsonResponse
+    {
+        if (!Auth::check()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized'
+            ], 401);
+        }
+
+        if (!$request->hasFile('profile_photo')) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Tidak ada file yang dipilih'
+            ], 400);
+        }
+
+        $file = $request->file('profile_photo');
+
+        if (!$file->isValid()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'File tidak valid: ' . $file->getErrorMessage()
+            ], 400);
+        }
+
+        $allowedMimes = ['jpeg', 'png', 'jpg', 'webp'];
+        $extension = strtolower($file->getClientOriginalExtension());
+
+        if (!in_array($extension, $allowedMimes)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'File harus berupa gambar (JPEG, PNG, JPG, WEBP)'
+            ], 422);
+        }
+
+        if ($file->getSize() > 2 * 1024 * 1024) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Ukuran file maksimal 2MB'
+            ], 422);
+        }
+
+        $user = Auth::user();
+
+        if ($user->profile_photo) {
+            Storage::disk('public')->delete($user->profile_photo);
+        }
+
+        $filename = 'profile_' . $user->id . '_' . time() . '.' . $extension;
+        $path = $file->storeAs('profile', $filename, 'public');
+
+        $user->profile_photo = $path;
+        $user->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Foto profil berhasil diperbarui',
+            'photo_url' => asset('storage/' . $path) . '?t=' . time()
+        ]);
     }
 }

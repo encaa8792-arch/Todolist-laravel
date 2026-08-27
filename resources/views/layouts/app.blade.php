@@ -205,6 +205,7 @@
       .page-topbar-right {
         display: flex;
         gap: 8px;
+        position: relative;
       }
       .topbar-btn {
         position: relative;
@@ -255,6 +256,103 @@
       .topbar-btn:hover .tooltip-text {
         opacity: 1;
         visibility: visible;
+      }
+      .user-profile {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 6px 12px 6px 6px;
+        background: #fff0f5;
+        border-radius: 30px;
+        cursor: pointer;
+        transition: all 0.2s;
+        margin-left: 8px;
+        position: relative;
+        z-index: 1002;
+      }
+      .user-profile:hover {
+        background: #ffe0eb;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 10px rgba(255,107,157,0.15);
+      }
+      .user-avatar {
+        width: 32px;
+        height: 32px;
+        background: linear-gradient(135deg, #ff6b9d, #ff8fa3);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 600;
+        font-size: 14px;
+        flex-shrink: 0;
+      }
+      .user-avatar-img {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        object-fit: cover;
+        flex-shrink: 0;
+      }
+      .user-name {
+        font-size: 13px;
+        font-weight: 500;
+        color: #333;
+      }
+      .dropdown-arrow {
+        font-size: 10px;
+        color: #999;
+        transition: transform 0.2s;
+      }
+      .user-profile.active .dropdown-arrow {
+        transform: rotate(180deg);
+      }
+      .user-dropdown {
+        position: absolute;
+        top: calc(100% + 8px);
+        right: 0;
+        background: white;
+        border-radius: 14px;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+        min-width: 190px;
+        z-index: 1003;
+        overflow: hidden;
+        display: none;
+        border: 1px solid rgba(255,182,193,0.3);
+      }
+      .user-dropdown.show {
+        display: block;
+      }
+      .dropdown-divider {
+        height: 1px;
+        background: #f5f0f2;
+        margin: 4px 0;
+      }
+      .dropdown-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 11px 16px;
+        color: #555;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 500;
+        transition: all 0.15s ease;
+        cursor: pointer;
+      }
+      .dropdown-item:hover {
+        background: linear-gradient(135deg, #fff0f5, #fff5f8);
+        color: #ff6b9d;
+      }
+      .dropdown-item.logout:hover {
+        background: linear-gradient(135deg, #ffeaea, #fff0f0);
+        color: #ff6b6b;
+      }
+      .dropdown-item span {
+        font-size: 16px;
+        width: 20px;
+        text-align: center;
       }
       body.sidebar-collapsed .main-content {
         margin-left: 80px;
@@ -1044,12 +1142,66 @@
                         📖
                         <span class="tooltip-text">Buku Panduan</span>
                     </button>
+                    <div class="user-profile" id="userProfileBtn">
+                        @if(auth()->user()->profile_photo)
+                            <img src="{{ asset('storage/' . auth()->user()->profile_photo) }}" class="user-avatar-img" alt="Profil">
+                        @else
+                            <div class="user-avatar">{{ substr(auth()->user()->name ?? 'U', 0, 1) }}</div>
+                        @endif
+                        <span class="user-name">{{ auth()->user()->name ?? 'User' }}</span>
+                        <span class="dropdown-arrow">▼</span>
+                    </div>
+                    <div class="user-dropdown" id="userDropdown">
+                        <a href="#" class="dropdown-item" onclick="openPhotoModal(); closeUserDropdown();">
+                            <span>📷</span> Foto Profil
+                        </a>
+                        <a href="#" class="dropdown-item" onclick="closeUserDropdown();">
+                            <span>👤</span> Profil
+                        </a>
+                        <a href="/settings" class="dropdown-item" onclick="closeUserDropdown();">
+                            <span>⚙️</span> Pengaturan
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item logout" onclick="confirmLogout();">
+                            <span>🚪</span> Logout
+                        </a>
+                    </div>
                 </div>
             </div>
             <div class="box box-overlay @yield('box-class')">
                 @yield('content')
             </div>
         </main>
+    </div>
+
+    <div id="photoModal" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.5); z-index:2000; justify-content:center; align-items:center;">
+        <div style="background:white; border-radius:20px; padding:30px; max-width:400px; width:90%; position:relative;">
+            <button onclick="closePhotoModal()" style="position:absolute; top:15px; right:15px; background:#ff6b9d; border:none; color:white; width:32px; height:32px; border-radius:50%; cursor:pointer; font-size:18px; display:flex; align-items:center; justify-content:center;">×</button>
+            <div style="text-align:center; margin-bottom:20px;">
+                <span style="font-size:40px;">📷</span>
+                <h3 style="color:#ff6b9d; margin:10px 0 5px;">Foto Profil</h3>
+                <p style="color:#999; margin:0; font-size:13px;">Pilih foto dari komputer Anda</p>
+            </div>
+            <div style="text-align:center;">
+                @if(auth()->user()->profile_photo)
+                    <img id="photoPreview" src="{{ asset('storage/' . auth()->user()->profile_photo) }}" style="width:100px; height:100px; border-radius:50%; object-fit:cover; margin-bottom:20px; border:3px solid #ffc2d1;">
+                @else
+                    <div id="photoPreview" style="width:100px; height:100px; border-radius:50%; background:linear-gradient(135deg, #ff6b9d, #ff8fa3); margin:0 auto 20px; display:flex; align-items:center; justify-content:center; color:white; font-size:36px; font-weight:600; border:3px solid #ffc2d1;">
+                        {{ substr(auth()->user()->name ?? 'U', 0, 1) }}
+                    </div>
+                @endif
+                <form id="photoForm" enctype="multipart/form-data">
+                    @csrf
+                    <input type="file" id="photoInput" name="profile_photo" accept="image/*" style="display:none;" onchange="previewImage(this);">
+                    <button type="button" onclick="document.getElementById('photoInput').click()" style="background:#fff0f5; color:#ff6b9d; border:2px dashed #ffc2d1; padding:12px 20px; border-radius:10px; font-size:13px; font-weight:500; font-family:'Poppins',sans-serif; cursor:pointer; width:100%; margin-bottom:15px; transition:all 0.2s;">
+                        📁 Pilih Foto
+                    </button>
+                    <button type="submit" id="uploadBtn" style="background:#ff6b9d; color:white; border:none; padding:12px 20px; border-radius:10px; font-size:14px; font-weight:600; font-family:'Poppins',sans-serif; cursor:pointer; width:100%; transition:all 0.2s; opacity:0.5; pointer-events:none;">
+                        💾 Simpan Foto
+                    </button>
+                </form>
+            </div>
+        </div>
     </div>
 
     <div id="guideModal" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.5); z-index:2000; justify-content:center; align-items:center;">
@@ -1239,6 +1391,139 @@
         });
         document.getElementById('bgModal').addEventListener('click', function(e) {
             if (e.target === this) closeBgModal();
+        });
+        var userDropdown = document.getElementById('userDropdown');
+        var userProfileBtn = document.getElementById('userProfileBtn');
+        userProfileBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            userDropdown.classList.toggle('show');
+            this.classList.toggle('active');
+        });
+        document.addEventListener('click', function(e) {
+            if (!userProfileBtn.contains(e.target) && !userDropdown.contains(e.target)) {
+                userDropdown.classList.remove('show');
+                userProfileBtn.classList.remove('active');
+            }
+        });
+        function openPhotoModal() {
+            alert('Fitur upload foto profil akan segera hadir!');
+        }
+        function closeUserDropdown() {
+            userDropdown.classList.remove('show');
+            userProfileBtn.classList.remove('active');
+        }
+        function confirmLogout() {
+            if (confirm('Apakah Anda yakin ingin keluar?')) {
+                var form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '/logout';
+                var csrfInput = document.createElement('input');
+                csrfInput.type = 'hidden';
+                csrfInput.name = '_token';
+                csrfInput.value = '{{ csrf_token() }}';
+                form.appendChild(csrfInput);
+                document.body.appendChild(form);
+                form.submit();
+            }
+            closeUserDropdown();
+        }
+        function openPhotoModal() {
+            document.getElementById('photoModal').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            closeUserDropdown();
+        }
+        function closePhotoModal() {
+            document.getElementById('photoModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+            document.getElementById('photoInput').value = '';
+            document.getElementById('uploadBtn').style.opacity = '0.5';
+            document.getElementById('uploadBtn').style.pointerEvents = 'none';
+        }
+        function previewImage(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    var preview = document.getElementById('photoPreview');
+                    preview.innerHTML = '<img src="' + e.target.result + '" style="width:100px; height:100px; border-radius:50%; object-fit:cover; border:3px solid #ffc2d1;">';
+                    document.getElementById('uploadBtn').style.opacity = '1';
+                    document.getElementById('uploadBtn').style.pointerEvents = 'auto';
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        document.getElementById('photoForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            var formData = new FormData(this);
+            var uploadBtn = document.getElementById('uploadBtn');
+            uploadBtn.textContent = '⏳ Mengunggah...';
+            uploadBtn.style.opacity = '0.7';
+
+            fetch('/profile/photo', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json'
+                }
+            })
+            .then(function(response) {
+                var contentType = response.headers.get('content-type');
+                if (contentType && contentType.indexOf('application/json') !== -1) {
+                    return response.json().then(function(data) {
+                        return { ok: response.ok, status: response.status, data: data };
+                    });
+                }
+                return response.text().then(function(text) {
+                    return { ok: response.ok, status: response.status, data: null, text: text };
+                });
+            })
+            .then(function(result) {
+                if (result.ok && result.data && result.data.success) {
+                    var userProfileBtn = document.getElementById('userProfileBtn');
+                    var existingImg = userProfileBtn.querySelector('.user-avatar-img');
+                    var avatarDiv = userProfileBtn.querySelector('.user-avatar');
+
+                    if (existingImg) {
+                        existingImg.src = result.data.photo_url;
+                    } else if (avatarDiv) {
+                        var newImg = document.createElement('img');
+                        newImg.src = result.data.photo_url;
+                        newImg.className = 'user-avatar-img';
+                        newImg.alt = 'Profil';
+                        newImg.style.cssText = 'width:32px; height:32px; border-radius:50%; object-fit:cover; flex-shrink:0;';
+                        avatarDiv.replaceWith(newImg);
+                    }
+                    var photoPreview = document.getElementById('photoPreview');
+                    if (photoPreview) {
+                        photoPreview.innerHTML = '<img src="' + result.data.photo_url + '" style="width:100px; height:100px; border-radius:50%; object-fit:cover; border:3px solid #ffc2d1;">';
+                    }
+                    closePhotoModal();
+                    alert('Foto profil berhasil diperbarui!');
+                } else if (result.data && result.data.message) {
+                    alert(result.data.message);
+                } else if (result.status === 422 && result.data && result.data.errors) {
+                    var errors = result.data.errors;
+                    var firstError = Object.values(errors)[0];
+                    alert(Array.isArray(firstError) ? firstError[0] : firstError);
+                } else if (result.status === 419) {
+                    alert('Sesi habis. Silakan refresh halaman dan coba lagi.');
+                } else if (result.status === 401) {
+                    alert('Silakan login terlebih dahulu.');
+                } else {
+                    alert('Terjadi kesalahan saat mengunggah foto (Status: ' + result.status + ')');
+                }
+            })
+            .catch(function(error) {
+                alert('Terjadi kesalahan saat mengunggah foto. Silakan coba lagi.');
+                console.error('Upload error:', error);
+            })
+            .finally(function() {
+                uploadBtn.textContent = '💾 Simpan Foto';
+                uploadBtn.style.opacity = '1';
+            });
+        });
+        document.getElementById('photoModal').addEventListener('click', function(e) {
+            if (e.target === this) closePhotoModal();
         });
     </script>
     <script>

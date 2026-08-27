@@ -93,6 +93,28 @@
         .form-group input::placeholder {
             color: #bbb;
         }
+        .password-wrapper {
+            position: relative;
+        }
+        .password-wrapper input {
+            padding-right: 48px;
+        }
+        .password-toggle {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            opacity: 0.5;
+            transition: opacity 0.2s;
+            padding: 0;
+        }
+        .password-toggle:hover {
+            opacity: 1;
+        }
         .remember-row {
             display: flex;
             justify-content: space-between;
@@ -236,7 +258,10 @@
                 </div>
                 <div class="form-group">
                     <label>Password</label>
-                    <input type="password" name="password" placeholder="Masukkan password" required>
+                    <div class="password-wrapper">
+                        <input type="password" name="password" id="passwordInput" placeholder="Masukkan password" required>
+                        <button type="button" class="password-toggle" onclick="togglePassword()">👁️</button>
+                    </div>
                 </div>
                 <div class="remember-row">
                     <label class="remember-me">
@@ -259,6 +284,20 @@
             </p>
         </div>
     </div>
+
+    <script>
+        function togglePassword() {
+            const input = document.getElementById('passwordInput');
+            const toggle = document.querySelector('.password-toggle');
+            if (input.type === 'password') {
+                input.type = 'text';
+                toggle.textContent = '🙈';
+            } else {
+                input.type = 'password';
+                toggle.textContent = '👁️';
+            }
+        }
+    </script>
 </body>
 </html>
 <?php /**PATH C:\laragon\www\Todolist\resources\views/login.blade.php ENDPATH**/ ?>

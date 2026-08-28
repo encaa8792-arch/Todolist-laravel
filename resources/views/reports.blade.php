@@ -3,31 +3,11 @@
 @section('page-title', 'Laporan')
 
 @section('styles')
-    .report-container {
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-    }
-    .report-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 15px;
-    }
-    .report-header h1 {
-        margin: 0;
-        font-size: 24px;
-        color: #333;
-    }
-    .report-header h1 span {
-        color: #ff6b9d;
-    }
     .export-btn {
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        background: #ff6b9d;
+        background: var(--theme-primary);
         color: white;
         border: none;
         padding: 10px 20px;
@@ -36,12 +16,10 @@
         font-weight: 600;
         font-family: 'Poppins', sans-serif;
         cursor: pointer;
-        transition: all 0.2s;
+        transition: filter 0.2s;
     }
     .export-btn:hover {
-        background: #e05585;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 15px rgba(255,107,157,0.3);
+        filter: brightness(0.9);
     }
     .stats-grid {
         display: grid;
@@ -49,11 +27,8 @@
         gap: 16px;
     }
     .stat-card {
-        background: white;
         padding: 20px;
         border-radius: 16px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        border: 1px solid rgba(255,182,193,0.2);
         transition: transform 0.2s, box-shadow 0.2s;
         position: relative;
         overflow: hidden;
@@ -68,7 +43,6 @@
     }
     .stat-card:hover {
         transform: translateY(-3px);
-        box-shadow: 0 8px 25px rgba(255,107,157,0.15);
     }
     .stat-card .icon-bg {
         position: absolute;
@@ -86,29 +60,26 @@
     }
     .stat-card .label {
         font-size: 13px;
-        font-weight: 500;
-        color: #666;
+        font-weight: 600;
+        color: #334155;
     }
     .stat-card .sublabel {
-        font-size: 11px;
-        color: #9ca3af;
+        font-size: 12px;
+        color: #64748b;
         margin-top: 4px;
     }
-    .stat-card.total::before { background: linear-gradient(90deg, #ff6b9d, #ff8fa3); }
-    .stat-card.total .number { color: #ff6b9d; }
-    .stat-card.completed::before { background: linear-gradient(90deg, #2ecc71, #58d68d); }
-    .stat-card.completed .number { color: #2ecc71; }
+    .stat-card.total::before { background: linear-gradient(90deg, var(--theme-primary), var(--theme-secondary)); }
+    .stat-card.total .number { color: var(--theme-primary); }
+    .stat-card.completed::before { background: linear-gradient(90deg, #16a34a, #22c55e); }
+    .stat-card.completed .number { color: #16a34a; }
     .stat-card.pending::before { background: linear-gradient(90deg, #f39c12, #f5b041); }
     .stat-card.pending .number { color: #f39c12; }
     .stat-card.overdue::before { background: linear-gradient(90deg, #ff6b6b, #ff8a8a); }
     .stat-card.overdue .number { color: #ff6b6b; }
 
     .filter-section {
-        background: white;
-        padding: 16px 20px;
+        padding: 20px;
         border-radius: 16px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        border: 1px solid rgba(255,182,193,0.2);
     }
     .filter-row {
         display: flex;
@@ -123,61 +94,54 @@
     }
     .filter-group label {
         font-size: 11px;
-        font-weight: 500;
-        color: #888;
+        font-weight: 600;
+        color: #475569;
     }
     .filter-group select,
     .filter-group input {
-        padding: 8px 12px;
-        border: 2px solid #ffc2d1;
-        border-radius: 8px;
+        padding: 10px 14px;
+        border: 2px solid #e2e8f0;
+        border-radius: 10px;
         font-size: 13px;
         font-family: 'Poppins', sans-serif;
         outline: none;
-        transition: border-color 0.2s;
+        transition: border-color 0.2s, box-shadow 0.2s;
         background: white;
+        min-height: 42px;
     }
     .filter-group select:focus,
     .filter-group input:focus {
-        border-color: #ff6b9d;
+        border-color: var(--theme-primary);
+        box-shadow: 0 0 0 3px rgba(255, 107, 157, 0.1);
     }
     .filter-group select {
-        min-width: 140px;
+        min-width: 150px;
     }
     .filter-group input[type="date"] {
-        min-width: 130px;
+        min-width: 140px;
     }
-    .btn-apply {
-        background: #ff6b9d;
-        color: white;
+    .btn-apply:hover {
+        filter: brightness(0.9);
+    }
+    .btn-reset {
+        background: #f1f5f9;
+        color: #475569;
         border: none;
-        padding: 8px 16px;
-        border-radius: 8px;
-        font-size: 12px;
+        padding: 10px 20px;
+        border-radius: 10px;
+        font-size: 13px;
         font-weight: 600;
         font-family: 'Poppins', sans-serif;
         cursor: pointer;
-        transition: background 0.2s;
+        transition: all 0.2s;
         white-space: nowrap;
-    }
-    .btn-apply:hover {
-        background: #e05585;
-    }
-    .btn-reset {
-        background: #f0f0f0;
-        color: #666;
-        border: none;
-        padding: 8px 16px;
-        border-radius: 8px;
-        font-size: 12px;
-        font-weight: 500;
-        font-family: 'Poppins', sans-serif;
-        cursor: pointer;
-        transition: background 0.2s;
-        white-space: nowrap;
+        min-height: 42px;
+        display: flex;
+        align-items: center;
     }
     .btn-reset:hover {
-        background: #e0e0e0;
+        background: #e2e8f0;
+        color: #334155;
     }
 
     .report-grid {
@@ -186,39 +150,35 @@
         gap: 16px;
     }
     .report-card {
-        background: white;
-        padding: 18px;
+        padding: 20px;
         border-radius: 16px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        border: 1px solid rgba(255,182,193,0.2);
-        transition: transform 0.2s, box-shadow 0.2s;
+        transition: transform 0.2s;
     }
     .report-card:hover {
         transform: translateY(-3px);
-        box-shadow: 0 8px 25px rgba(255,107,157,0.15);
     }
     .report-card-header {
         display: flex;
         align-items: center;
         gap: 12px;
-        margin-bottom: 14px;
+        margin-bottom: 16px;
         padding-bottom: 12px;
-        border-bottom: 2px solid #fff0f5;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.06);
     }
     .report-card-icon {
-        width: 40px;
-        height: 40px;
-        border-radius: 10px;
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 20px;
+        font-size: 22px;
     }
     .report-card-icon.pink { background: rgba(255,107,157,0.15); }
     .report-card-icon.green { background: rgba(46,204,113,0.15); }
     .report-card-icon.orange { background: rgba(243,156,18,0.15); }
     .report-card-title {
-        font-size: 14px;
+        font-size: 16px;
         font-weight: 600;
         color: #333;
     }
@@ -229,20 +189,20 @@
         padding: 8px 0;
     }
     .report-card-stat:not(:last-child) {
-        border-bottom: 1px dashed #f5f5f5;
+        border-bottom: 1px dashed #e2e8f0;
     }
     .report-card-stat-label {
-        font-size: 12px;
-        color: #888;
+        font-size: 13px;
+        color: #64748b;
     }
     .report-card-stat-value {
         font-size: 14px;
         font-weight: 600;
-        color: #333;
+        color: #1e293b;
     }
-    .report-card-stat-value.pink { color: #ff6b9d; }
-    .report-card-stat-value.green { color: #2ecc71; }
-    .report-card-stat-value.orange { color: #f39c12; }
+    .report-card-stat-value.pink { color: var(--theme-primary); }
+    .report-card-stat-value.green { color: #16a34a; }
+    .report-card-stat-value.orange { color: #ea580c; }
 
     @media (max-width: 1200px) {
         .stats-grid {
@@ -281,10 +241,6 @@
         .report-grid {
             grid-template-columns: 1fr;
         }
-        .report-header {
-            flex-direction: column;
-            align-items: flex-start;
-        }
     }
     @media (max-width: 480px) {
         .stats-grid {
@@ -300,42 +256,49 @@
 @endsection
 
 @section('content')
-    <div class="report-container">
-        <div class="report-header">
-            <h1>Laporan <span>Tugas</span></h1>
+    <div class="glass-card" style="background: rgba(255, 255, 255, 0.6); border: 1px solid rgba(255, 255, 255, 0.5); box-shadow: 0 4px 20px rgba(0,0,0,0.05);">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:15px;">
             <button class="export-btn" onclick="exportReport()">
                 📥 Export Laporan
             </button>
         </div>
 
-        <div class="stats-grid">
-            <div class="stat-card total">
-                <span class="icon-bg">📋</span>
-                <div class="number">{{ $totalTasks }}</div>
-                <div class="label">Total Tugas</div>
-                <div class="sublabel">Semua tugas dibuat</div>
+        <div class="stats-grid" style="margin-top: 20px;">
+            <div class="glass-card" style="padding: 20px; background: rgba(255, 255, 255, 0.88); border: 1px solid rgba(255, 255, 255, 0.7); box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+                <div class="stat-card total">
+                    <span class="icon-bg">📋</span>
+                    <div class="number">{{ $totalTasks }}</div>
+                    <div class="label">Total Tugas</div>
+                    <div class="sublabel">Semua tugas dibuat</div>
+                </div>
             </div>
-            <div class="stat-card completed">
-                <span class="icon-bg">✓</span>
-                <div class="number">{{ $completedTasks }}</div>
-                <div class="label">Selesai</div>
-                <div class="sublabel">Tugas selesai</div>
+            <div class="glass-card" style="padding: 20px; background: rgba(255, 255, 255, 0.88); border: 1px solid rgba(255, 255, 255, 0.7); box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+                <div class="stat-card completed">
+                    <span class="icon-bg">✓</span>
+                    <div class="number">{{ $completedTasks }}</div>
+                    <div class="label">Selesai</div>
+                    <div class="sublabel">Tugas selesai</div>
+                </div>
             </div>
-            <div class="stat-card pending">
-                <span class="icon-bg">⏳</span>
-                <div class="number">{{ $pendingTasks }}</div>
-                <div class="label">Belum Selesai</div>
-                <div class="sublabel">Sedang berjalan</div>
+            <div class="glass-card" style="padding: 20px; background: rgba(255, 255, 255, 0.88); border: 1px solid rgba(255, 255, 255, 0.7); box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+                <div class="stat-card pending">
+                    <span class="icon-bg">⏳</span>
+                    <div class="number">{{ $pendingTasks }}</div>
+                    <div class="label">Belum Selesai</div>
+                    <div class="sublabel">Sedang berjalan</div>
+                </div>
             </div>
-            <div class="stat-card overdue">
-                <span class="icon-bg">⚠️</span>
-                <div class="number">{{ $overdueTasks }}</div>
-                <div class="label">Terlambat</div>
-                <div class="sublabel">Melewati deadline</div>
+            <div class="glass-card" style="padding: 20px; background: rgba(255, 255, 255, 0.88); border: 1px solid rgba(255, 255, 255, 0.7); box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+                <div class="stat-card overdue">
+                    <span class="icon-bg">⚠️</span>
+                    <div class="number">{{ $overdueTasks }}</div>
+                    <div class="label">Terlambat</div>
+                    <div class="sublabel">Melewati deadline</div>
+                </div>
             </div>
         </div>
 
-        <div class="filter-section">
+        <div class="filter-section" style="background: rgba(255, 255, 255, 0.88); border: 1px solid rgba(255, 255, 255, 0.7);">
             <div class="filter-row">
                 <div class="filter-group">
                     <label>Kategori</label>
@@ -361,7 +324,7 @@
         </div>
 
         <div class="report-grid">
-            <div class="report-card">
+            <div class="report-card" style="background: rgba(255, 255, 255, 0.88); border: 1px solid rgba(255, 255, 255, 0.7); box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
                 <div class="report-card-header">
                     <div class="report-card-icon pink">📊</div>
                     <div class="report-card-title">Ringkasan</div>
@@ -380,7 +343,7 @@
                 </div>
             </div>
 
-            <div class="report-card">
+            <div class="report-card" style="background: rgba(255, 255, 255, 0.88); border: 1px solid rgba(255, 255, 255, 0.7); box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
                 <div class="report-card-header">
                     <div class="report-card-icon green">✓</div>
                     <div class="report-card-title">Tugas Selesai</div>
@@ -399,7 +362,7 @@
                 </div>
             </div>
 
-            <div class="report-card">
+            <div class="report-card" style="background: rgba(255, 255, 255, 0.88); border: 1px solid rgba(255, 255, 255, 0.7); box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
                 <div class="report-card-header">
                     <div class="report-card-icon orange">⏳</div>
                     <div class="report-card-title">Status Tugas</div>

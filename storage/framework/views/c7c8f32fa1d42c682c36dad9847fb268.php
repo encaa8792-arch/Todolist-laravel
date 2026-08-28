@@ -2,12 +2,6 @@
 <?php $__env->startSection('page-title', 'Daftar Tugas'); ?>
 
 <?php $__env->startSection('styles'); ?>
-    .todo-container {
-        background: rgba(255,255,255,0.95);
-        border-radius: 20px;
-        padding: 24px;
-        box-shadow: 0 8px 32px rgba(0,0,0,0.08);
-    }
     .todo-header {
         text-align: center;
         margin-bottom: 24px;
@@ -67,7 +61,7 @@
         width: 140px;
     }
     .btn-tambah {
-        background: linear-gradient(135deg, #ff6b9d, #ff8fa3);
+        background: var(--theme-primary);
         color: white;
         border: none;
         padding: 10px 22px;
@@ -76,17 +70,15 @@
         font-weight: 600;
         font-family: 'Poppins', sans-serif;
         font-size: 13px;
-        transition: all 0.2s;
+        transition: filter 0.2s;
         white-space: nowrap;
         height: 42px;
         display: flex;
         align-items: center;
         gap: 6px;
-        box-shadow: 0 4px 12px rgba(255,107,157,0.3);
     }
     .btn-tambah:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 16px rgba(255,107,157,0.4);
+        filter: brightness(0.9);
     }
     .task-list {
         display: flex;
@@ -99,18 +91,13 @@
         justify-content: space-between;
         gap: 16px;
         padding: 14px 18px;
-        background: white;
         border-radius: 12px;
-        border: 1px solid #f0f0f0;
         transition: all 0.2s;
     }
     .task-item:hover {
-        border-color: #ffc2d1;
-        box-shadow: 0 4px 16px rgba(255,107,157,0.1);
         transform: translateX(4px);
     }
     .task-item.done {
-        background: #f8f8f8;
         opacity: 0.7;
     }
     .task-item.done .task-name {
@@ -303,7 +290,7 @@
         <div class="success-msg"><?php echo e(session('success')); ?></div>
     <?php endif; ?>
 
-    <div class="todo-container">
+    <div class="glass-card" style="background: rgba(255, 255, 255, 0.6); border: 1px solid rgba(255, 255, 255, 0.5); box-shadow: 0 4px 20px rgba(0,0,0,0.05);">
         <form method="POST" action="/tasks" class="todo-form" style="margin-top: 0;">
             <?php echo csrf_field(); ?>
             <div class="form-group">

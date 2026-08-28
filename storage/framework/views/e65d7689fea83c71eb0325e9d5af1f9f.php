@@ -1191,6 +1191,140 @@
         from { opacity: 1; transform: translateY(0); }
         to { opacity: 0; transform: translateY(10px); }
       }
+      .content-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        width: 100%;
+        max-width: 95%;
+      }
+      .glass-card {
+        background: rgba(255, 255, 255, 0.72);
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        border-radius: 16px;
+        padding: 24px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+      }
+      .glass-card-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 20px;
+        padding-bottom: 16px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+      }
+      .glass-card-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        flex-shrink: 0;
+      }
+      .glass-card-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #1e293b;
+      }
+      .glass-card-body {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+      .stat-card {
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        border: 1px solid rgba(0, 0, 0, 0.04);
+        transition: transform 0.2s, box-shadow 0.2s;
+      }
+      .stat-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+      }
+      .report-card {
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        border: 1px solid rgba(0, 0, 0, 0.04);
+        transition: transform 0.2s, box-shadow 0.2s;
+      }
+      .report-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+      }
+      .category-card {
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        border: 1px solid rgba(0, 0, 0, 0.04);
+        transition: transform 0.2s, box-shadow 0.2s;
+      }
+      .category-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+      }
+      .card {
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        border: 1px solid rgba(0, 0, 0, 0.04);
+        padding: 20px;
+        transition: transform 0.2s, box-shadow 0.2s;
+      }
+      .card:hover {
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+      }
+      .completed-item {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+        border: 1px solid rgba(0, 0, 0, 0.04);
+        transition: transform 0.2s, box-shadow 0.2s;
+      }
+      .completed-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+      }
+      .preference-item {
+        background: white;
+        border-radius: 12px;
+        padding: 16px;
+        border: 1px solid rgba(0, 0, 0, 0.06);
+        transition: all 0.2s;
+      }
+      .preference-item:hover {
+        border-color: var(--theme-border);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+      }
+      .about-item {
+        background: white;
+        border-radius: 14px;
+        padding: 20px;
+        text-align: center;
+        border: 1px solid rgba(0, 0, 0, 0.06);
+        transition: all 0.2s;
+      }
+      .about-item:hover {
+        border-color: var(--theme-border);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+      }
+      .task-item {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+        border: 1px solid rgba(0, 0, 0, 0.04);
+        transition: all 0.2s;
+      }
+      .task-item:hover {
+        transform: translateX(4px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+      }
+      .task-item.done {
+        opacity: 0.7;
+      }
 
       <?php echo $__env->yieldContent('styles'); ?>
     </style>
@@ -1304,7 +1438,7 @@
                     </div>
                 </div>
             </div>
-            <div class="box box-overlay <?php echo $__env->yieldContent('box-class'); ?>">
+            <div class="content-wrapper <?php echo $__env->yieldContent('box-class', ''); ?>">
                 <?php echo $__env->yieldContent('content'); ?>
             </div>
         </main>

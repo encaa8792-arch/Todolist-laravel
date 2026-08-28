@@ -3,8 +3,6 @@
 @section('title', 'Edit Tugas')
 @section('page-title', 'Edit Tugas')
 
-@section('box-class', 'edit-box')
-
 @section('styles')
     .edit-form-group {
         display: flex;
@@ -21,7 +19,7 @@
     .edit-form-group input[type="text"] {
         width: 100%;
         padding: 12px;
-        border: 2px solid #ffc2d1;
+        border: 2px solid var(--theme-border);
         border-radius: 10px;
         font-size: 14px;
         font-family: 'Poppins', sans-serif;
@@ -30,7 +28,7 @@
     }
     .edit-form-group select:focus,
     .edit-form-group input[type="text"]:focus {
-        border-color: #ff6b9d;
+        border-color: var(--theme-primary);
     }
     .date-row {
         display: flex;
@@ -58,7 +56,7 @@
     .date-col input {
         width: 100%;
         padding: 12px;
-        border: 2px solid #ffc2d1;
+        border: 2px solid var(--theme-border);
         border-radius: 10px;
         font-size: 14px;
         font-family: 'Poppins', sans-serif;
@@ -66,12 +64,12 @@
         transition: border-color 0.3s;
     }
     .date-col input:focus {
-        border-color: #ff6b9d;
+        border-color: var(--theme-primary);
     }
     .btn-update {
         width: 100%;
         padding: 14px;
-        background: #ff6b9d;
+        background: var(--theme-primary);
         color: white;
         border: none;
         border-radius: 10px;
@@ -80,31 +78,32 @@
         cursor: pointer;
         margin-top: 15px;
         font-family: 'Poppins', sans-serif;
-        transition: background 0.2s, transform 0.2s;
+        transition: filter 0.2s, transform 0.2s;
     }
     .btn-update:hover {
-        background: #e05585;
+        filter: brightness(0.9);
         transform: translateY(-2px);
     }
     .btn-back {
         display: block;
         text-align: center;
         margin-top: 12px;
-        color: #ff6b9d;
+        color: var(--theme-primary);
         text-decoration: none;
         font-weight: 500;
         font-size: 13px;
         transition: color 0.2s;
     }
     .btn-back:hover {
-        color: #e05585;
+        color: var(--theme-secondary);
         text-decoration: underline;
     }
 @endsection
 
 @section('content')
-    <h2>✏️ Edit Tugas</h2>
-    <form action="{{ route('tasks.update', $task->id) }}" method="POST" id="editForm">
+    <div class="glass-card">
+        <h2 style="text-align:center; margin:0 0 20px; color:#333;">✏️ Edit Tugas</h2>
+        <form action="{{ route('tasks.update', $task->id) }}" method="POST" id="editForm">
         @csrf
         @method('PUT')
 
@@ -139,6 +138,7 @@
         <button type="submit" class="btn-update">Update</button>
     </form>
     <a href="/tasks" class="btn-back">← Batal / Kembali</a>
+    </div>
 
     <script>
         document.getElementById('deadline').addEventListener('change', function() {

@@ -3,53 +3,34 @@
 @section('page-title', 'Pengaturan')
 
 @section('styles')
-    .settings-container {
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-    }
-    .settings-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-    .settings-header h1 {
-        margin: 0;
-        font-size: 24px;
-        color: #333;
-    }
-    .settings-header h1 span {
-        color: var(--theme-primary);
-    }
     .settings-section {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         gap: 16px;
     }
     .settings-card {
-        background: white;
-        padding: 20px;
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.6);
         border-radius: 16px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        border: 1px solid var(--theme-border);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+        padding: 24px;
         transition: transform 0.2s, box-shadow 0.2s;
         display: flex;
         flex-direction: column;
     }
     .settings-card:hover {
         transform: translateY(-3px);
-        box-shadow: 0 8px 25px var(--theme-shadow);
-    }
-    .settings-card.full-width {
-        grid-column: 1 / -1;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
     }
     .settings-card-header {
         display: flex;
         align-items: center;
         gap: 12px;
-        margin-bottom: 16px;
-        padding-bottom: 12px;
-        border-bottom: 2px solid var(--theme-bg);
+        margin-bottom: 20px;
+        padding-bottom: 16px;
+        border-bottom: 1px solid #f0f0f0;
     }
     .settings-card-icon {
         width: 44px;
@@ -59,15 +40,19 @@
         align-items: center;
         justify-content: center;
         font-size: 22px;
+        flex-shrink: 0;
     }
-    .settings-card-icon.pink { background: var(--theme-bg); }
+    .settings-card-icon.pink { background: rgba(255,107,157,0.15); }
     .settings-card-icon.blue { background: rgba(160,196,255,0.15); }
     .settings-card-icon.green { background: rgba(46,204,113,0.15); }
     .settings-card-icon.purple { background: rgba(155,89,182,0.15); }
     .settings-card-icon.orange { background: rgba(255,165,0,0.15); }
     .settings-card-icon.gray { background: rgba(150,150,150,0.15); }
     .settings-card-title {
-        font-size: 15px;
+        font-size: 16px;
+        font-weight: 600;
+        color: #333;
+    }
         font-weight: 600;
         color: #333;
     }
@@ -200,13 +185,12 @@
         gap: 12px;
     }
     .preference-item {
-        background: var(--theme-bg);
         padding: 14px;
         border-radius: 12px;
-        transition: background 0.2s;
+        transition: all 0.2s;
     }
     .preference-item:hover {
-        background: var(--theme-hover);
+        transform: translateY(-2px);
     }
     .preference-label {
         font-size: 12px;
@@ -236,7 +220,6 @@
     .about-item {
         text-align: center;
         padding: 20px 16px;
-        background: var(--theme-bg);
         border-radius: 14px;
         transition: transform 0.2s;
     }
@@ -259,7 +242,6 @@
     }
     .about-desc {
         grid-column: 1 / -1;
-        background: var(--theme-bg);
         padding: 16px;
         border-radius: 14px;
         text-align: center;
@@ -299,11 +281,6 @@
         .settings-section {
             grid-template-columns: 1fr;
         }
-        .settings-header {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 10px;
-        }
         .preference-grid {
             grid-template-columns: 1fr;
         }
@@ -317,15 +294,12 @@
 @endsection
 
 @section('content')
-    <div class="settings-container">
+    <div class="glass-card" style="background: rgba(255, 255, 255, 0.6); border: 1px solid rgba(255, 255, 255, 0.5); box-shadow: 0 4px 20px rgba(0,0,0,0.05);">
         @if(session('success'))
             <div class="success-message" style="background:#d4edda; color:#155724; padding:12px 16px; border-radius:12px; margin-bottom:10px; font-size:13px; display:flex; align-items:center; gap:8px;">
                 <span>✓</span> {{ session('success') }}
             </div>
         @endif
-        <div class="settings-header">
-            <h1>Pengaturan <span>TodoList</span></h1>
-        </div>
 
         <div class="settings-section">
             <div class="settings-card">
@@ -346,28 +320,6 @@
                             <input type="email" name="email" value="{{ auth()->user()->email ?? 'email@contoh.com' }}">
                         </div>
                         <button type="submit" class="btn-simpan">💾 Simpan Profil</button>
-                    </form>
-                </div>
-            </div>
-
-            <div class="settings-card">
-                <div class="settings-card-header">
-                    <div class="settings-card-icon purple">🔒</div>
-                    <div class="settings-card-title">Ubah Password</div>
-                </div>
-                <div class="settings-card-body">
-                    <form method="POST" action="/settings/password">
-                        @csrf
-                        @method('PUT')
-                        <div class="form-group">
-                            <label>Password Baru</label>
-                            <input type="password" name="password" placeholder="Masukkan password baru">
-                        </div>
-                        <div class="form-group">
-                            <label>Konfirmasi Password</label>
-                            <input type="password" name="password_confirmation" placeholder="Ulangi password baru">
-                        </div>
-                        <button type="submit" class="btn-simpan">🔑 Update Password</button>
                     </form>
                 </div>
             </div>
@@ -454,7 +406,7 @@
                 </div>
             </div>
 
-            <div class="settings-card full-width">
+            <div class="settings-card">
                 <div class="settings-card-header">
                     <div class="settings-card-icon gray">ℹ️</div>
                     <div class="settings-card-title">Tentang Aplikasi</div>
@@ -476,21 +428,24 @@
                             <div class="about-title">Developer</div>
                             <div class="about-value">TodoList Team</div>
                         </div>
-                        <div class="about-desc">
-                            <p>Aplikasi TodoList membantu Anda mengelola tugas harian dengan mudah. Buat, edit, dan selesaikan tugas dengan fitur deadline, kategori, dan statistik lengkap.</p>
-                            <button type="button" class="btn-panduan" onclick="openGuide()">
-                                📖 Lihat Panduan
-                            </button>
-                        </div>
                     </div>
+                    <p style="text-align:center; margin:16px 0 0; font-size:13px; color:#666; line-height:1.6;">
+                        Aplikasi TodoList membantu Anda mengelola tugas harian dengan mudah.
+                    </p>
+                    <button type="button" class="btn-panduan" onclick="openGuide()" style="margin:16px auto 0; display:flex;">
+                        📖 Lihat Panduan
+                    </button>
                 </div>
-                <a href="/logout" class="logout-btn" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                    🚪 Logout
-                </a>
-                <form id="logout-form" action="/logout" method="POST" style="display: none;">
-                    @csrf
-                </form>
             </div>
         </div>
+    </div>
+    
+    <div class="glass-card" style="display:flex; justify-content:center; margin-top:0; background: rgba(255, 255, 255, 0.6); border: 1px solid rgba(255, 255, 255, 0.5); box-shadow: 0 4px 20px rgba(0,0,0,0.05);">
+        <a href="/logout" class="logout-btn" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" style="max-width:300px;">
+            🚪 Logout
+        </a>
+        <form id="logout-form" action="/logout" method="POST" style="display: none;">
+            @csrf
+        </form>
     </div>
 @endsection

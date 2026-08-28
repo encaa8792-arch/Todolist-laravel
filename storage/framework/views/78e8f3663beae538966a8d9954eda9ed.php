@@ -2,17 +2,11 @@
 <?php $__env->startSection('page-title', 'Kategori'); ?>
 
 <?php $__env->startSection('styles'); ?>
-    .category-container {
-        background: rgba(255,255,255,0.95);
-        border-radius: 20px;
-        padding: 24px;
-        box-shadow: 0 8px 32px rgba(0,0,0,0.08);
-    }
     .add-category-btn {
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        background: #ff6b9d;
+        background: var(--theme-primary);
         color: white;
         border: none;
         padding: 12px 24px;
@@ -21,13 +15,10 @@
         font-weight: 600;
         font-family: 'Poppins', sans-serif;
         cursor: pointer;
-        transition: all 0.2s;
-        margin-bottom: 20px;
+        transition: filter 0.2s;
     }
     .add-category-btn:hover {
-        background: #e05585;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 15px rgba(255,107,157,0.3);
+        filter: brightness(0.9);
     }
     .category-grid {
         display: grid;
@@ -35,11 +26,8 @@
         gap: 16px;
     }
     .category-card {
-        background: linear-gradient(135deg, #fff0f5 0%, #fff5f8 100%);
         border-radius: 16px;
         padding: 20px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        border: 1px solid rgba(255,182,193,0.2);
         transition: all 0.2s;
         display: flex;
         flex-direction: column;
@@ -48,7 +36,6 @@
     }
     .category-card:hover {
         transform: translateY(-3px);
-        box-shadow: 0 8px 25px rgba(255,107,157,0.15);
     }
     .category-card .category-icon {
         font-size: 40px;
@@ -103,14 +90,14 @@
     }
     .modal-content h3 {
         text-align: center;
-        color: #ff6b9d;
+        color: var(--theme-primary);
         margin: 0 0 20px;
         font-size: 20px;
     }
     .modal-content input {
         width: 100%;
         padding: 12px;
-        border: 2px solid #ffc2d1;
+        border: 2px solid var(--theme-border);
         border-radius: 10px;
         font-size: 14px;
         font-family: 'Poppins', sans-serif;
@@ -118,7 +105,7 @@
         margin-bottom: 20px;
     }
     .modal-content input:focus {
-        border-color: #ff6b9d;
+        border-color: var(--theme-primary);
     }
     .modal-content .btn-group {
         display: flex;
@@ -126,7 +113,7 @@
     }
     .modal-content .btn-submit {
         flex: 1;
-        background: #ff6b9d;
+        background: var(--theme-primary);
         color: white;
         border: none;
         padding: 12px;
@@ -135,10 +122,10 @@
         font-weight: 600;
         font-family: 'Poppins', sans-serif;
         cursor: pointer;
-        transition: background 0.2s;
+        transition: filter 0.2s;
     }
     .modal-content .btn-submit:hover {
-        background: #e05585;
+        filter: brightness(0.9);
     }
     .modal-content .btn-cancel {
         flex: 1;
@@ -156,16 +143,15 @@
     .modal-content .btn-cancel:hover {
         background: #e0e0e0;
     }
-    .category-form {
-        display: inline;
-    }
 <?php $__env->stopSection(); ?>
 
 <?php $__env->startSection('content'); ?>
-    <div class="category-container">
-        <button class="add-category-btn" onclick="openAddModal()">
-            ➕ Tambah Kategori
-        </button>
+    <div class="glass-card" style="background: rgba(255, 255, 255, 0.6); border: 1px solid rgba(255, 255, 255, 0.5); box-shadow: 0 4px 20px rgba(0,0,0,0.05);">
+        <div style="display:flex;align-items:center;gap:12px;">
+            <button class="add-category-btn" onclick="openAddModal()" style="margin-bottom:0;">
+                ➕ Tambah Kategori
+            </button>
+        </div>
 
         <div class="category-grid">
             <?php

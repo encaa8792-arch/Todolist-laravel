@@ -29,13 +29,16 @@
         display: grid;
         grid-template-columns: repeat(4, 1fr);
         gap: 16px;
+        padding-bottom: 20px;
+        margin-bottom: 20px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.06);
     }
     .stat-card {
-        background: white;
         padding: 20px;
         border-radius: 16px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        border: 1px solid rgba(255,182,193,0.2);
+        background: white;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        border: 1px solid rgba(0,0,0,0.04);
         transition: transform 0.2s, box-shadow 0.2s;
         position: relative;
         overflow: hidden;
@@ -50,7 +53,6 @@
     }
     .stat-card:hover {
         transform: translateY(-3px);
-        box-shadow: 0 8px 25px rgba(255,107,157,0.15);
     }
     .stat-card .icon-bg {
         position: absolute;
@@ -68,27 +70,30 @@
     }
     .stat-card .label {
         font-size: 13px;
-        font-weight: 500;
-        color: #666;
+        font-weight: 600;
+        color: #334155;
     }
     .stat-card .sublabel {
-        font-size: 11px;
-        color: #9ca3af;
+        font-size: 12px;
+        color: #64748b;
         margin-top: 4px;
     }
-    .stat-card.total::before { background: linear-gradient(90deg, #ff6b9d, #ff8fa3); }
-    .stat-card.total .number { color: #ff6b9d; }
-    .stat-card.completed::before { background: linear-gradient(90deg, #2ecc71, #58d68d); }
-    .stat-card.completed .number { color: #2ecc71; }
-    .stat-card.pending::before { background: linear-gradient(90deg, #f39c12, #f5b041); }
-    .stat-card.pending .number { color: #f39c12; }
-    .stat-card.overdue::before { background: linear-gradient(90deg, #ff6b6b, #ff8a8a); }
-    .stat-card.overdue .number { color: #ff6b6b; }
+    .stat-card.total::before { background: linear-gradient(90deg, var(--theme-primary), var(--theme-secondary)); }
+    .stat-card.total .number { color: var(--theme-primary); }
+    .stat-card.completed::before { background: linear-gradient(90deg, #16a34a, #22c55e); }
+    .stat-card.completed .number { color: #16a34a; }
+    .stat-card.pending::before { background: linear-gradient(90deg, #ca8a04, #eab308); }
+    .stat-card.pending .number { color: #ca8a04; }
+    .stat-card.overdue::before { background: linear-gradient(90deg, #dc2626, #ef4444); }
+    .stat-card.overdue .number { color: #dc2626; }
     
     .content-grid {
         display: grid;
         grid-template-columns: 1.5fr 1fr;
         gap: 20px;
+    }
+    .dashboard-section {
+        padding: 0;
     }
     .card {
         background: white;
@@ -137,27 +142,29 @@
         align-items: center;
         gap: 12px;
         padding: 12px 14px;
-        background: #fff0f5;
+        background: rgba(255,255,255,0.8);
+        backdrop-filter: blur(8px);
         border-radius: 12px;
         transition: 0.2s;
     }
     .task-item:hover {
-        background: #ffe8f0;
+        background: white;
         transform: translateX(3px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
     }
     .task-item .check-circle {
         width: 24px;
         height: 24px;
         border-radius: 50%;
-        border: 2px solid #ffc2d1;
+        border: 2px solid var(--theme-border);
         display: flex;
         align-items: center;
         justify-content: center;
         flex-shrink: 0;
     }
     .task-item .check-circle.done {
-        background: #2ecc71;
-        border-color: #2ecc71;
+        background: #16a34a;
+        border-color: #16a34a;
         color: white;
         font-size: 12px;
     }
@@ -168,33 +175,33 @@
     .task-item .task-name {
         font-size: 13px;
         font-weight: 500;
-        color: #333;
+        color: #1e293b;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
     }
     .task-item .task-meta {
-        font-size: 11px;
-        color: #9ca3af;
+        font-size: 12px;
+        color: #64748b;
         margin-top: 2px;
     }
     .task-item .task-badge {
-        background: #a0c4ff;
+        background: var(--theme-primary);
         color: white;
         padding: 2px 8px;
         border-radius: 8px;
         font-size: 10px;
-        font-weight: 500;
+        font-weight: 600;
         flex-shrink: 0;
     }
     .task-item .task-date {
-        font-size: 11px;
-        color: #666;
+        font-size: 12px;
+        color: #475569;
         flex-shrink: 0;
     }
     .task-item .task-date.overdue {
-        color: #ff6b6b;
-        font-weight: 500;
+        color: #dc2626;
+        font-weight: 600;
     }
     
     .deadline-list {
@@ -209,17 +216,19 @@
         align-items: center;
         gap: 12px;
         padding: 12px 14px;
-        background: #fff0f5;
+        background: rgba(255,255,255,0.8);
+        backdrop-filter: blur(8px);
         border-radius: 12px;
-        border-left: 4px solid #f39c12;
+        border-left: 4px solid var(--theme-primary);
         transition: 0.2s;
     }
     .deadline-item:hover {
-        background: #ffe8f0;
+        background: white;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
     }
     .deadline-item.urgent {
-        border-left-color: #ff6b6b;
-        background: #ffe5e5;
+        border-left-color: #dc2626;
+        background: rgba(254,226,226,0.9);
     }
     .deadline-item .deadline-icon {
         font-size: 20px;
@@ -232,27 +241,27 @@
     .deadline-item .deadline-name {
         font-size: 13px;
         font-weight: 500;
-        color: #333;
+        color: #1e293b;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
     }
     .deadline-item .deadline-info {
-        font-size: 11px;
-        color: #9ca3af;
+        font-size: 12px;
+        color: #64748b;
         margin-top: 2px;
     }
     .deadline-item .deadline-date {
-        background: #ffd6a5;
+        background: var(--theme-bg);
         padding: 4px 10px;
         border-radius: 8px;
         font-size: 11px;
-        font-weight: 500;
-        color: #333;
+        font-weight: 600;
+        color: #475569;
         flex-shrink: 0;
     }
     .deadline-item.urgent .deadline-date {
-        background: #ff6b6b;
+        background: #dc2626;
         color: white;
     }
     
@@ -389,7 +398,7 @@
 <?php $__env->stopSection(); ?>
 
 <?php $__env->startSection('content'); ?>
-    <div class="dashboard-container">
+    <div class="glass-card" style="background: rgba(255, 255, 255, 0.72); border: 1px solid rgba(255, 255, 255, 0.6); box-shadow: 0 4px 20px rgba(0,0,0,0.06);">
         <div class="stats-grid">
             <div class="stat-card total">
                 <span class="icon-bg">📋</span>
@@ -417,11 +426,12 @@
             </div>
         </div>
 
-        <div class="content-grid">
-            <div class="card">
-                <div class="card-header">
-                    <h3><span>📋</span> Tugas Terbaru</h3>
-                    <a href="/tasks" class="badge" style="text-decoration: none;">Lihat Semua</a>
+        <div class="content-grid" style="margin-top: 0;">
+            <div class="dashboard-section">
+                <div class="glass-card-header">
+                    <div class="glass-card-icon" style="background: rgba(255,107,157,0.15);">📋</div>
+                    <div class="glass-card-title">Tugas Terbaru</div>
+                    <a href="/tasks" class="badge" style="text-decoration: none; margin-left:auto;">Lihat Semua</a>
                 </div>
                 
                 <div class="task-list">
@@ -447,9 +457,10 @@
                 </div>
             </div>
 
-            <div class="card">
-                <div class="card-header">
-                    <h3><span>⏰</span> Deadline Mendatang</h3>
+            <div class="dashboard-section">
+                <div class="glass-card-header">
+                    <div class="glass-card-icon" style="background: rgba(243,156,18,0.15);">⏰</div>
+                    <div class="glass-card-title">Deadline Mendatang</div>
                 </div>
                 
                 <div class="deadline-list">
@@ -464,7 +475,7 @@
                                 <div class="deadline-name"><?php echo e($task->task); ?></div>
                                 <div class="deadline-info">
                                     <?php if($task->category): ?>
-                                        <span style="background: #a0c4ff; color: white; padding: 1px 6px; border-radius: 6px; font-size: 10px;"><?php echo e($task->category); ?></span>
+                                        <span style="background: var(--theme-primary); color: white; padding: 1px 6px; border-radius: 6px; font-size: 10px;"><?php echo e($task->category); ?></span>
                                     <?php endif; ?>
                                 </div>
                             </div>

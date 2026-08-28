@@ -2,12 +2,6 @@
 <?php $__env->startSection('page-title', 'Tugas Selesai'); ?>
 
 <?php $__env->startSection('styles'); ?>
-    .completed-container {
-        background: rgba(255,255,255,0.95);
-        border-radius: 20px;
-        padding: 24px;
-        box-shadow: 0 8px 32px rgba(0,0,0,0.08);
-    }
     .completed-header {
         text-align: center;
         margin-bottom: 24px;
@@ -32,14 +26,11 @@
         justify-content: space-between;
         gap: 16px;
         padding: 14px 18px;
-        background: #f8f9fa;
         border-radius: 12px;
-        border: 1px solid #e8e8e8;
         transition: all 0.2s;
     }
     .completed-item:hover {
-        border-color: #c8e6c9;
-        box-shadow: 0 4px 16px rgba(46,204,113,0.1);
+        transform: translateY(-2px);
     }
     .completed-info {
         flex: 1;
@@ -63,15 +54,15 @@
     .completed-name {
         font-size: 14px;
         font-weight: 500;
-        color: #888;
+        color: #64748b;
         text-decoration: line-through;
     }
     .completed-dates {
         display: flex;
         gap: 12px;
         margin-top: 6px;
-        font-size: 11px;
-        color: #888;
+        font-size: 12px;
+        color: #64748b;
     }
     .completed-date {
         display: flex;
@@ -312,7 +303,7 @@
 <?php $__env->stopSection(); ?>
 
 <?php $__env->startSection('content'); ?>
-    <div class="completed-container">
+    <div class="glass-card" style="background: rgba(255, 255, 255, 0.6); border: 1px solid rgba(255, 255, 255, 0.5); box-shadow: 0 4px 20px rgba(0,0,0,0.05);">
         <div style="display: flex; justify-content: flex-end; margin-bottom: 16px;">
             <div class="kebab-wrapper">
                 <button class="kebab-btn" type="button" onclick="toggleKebabMenu(this)">

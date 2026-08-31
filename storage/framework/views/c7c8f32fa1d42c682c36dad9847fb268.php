@@ -290,7 +290,7 @@
         <div class="success-msg"><?php echo e(session('success')); ?></div>
     <?php endif; ?>
 
-    <div class="glass-card" style="background: rgba(255, 255, 255, 0.6); border: 1px solid rgba(255, 255, 255, 0.5); box-shadow: 0 4px 20px rgba(0,0,0,0.05);">
+    <div class="glass-card">
         <form method="POST" action="/tasks" class="todo-form" style="margin-top: 0;">
             <?php echo csrf_field(); ?>
             <div class="form-group">

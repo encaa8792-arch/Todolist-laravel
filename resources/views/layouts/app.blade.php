@@ -7,6 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <style>
       :root {
         --theme-primary: #ff6b9d;
@@ -64,14 +65,31 @@
         background-size: cover;
         background-position: center;
         background-attachment: fixed;
+        background-color: rgba(0,0,0,0.03);
         font-family: 'Poppins', sans-serif;
         min-height: 100vh;
+        height: 100vh;
         margin: 0;
         padding: 0;
+        overflow: hidden;
+      }
+      body::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(255,255,255,0.15);
+        pointer-events: none;
+        z-index: 0;
       }
       .layout-wrapper {
+        position: relative;
+        z-index: 1;
         display: flex;
-        min-height: 100vh;
+        height: 100vh;
+        overflow: hidden;
       }
       .sidebar {
         position: fixed;
@@ -84,7 +102,7 @@
         transition: width 0.3s ease;
         z-index: 999;
         overflow: visible;
-        border-radius: 0 24px 24px 0;
+        border-radius: 0 20px 20px 0;
       }
       .sidebar.collapsed {
         width: 72px;
@@ -168,13 +186,13 @@
         color: white;
         box-shadow: 0 4px 15px var(--theme-shadow-dark);
       }
-      .menu-item .icon {
+      .menu-item i {
         width: 32px;
         height: 32px;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 20px;
+        font-size: 18px;
         flex-shrink: 0;
         margin-right: 12px;
       }
@@ -225,7 +243,7 @@
       }
       .main-content {
         flex: 1;
-        padding: 15px;
+        padding: 12px;
         margin-left: 248px;
         transition: margin-left 0.3s ease;
       }
@@ -233,11 +251,11 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 12px 20px;
+        padding: 10px 16px;
         background: white;
-        border-radius: 16px;
+        border-radius: 14px;
         box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        margin-bottom: 20px;
+        margin-bottom: 12px;
       }
       .page-topbar-left {
         display: flex;
@@ -246,7 +264,7 @@
       }
       .page-topbar-left .page-title {
         font-weight: 600;
-        font-size: 16px;
+        font-size: 14px;
         color: #333;
         transition: color 0.3s;
       }
@@ -1194,16 +1212,15 @@
       .content-wrapper {
         display: flex;
         flex-direction: column;
-        gap: 20px;
         width: 100%;
         max-width: 95%;
       }
       .glass-card {
-        background: rgba(255, 255, 255, 0.72);
-        border: 1px solid rgba(255, 255, 255, 0.6);
+        background: rgba(255, 255, 255, 0.78);
+        border: 1px solid rgba(255, 255, 255, 0.7);
         border-radius: 16px;
         padding: 24px;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+        box-shadow: 0 4px 24px rgba(0,0,0,0.06);
       }
       .glass-card-header {
         display: flex;
@@ -1336,36 +1353,36 @@
                 <div class="sidebar-brand">
                     <a href="/dashboard" class="sidebar-logo-text">TodoList</a>
                     <button class="toggle-btn" onclick="toggleSidebar()">
-                        <span id="toggleIcon">✕</span>
+                        <i class="bi bi-list" id="toggleIcon"></i>
                     </button>
                 </div>
             </div>
             <nav class="sidebar-menu">
                 <a href="/dashboard" class="menu-item {{ request()->is('dashboard') ? 'active' : '' }}" data-tooltip="Dashboard">
-                    <span class="icon">🏠</span>
+                    <i class="bi bi-house-door"></i>
                     <span class="label">Dashboard</span>
                 </a>
                 <a href="/tasks" class="menu-item {{ request()->is('tasks') ? 'active' : '' }}" data-tooltip="Tugas">
-                    <span class="icon">📋</span>
+                    <i class="bi bi-list-task"></i>
                     <span class="label">Tugas</span>
                 </a>
                 <a href="/tasks/completed" class="menu-item {{ request()->is('tasks/completed') ? 'active' : '' }}" data-tooltip="Tugas Selesai">
-                    <span class="icon">✓</span>
+                    <i class="bi bi-check-circle"></i>
                     <span class="label">Selesai</span>
                 </a>
                 
                 <div class="menu-divider"></div>
                 
                 <a href="/categories" class="menu-item {{ request()->is('categories') ? 'active' : '' }}" data-tooltip="Kategori">
-                    <span class="icon">📁</span>
+                    <i class="bi bi-folder"></i>
                     <span class="label">Kategori</span>
                 </a>
                 <a href="/reports" class="menu-item {{ request()->is('reports') ? 'active' : '' }}" data-tooltip="Laporan">
-                    <span class="icon">📊</span>
+                    <i class="bi bi-bar-chart"></i>
                     <span class="label">Laporan</span>
                 </a>
                 <a href="/settings" class="menu-item {{ request()->is('settings') ? 'active' : '' }}" data-tooltip="Pengaturan">
-                    <span class="icon">⚙️</span>
+                    <i class="bi bi-gear"></i>
                     <span class="label">Pengaturan</span>
                 </a>
             </nav>
@@ -1599,7 +1616,7 @@
             const sidebar = document.getElementById('sidebar');
             const isCollapsed = sidebar.classList.toggle('collapsed');
             document.body.classList.toggle('sidebar-collapsed', isCollapsed);
-            document.getElementById('toggleIcon').textContent = isCollapsed ? '☰' : '✕';
+            document.getElementById('toggleIcon').className = 'bi ' + (isCollapsed ? 'bi-chevron-double-right' : 'bi-chevron-double-left');
             localStorage.setItem('sidebarCollapsed', isCollapsed);
         }
 
@@ -1673,9 +1690,9 @@
             if (sidebarCollapsed) {
                 document.getElementById('sidebar').classList.add('collapsed');
                 document.body.classList.add('sidebar-collapsed');
-                document.getElementById('toggleIcon').textContent = '☰';
+                document.getElementById('toggleIcon').className = 'bi bi-chevron-double-right';
             } else {
-                document.getElementById('toggleIcon').textContent = '✕';
+                document.getElementById('toggleIcon').className = 'bi bi-chevron-double-left';
             }
         })();
         loadTheme();

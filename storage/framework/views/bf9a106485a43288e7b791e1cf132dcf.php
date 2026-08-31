@@ -3,504 +3,351 @@
 <?php $__env->startSection('page-title', 'Dashboard TodoList'); ?>
 
 <?php $__env->startSection('styles'); ?>
-    .dashboard-container {
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-    }
-    .dashboard-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-    .dashboard-header h1 {
-        margin: 0;
-        font-size: 24px;
-        color: #333;
-    }
-    .dashboard-header h1 span {
-        color: #ff6b9d;
-    }
-    .greeting {
-        font-size: 13px;
-        color: #9ca3af;
-    }
-    .stats-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 16px;
-        padding-bottom: 20px;
-        margin-bottom: 20px;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-    }
-    .stat-card {
-        padding: 20px;
-        border-radius: 16px;
-        background: white;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-        border: 1px solid rgba(0,0,0,0.04);
-        transition: transform 0.2s, box-shadow 0.2s;
-        position: relative;
-        overflow: hidden;
-    }
-    .stat-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 4px;
-    }
-    .stat-card:hover {
-        transform: translateY(-3px);
-    }
-    .stat-card .icon-bg {
-        position: absolute;
-        right: 15px;
-        top: 50%;
-        transform: translateY(-50%);
-        font-size: 40px;
-        opacity: 0.15;
-    }
-    .stat-card .number {
-        font-size: 32px;
-        font-weight: 700;
-        line-height: 1;
-        margin-bottom: 6px;
-    }
-    .stat-card .label {
-        font-size: 13px;
-        font-weight: 600;
-        color: #334155;
-    }
-    .stat-card .sublabel {
-        font-size: 12px;
-        color: #64748b;
-        margin-top: 4px;
-    }
-    .stat-card.total::before { background: linear-gradient(90deg, var(--theme-primary), var(--theme-secondary)); }
-    .stat-card.total .number { color: var(--theme-primary); }
-    .stat-card.completed::before { background: linear-gradient(90deg, #16a34a, #22c55e); }
-    .stat-card.completed .number { color: #16a34a; }
-    .stat-card.pending::before { background: linear-gradient(90deg, #ca8a04, #eab308); }
-    .stat-card.pending .number { color: #ca8a04; }
-    .stat-card.overdue::before { background: linear-gradient(90deg, #dc2626, #ef4444); }
-    .stat-card.overdue .number { color: #dc2626; }
-    
-    .content-grid {
-        display: grid;
-        grid-template-columns: 1.5fr 1fr;
-        gap: 20px;
-    }
-    .dashboard-section {
-        padding: 0;
-    }
-    .card {
-        background: white;
-        border-radius: 16px;
-        padding: 20px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        border: 1px solid rgba(255,182,193,0.2);
-    }
-    .card-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 16px;
-        padding-bottom: 12px;
-        border-bottom: 2px solid #fff0f5;
-    }
-    .card-header h3 {
-        font-size: 16px;
-        font-weight: 600;
-        color: #333;
-        margin: 0;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-    .card-header h3 span {
-        font-size: 20px;
-    }
-    .card-header .badge {
-        background: #fff0f5;
-        color: #ff6b9d;
-        padding: 4px 10px;
-        border-radius: 12px;
-        font-size: 11px;
-        font-weight: 600;
-    }
-    .task-list {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        max-height: 280px;
-        overflow-y: auto;
-    }
-    .task-item {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        padding: 12px 14px;
-        background: rgba(255,255,255,0.8);
-        backdrop-filter: blur(8px);
-        border-radius: 12px;
-        transition: 0.2s;
-    }
-    .task-item:hover {
-        background: white;
-        transform: translateX(3px);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    }
-    .task-item .check-circle {
-        width: 24px;
-        height: 24px;
-        border-radius: 50%;
-        border: 2px solid var(--theme-border);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-    }
-    .task-item .check-circle.done {
-        background: #16a34a;
-        border-color: #16a34a;
-        color: white;
-        font-size: 12px;
-    }
-    .task-item .task-content {
-        flex: 1;
-        min-width: 0;
-    }
-    .task-item .task-name {
-        font-size: 13px;
-        font-weight: 500;
-        color: #1e293b;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-    .task-item .task-meta {
-        font-size: 12px;
-        color: #64748b;
-        margin-top: 2px;
-    }
-    .task-item .task-badge {
-        background: var(--theme-primary);
-        color: white;
-        padding: 2px 8px;
-        border-radius: 8px;
-        font-size: 10px;
-        font-weight: 600;
-        flex-shrink: 0;
-    }
-    .task-item .task-date {
-        font-size: 12px;
-        color: #475569;
-        flex-shrink: 0;
-    }
-    .task-item .task-date.overdue {
-        color: #dc2626;
-        font-weight: 600;
-    }
-    
-    .deadline-list {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        max-height: 280px;
-        overflow-y: auto;
-    }
-    .deadline-item {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        padding: 12px 14px;
-        background: rgba(255,255,255,0.8);
-        backdrop-filter: blur(8px);
-        border-radius: 12px;
-        border-left: 4px solid var(--theme-primary);
-        transition: 0.2s;
-    }
-    .deadline-item:hover {
-        background: white;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    }
-    .deadline-item.urgent {
-        border-left-color: #dc2626;
-        background: rgba(254,226,226,0.9);
-    }
-    .deadline-item .deadline-icon {
-        font-size: 20px;
-        flex-shrink: 0;
-    }
-    .deadline-item .deadline-content {
-        flex: 1;
-        min-width: 0;
-    }
-    .deadline-item .deadline-name {
-        font-size: 13px;
-        font-weight: 500;
-        color: #1e293b;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-    .deadline-item .deadline-info {
-        font-size: 12px;
-        color: #64748b;
-        margin-top: 2px;
-    }
-    .deadline-item .deadline-date {
-        background: var(--theme-bg);
-        padding: 4px 10px;
-        border-radius: 8px;
-        font-size: 11px;
-        font-weight: 600;
-        color: #475569;
-        flex-shrink: 0;
-    }
-    .deadline-item.urgent .deadline-date {
-        background: #dc2626;
-        color: white;
-    }
-    
-    .weekly-chart {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-end;
-        height: 100px;
-        padding: 10px 0;
-    }
-    .chart-day {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 6px;
-        flex: 1;
-    }
-    .chart-bars {
-        display: flex;
-        gap: 4px;
-        align-items: flex-end;
-        height: 70px;
-    }
-    .chart-bar {
-        width: 14px;
-        border-radius: 4px 4px 0 0;
-        transition: height 0.3s;
-    }
-    .chart-bar.created { background: linear-gradient(180deg, #ff6b9d, #ff8fa3); }
-    .chart-bar.completed { background: linear-gradient(180deg, #2ecc71, #58d68d); }
-    .chart-label {
-        font-size: 11px;
-        color: #9ca3af;
-        font-weight: 500;
-    }
-    
-    .quick-actions {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 10px;
-    }
-    .quick-action {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding: 14px;
-        background: #fff0f5;
-        border-radius: 12px;
-        text-decoration: none;
-        color: #333;
-        transition: 0.2s;
-    }
-    .quick-action:hover {
-        background: #ffe8f0;
-        transform: translateY(-2px);
-    }
-    .quick-action .action-icon {
-        width: 36px;
-        height: 36px;
-        border-radius: 10px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 18px;
-    }
-    .quick-action .action-icon.pink { background: rgba(255,107,157,0.2); }
-    .quick-action .action-icon.green { background: rgba(46,204,113,0.2); }
-    .quick-action .action-icon.orange { background: rgba(243,156,18,0.2); }
-    .quick-action .action-icon.blue { background: rgba(160,196,255,0.2); }
-    .quick-action .action-text {
-        font-size: 12px;
-        font-weight: 500;
-    }
-    
-    .empty-state {
-        text-align: center;
-        padding: 30px;
-        color: #9ca3af;
-    }
-    .empty-state span {
-        font-size: 40px;
-        opacity: 0.5;
-    }
-    .empty-state p {
-        margin: 10px 0 0;
-        font-size: 13px;
-    }
-
-    @media (max-width: 1200px) {
-        .stats-grid {
-            grid-template-columns: repeat(2, 1fr);
-        }
-        .content-grid {
-            grid-template-columns: 1fr;
-        }
-    }
-    @media (max-width: 768px) {
-        .stats-grid {
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-        }
-        .stat-card {
-            padding: 16px;
-        }
-        .stat-card .number {
-            font-size: 26px;
-        }
-        .stat-card .icon-bg {
-            font-size: 30px;
-        }
-        .quick-actions {
-            grid-template-columns: 1fr;
-        }
-        .dashboard-header {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 5px;
-        }
-        .progress-container {
-            flex-direction: column;
-        }
-    }
-    @media (max-width: 480px) {
-        .stats-grid {
-            grid-template-columns: 1fr 1fr;
-        }
-        .stat-card {
-            padding: 14px 12px;
-        }
-        .stat-card .number {
-            font-size: 22px;
-        }
-    }
+.dashboard-main {
+    background: rgba(255, 255, 255, 0.92);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    overflow: hidden;
+    height: calc(100vh - 80px);
+    display: flex;
+    flex-direction: column;
+}
+.dashboard-section {
+    padding: 12px 16px;
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+    flex-shrink: 0;
+}
+.dashboard-section:last-child {
+    border-bottom: none;
+}
+.dashboard-section.stats-section {
+    padding: 10px 16px;
+}
+.dashboard-section.content-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+}
+.section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+.section-header i {
+    font-size: 14px;
+    color: var(--theme-primary);
+}
+.section-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: #1e293b;
+}
+.section-link {
+    margin-left: auto;
+    font-size: 11px;
+    color: var(--theme-primary);
+    text-decoration: none;
+    font-weight: 500;
+}
+.section-link:hover {
+    text-decoration: underline;
+}
+.stats-table {
+    display: table;
+    width: 100%;
+    border-collapse: collapse;
+}
+.stats-row {
+    display: table-row;
+}
+.stat-cell {
+    display: table-cell;
+    width: 25%;
+    padding: 8px 12px;
+    text-align: left;
+    vertical-align: middle;
+    border-right: 1px solid rgba(0,0,0,0.08);
+}
+.stat-cell:last-child {
+    border-right: none;
+}
+.stat-cell-inner {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.stat-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+}
+.stat-icon.total { background: rgba(59,130,246,0.12); color: #2563eb; }
+.stat-icon.completed { background: rgba(22,163,74,0.12); color: #16a34a; }
+.stat-icon.pending { background: rgba(234,179,8,0.12); color: #ca8a04; }
+.stat-icon.overdue { background: rgba(220,38,38,0.12); color: #dc2626; }
+.stat-number {
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+.stat-number.total { color: #2563eb; }
+.stat-number.completed { color: #16a34a; }
+.stat-number.pending { color: #ca8a04; }
+.stat-number.overdue { color: #dc2626; }
+.stat-label {
+    font-size: 10px;
+    color: #64748b;
+    font-weight: 500;
+}
+.content-row {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    flex: 1;
+    min-height: 0;
+}
+.content-col {
+    padding: 12px 16px;
+    background: rgba(0,0,0,0.015);
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+}
+.content-col:first-child {
+    border-right: 1px solid rgba(0,0,0,0.08);
+}
+.task-list {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    overflow-y: auto;
+    flex: 1;
+}
+.task-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 8px;
+    background: white;
+    border-radius: 8px;
+    border: 1px solid rgba(0,0,0,0.05);
+    height: 38px;
+    flex-shrink: 0;
+}
+.task-item .btn-check {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 0;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: var(--theme-border);
+}
+.task-item .btn-check.checked {
+    color: #16a34a;
+}
+.task-text {
+    flex: 1;
+    font-size: 11px;
+    color: #1e293b;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.task-item.done .task-text {
+    text-decoration: line-through;
+    color: #94a3b8;
+}
+.task-badge {
+    background: var(--theme-bg);
+    color: var(--theme-primary);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 9px;
+    font-weight: 500;
+    flex-shrink: 0;
+}
+.task-deadline {
+    font-size: 9px;
+    color: #94a3b8;
+    flex-shrink: 0;
+}
+.deadline-list {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    overflow-y: auto;
+    flex: 1;
+}
+.deadline-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 8px;
+    background: white;
+    border-radius: 8px;
+    border: 1px solid rgba(0,0,0,0.05);
+    border-left: 3px solid #f59e0b;
+    height: 38px;
+    flex-shrink: 0;
+}
+.deadline-item.urgent {
+    border-left-color: #dc2626;
+}
+.deadline-text {
+    flex: 1;
+    font-size: 11px;
+    color: #1e293b;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.deadline-badge {
+    background: rgba(245,158,11,0.1);
+    color: #b45309;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 9px;
+    font-weight: 600;
+    flex-shrink: 0;
+}
+.deadline-item.urgent .deadline-badge {
+    background: rgba(220,38,38,0.1);
+    color: #dc2626;
+}
+.empty-state {
+    text-align: center;
+    padding: 12px;
+    color: #94a3b8;
+    font-size: 11px;
+}
 <?php $__env->stopSection(); ?>
 
 <?php $__env->startSection('content'); ?>
-    <div class="glass-card" style="background: rgba(255, 255, 255, 0.72); border: 1px solid rgba(255, 255, 255, 0.6); box-shadow: 0 4px 20px rgba(0,0,0,0.06);">
-        <div class="stats-grid">
-            <div class="stat-card total">
-                <span class="icon-bg">📋</span>
-                <div class="number"><?php echo e($totalTasks); ?></div>
-                <div class="label">Total Tugas</div>
-                <div class="sublabel">Semua tugas yang dibuat</div>
-            </div>
-            <div class="stat-card completed">
-                <span class="icon-bg">✓</span>
-                <div class="number"><?php echo e($completedTasks); ?></div>
-                <div class="label">Selesai</div>
-                <div class="sublabel">Tugas yang sudah selesai</div>
-            </div>
-            <div class="stat-card pending">
-                <span class="icon-bg">⏳</span>
-                <div class="number"><?php echo e($pendingTasks); ?></div>
-                <div class="label">Belum Selesai</div>
-                <div class="sublabel">Sedang dikerjakan</div>
-            </div>
-            <div class="stat-card overdue">
-                <span class="icon-bg">⚠️</span>
-                <div class="number"><?php echo e($overdueTasks); ?></div>
-                <div class="label">Terlambat</div>
-                <div class="sublabel">Melewati deadline</div>
-            </div>
+<div class="dashboard-main">
+    <div class="dashboard-section stats-section">
+        <div class="section-header">
+            <i class="bi bi-grid-3x3-gap"></i>
+            <span class="section-title">Statistik</span>
         </div>
-
-        <div class="content-grid" style="margin-top: 0;">
-            <div class="dashboard-section">
-                <div class="glass-card-header">
-                    <div class="glass-card-icon" style="background: rgba(255,107,157,0.15);">📋</div>
-                    <div class="glass-card-title">Tugas Terbaru</div>
-                    <a href="/tasks" class="badge" style="text-decoration: none; margin-left:auto;">Lihat Semua</a>
+        <div class="stats-table">
+            <div class="stats-row">
+                <div class="stat-cell">
+                    <div class="stat-cell-inner">
+                        <div class="stat-icon total"><i class="bi bi-list-task"></i></div>
+                        <div class="stat-info">
+                            <div class="stat-number total"><?php echo e($totalTasks); ?></div>
+                            <div class="stat-label">Total</div>
+                        </div>
+                    </div>
                 </div>
-                
-                <div class="task-list">
-                    <?php $__empty_1 = true; $__currentLoopData = $recentTasks; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $task): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
-                        <div class="task-item">
-                            <div class="check-circle <?php echo e($task->is_done ? 'done' : ''); ?>">
-                                <?php if($task->is_done): ?> ✓ <?php endif; ?>
-                            </div>
-                            <div class="task-content">
-                                <div class="task-name"><?php echo e($task->task); ?></div>
-                                <div class="task-meta"><?php echo e(date('d M Y', strtotime($task->created_at))); ?></div>
-                            </div>
-                            <?php if($task->category): ?>
-                                <span class="task-badge"><?php echo e($task->category); ?></span>
-                            <?php endif; ?>
+                <div class="stat-cell">
+                    <div class="stat-cell-inner">
+                        <div class="stat-icon completed"><i class="bi bi-check-circle"></i></div>
+                        <div class="stat-info">
+                            <div class="stat-number completed"><?php echo e($completedTasks); ?></div>
+                            <div class="stat-label">Selesai</div>
                         </div>
-                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
-                        <div class="empty-state">
-                            <span>✨</span>
-                            <p>Belum ada tugas. Yuk, buat tugas baru!</p>
-                        </div>
-                    <?php endif; ?>
+                    </div>
                 </div>
-            </div>
-
-            <div class="dashboard-section">
-                <div class="glass-card-header">
-                    <div class="glass-card-icon" style="background: rgba(243,156,18,0.15);">⏰</div>
-                    <div class="glass-card-title">Deadline Mendatang</div>
+                <div class="stat-cell">
+                    <div class="stat-cell-inner">
+                        <div class="stat-icon pending"><i class="bi bi-hourglass-split"></i></div>
+                        <div class="stat-info">
+                            <div class="stat-number pending"><?php echo e($pendingTasks); ?></div>
+                            <div class="stat-label">Belum</div>
+                        </div>
+                    </div>
                 </div>
-                
-                <div class="deadline-list">
-                    <?php $__empty_1 = true; $__currentLoopData = $upcomingDeadlines; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $task): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
-                        <?php
-                            $daysLeft = now()->diffInDays($task->deadline, false);
-                            $isUrgent = $daysLeft <= 2;
-                        ?>
-                        <div class="deadline-item <?php echo e($isUrgent ? 'urgent' : ''); ?>">
-                            <span class="deadline-icon">⏰</span>
-                            <div class="deadline-content">
-                                <div class="deadline-name"><?php echo e($task->task); ?></div>
-                                <div class="deadline-info">
-                                    <?php if($task->category): ?>
-                                        <span style="background: var(--theme-primary); color: white; padding: 1px 6px; border-radius: 6px; font-size: 10px;"><?php echo e($task->category); ?></span>
-                                    <?php endif; ?>
-                                </div>
-                            </div>
-                            <span class="deadline-date">
-                                <?php if($daysLeft < 0): ?>
-                                    Terlambat <?php echo e(round(abs($daysLeft))); ?> hari
-                                <?php elseif($daysLeft == 0): ?>
-                                    Hari ini
-                                <?php elseif($daysLeft == 1): ?>
-                                    Besok
-                                <?php else: ?>
-                                    <?php echo e(round($daysLeft)); ?> hari
-                                <?php endif; ?>
-                            </span>
+                <div class="stat-cell">
+                    <div class="stat-cell-inner">
+                        <div class="stat-icon overdue"><i class="bi bi-exclamation-circle"></i></div>
+                        <div class="stat-info">
+                            <div class="stat-number overdue"><?php echo e($overdueTasks); ?></div>
+                            <div class="stat-label">Overdue</div>
                         </div>
-                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
-                        <div class="empty-state">
-                            <span>🎉</span>
-                            <p>Tidak ada deadline mendatang</p>
-                        </div>
-                    <?php endif; ?>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <div class="content-row">
+        <div class="content-col">
+            <div class="section-header">
+                <i class="bi bi-list-task"></i>
+                <span class="section-title">Tugas Terbaru</span>
+                <a href="/tasks" class="section-link">Lihat Semua →</a>
+            </div>
+            <div class="task-list">
+                <?php $__empty_1 = true; $__currentLoopData = $recentTasks->take(4); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $task): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                    <div class="task-item <?php echo e($task->is_done ? 'done' : ''); ?>">
+                        <form action="/tasks/<?php echo e($task->id); ?>/toggle" method="POST" style="display:inline;">
+                            <?php echo csrf_field(); ?>
+                            <button type="submit" class="btn-check <?php echo e($task->is_done ? 'checked' : ''); ?>">
+                                <i class="bi <?php echo e($task->is_done ? 'bi-check-circle-fill' : 'bi-circle'); ?>"></i>
+                            </button>
+                        </form>
+                        <span class="task-text"><?php echo e($task->task); ?></span>
+                        <?php if($task->category): ?>
+                            <span class="task-badge"><?php echo e($task->category); ?></span>
+                        <?php endif; ?>
+                        <?php if($task->deadline): ?>
+                            <span class="task-deadline"><?php echo e(date('d/m', strtotime($task->deadline))); ?></span>
+                        <?php endif; ?>
+                    </div>
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
+                    <div class="empty-state">Belum ada tugas</div>
+                <?php endif; ?>
+            </div>
+        </div>
+
+        <div class="content-col">
+            <div class="section-header">
+                <i class="bi bi-calendar-event"></i>
+                <span class="section-title">Deadline Mendatang</span>
+            </div>
+            <div class="deadline-list">
+                <?php $__empty_1 = true; $__currentLoopData = $upcomingDeadlines; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $task): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                    <?php
+                        $daysLeft = now()->diffInDays($task->deadline, false);
+                        $isUrgent = $daysLeft <= 2;
+                    ?>
+                    <div class="deadline-item <?php echo e($isUrgent ? 'urgent' : ''); ?>">
+                        <span class="deadline-text"><?php echo e($task->task); ?></span>
+                        <span class="deadline-badge">
+                            <?php if($daysLeft < 0): ?>
+                                Terlambat
+                            <?php elseif($daysLeft == 0): ?>
+                                Hari ini
+                            <?php elseif($daysLeft == 1): ?>
+                                Besok
+                            <?php else: ?>
+                                <?php echo e(round($daysLeft)); ?> hari
+                            <?php endif; ?>
+                        </span>
+                    </div>
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
+                    <div class="empty-state">Tidak ada deadline</div>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+</div>
 <?php $__env->stopSection(); ?>
 
 <?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\laragon\www\Todolist\resources\views/dashboard.blade.php ENDPATH**/ ?>

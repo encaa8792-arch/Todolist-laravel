@@ -2,16 +2,13 @@
 <?php $__env->startSection('page-title', 'Pengaturan'); ?>
 
 <?php $__env->startSection('styles'); ?>
-    .settings-section {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 16px;
-    }
     .settings-card {
-        background: white;
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.6);
         border-radius: 16px;
-        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
-        border: 1px solid rgba(0, 0, 0, 0.04);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
         padding: 24px;
         transition: transform 0.2s, box-shadow 0.2s;
         display: flex;
@@ -47,9 +44,6 @@
     .settings-card-icon.gray { background: rgba(150,150,150,0.15); }
     .settings-card-title {
         font-size: 16px;
-        font-weight: 600;
-        color: #333;
-    }
         font-weight: 600;
         color: #333;
     }
@@ -209,11 +203,6 @@
     .preference-select:focus {
         border-color: var(--theme-primary);
     }
-    .about-info {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 16px;
-    }
     .about-item {
         text-align: center;
         padding: 20px 16px;
@@ -237,18 +226,6 @@
         font-size: 11px;
         color: #888;
     }
-    .about-desc {
-        grid-column: 1 / -1;
-        padding: 16px;
-        border-radius: 14px;
-        text-align: center;
-    }
-    .about-desc p {
-        margin: 0;
-        font-size: 13px;
-        color: #666;
-        line-height: 1.6;
-    }
     .btn-panduan {
         display: inline-flex;
         align-items: center;
@@ -269,23 +246,56 @@
         filter: brightness(0.9);
     }
 
+    .settings-cards-row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+    }
+    .about-full-width {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        border-radius: 16px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+        padding: 24px;
+        transition: transform 0.2s, box-shadow 0.2s;
+        margin-top: 16px;
+    }
+    .about-full-width:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    }
+    .about-horizontal {
+        display: flex;
+        justify-content: center;
+        gap: 80px;
+    }
+
     @media (max-width: 1200px) {
         .settings-section {
             grid-template-columns: repeat(2, 1fr);
+        }
+        .settings-cards-row {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        .about-horizontal {
+            gap: 40px;
         }
     }
     @media (max-width: 768px) {
         .settings-section {
             grid-template-columns: 1fr;
         }
+        .settings-cards-row {
+            grid-template-columns: 1fr;
+        }
         .preference-grid {
             grid-template-columns: 1fr;
         }
-        .about-info {
-            grid-template-columns: 1fr;
-        }
-        .about-desc {
-            grid-column: 1;
+        .about-horizontal {
+            flex-direction: column;
+            gap: 16px;
         }
     }
 <?php $__env->stopSection(); ?>
@@ -299,7 +309,7 @@
             </div>
         <?php endif; ?>
 
-        <div class="settings-section">
+        <div class="settings-cards-row">
             <div class="settings-card">
                 <div class="settings-card-header">
                     <div class="settings-card-icon pink">👤</div>
@@ -403,37 +413,37 @@
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div class="settings-card">
-                <div class="settings-card-header">
-                    <div class="settings-card-icon gray">ℹ️</div>
-                    <div class="settings-card-title">Tentang Aplikasi</div>
-                </div>
-                <div class="settings-card-body">
-                    <div class="about-info">
-                        <div class="about-item">
-                            <div class="about-icon">📝</div>
-                            <div class="about-title">TodoList</div>
-                            <div class="about-value">Manajer Tugas Harian</div>
-                        </div>
-                        <div class="about-item">
-                            <div class="about-icon">📌</div>
-                            <div class="about-title">Versi</div>
-                            <div class="about-value">1.0.0</div>
-                        </div>
-                        <div class="about-item">
-                            <div class="about-icon">👨‍💻</div>
-                            <div class="about-title">Developer</div>
-                            <div class="about-value">TodoList Team</div>
-                        </div>
+        <div class="settings-card about-full-width">
+            <div class="settings-card-header">
+                <div class="settings-card-icon gray">ℹ️</div>
+                <div class="settings-card-title">Tentang Aplikasi</div>
+            </div>
+            <div class="settings-card-body">
+                <div class="about-horizontal">
+                    <div class="about-item">
+                        <div class="about-icon">📝</div>
+                        <div class="about-title">TodoList</div>
+                        <div class="about-value">Manajer Tugas Harian</div>
                     </div>
-                    <p style="text-align:center; margin:16px 0 0; font-size:13px; color:#666; line-height:1.6;">
-                        Aplikasi TodoList membantu Anda mengelola tugas harian dengan mudah.
-                    </p>
-                    <button type="button" class="btn-panduan" onclick="openGuide()" style="margin:16px auto 0; display:flex;">
-                        📖 Lihat Panduan
-                    </button>
+                    <div class="about-item">
+                        <div class="about-icon">📌</div>
+                        <div class="about-title">Versi</div>
+                        <div class="about-value">1.0.0</div>
+                    </div>
+                    <div class="about-item">
+                        <div class="about-icon">👨‍💻</div>
+                        <div class="about-title">Developer</div>
+                        <div class="about-value">TodoList Team</div>
+                    </div>
                 </div>
+                <p style="text-align:center; margin:16px 0 0; font-size:13px; color:#666; line-height:1.6;">
+                    Aplikasi TodoList membantu Anda mengelola tugas harian dengan mudah.
+                </p>
+                <button type="button" class="btn-panduan" onclick="openGuide()" style="margin:16px auto 0; display:flex;">
+                    📖 Lihat Panduan
+                </button>
             </div>
         </div>
     </div>

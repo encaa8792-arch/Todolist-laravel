@@ -3,6 +3,11 @@
 @section('page-title', 'Laporan')
 
 @section('styles')
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    .flatpickr-input {
+        background: white !important;
+    }
+
     .export-btn {
         display: inline-flex;
         align-items: center;
@@ -119,6 +124,30 @@
     }
     .filter-group input[type="date"] {
         min-width: 140px;
+    }
+    .date-placeholder-wrapper {
+        position: relative;
+        display: inline-block;
+    }
+    .date-placeholder-wrapper input {
+        padding-right: 14px;
+        min-width: 140px;
+    }
+    .date-placeholder-wrapper .placeholder-text {
+        position: absolute;
+        top: 50%;
+        left: 14px;
+        transform: translateY(-50%);
+        color: #94a3b8;
+        font-size: 13px;
+        pointer-events: none;
+        font-family: 'Poppins', sans-serif;
+    }
+    .date-placeholder-wrapper input:not(:placeholder-shown) + .placeholder-text {
+        display: none;
+    }
+    .flatpickr-input {
+        background: white !important;
     }
     .btn-apply:hover {
         filter: brightness(0.9);
@@ -256,7 +285,7 @@
 @endsection
 
 @section('content')
-    <div class="glass-card" style="background: rgba(255, 255, 255, 0.6); border: 1px solid rgba(255, 255, 255, 0.5); box-shadow: 0 4px 20px rgba(0,0,0,0.05);">
+    <div class="glass-card">
         <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:15px;">
             <button class="export-btn" onclick="exportReport()">
                 📥 Export Laporan
@@ -312,11 +341,11 @@
                 </div>
                 <div class="filter-group">
                     <label>Dari Tanggal</label>
-                    <input type="date" id="filterDateFrom">
+                    <input type="text" class="flatpickr-date" id="filterDateFrom">
                 </div>
                 <div class="filter-group">
                     <label>Sampai Tanggal</label>
-                    <input type="date" id="filterDateTo">
+                    <input type="text" class="flatpickr-date" id="filterDateTo">
                 </div>
                 <button class="btn-apply" onclick="applyFilter()">🔍 Terapkan</button>
                 <button class="btn-reset" onclick="resetFilter()">↺ Reset</button>
@@ -383,33 +412,47 @@
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/id.js"></script>
     <script>
+        flatpickr(".flatpickr-date", {
+            dateFormat: "d-m-Y",
+            locale: "id",
+            allowInput: true
+        });
+
         function applyFilter() {
             const category = document.getElementById('filterCategory').value;
             const dateFrom = document.getElementById('filterDateFrom').value;
             const dateTo = document.getElementById('filterDateTo').value;
-            
+
             let url = '/reports?';
             const params = [];
-            
+
             if (category) params.push('category=' + category);
-            if (dateFrom) params.push('from=' + dateFrom);
-            if (dateTo) params.push('to=' + dateTo);
-            
+            if (dateFrom) {
+                const parts = dateFrom.split('-');
+                params.push('from=' + parts[2] + '-' + parts[1] + '-' + parts[0]);
+            }
+            if (dateTo) {
+                const parts = dateTo.split('-');
+                params.push('to=' + parts[2] + '-' + parts[1] + '-' + parts[0]);
+            }
+
             if (params.length > 0) {
                 url += params.join('&');
             }
-            
+
             window.location.href = url;
         }
-        
+
         function resetFilter() {
             document.getElementById('filterCategory').value = '';
             document.getElementById('filterDateFrom').value = '';
             document.getElementById('filterDateTo').value = '';
             window.location.href = '/reports';
         }
-        
+
         function exportReport() {
             alert('Fitur Export Laporan akan segera hadir!');
         }

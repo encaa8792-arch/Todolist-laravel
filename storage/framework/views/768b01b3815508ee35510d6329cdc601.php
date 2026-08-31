@@ -303,7 +303,7 @@
 <?php $__env->stopSection(); ?>
 
 <?php $__env->startSection('content'); ?>
-    <div class="glass-card" style="background: rgba(255, 255, 255, 0.6); border: 1px solid rgba(255, 255, 255, 0.5); box-shadow: 0 4px 20px rgba(0,0,0,0.05);">
+    <div class="glass-card">
         <div style="display: flex; justify-content: flex-end; margin-bottom: 16px;">
             <div class="kebab-wrapper">
                 <button class="kebab-btn" type="button" onclick="toggleKebabMenu(this)">

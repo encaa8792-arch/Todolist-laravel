@@ -147,7 +147,7 @@
 @endsection
 
 @section('content')
-    <div class="glass-card" style="background: rgba(255, 255, 255, 0.6); border: 1px solid rgba(255, 255, 255, 0.5); box-shadow: 0 4px 20px rgba(0,0,0,0.05);">
+    <div class="glass-card">
         <div style="display:flex;align-items:center;gap:12px;">
             <button class="add-category-btn" onclick="openAddModal()" style="margin-bottom:0;">
                 ➕ Tambah Kategori

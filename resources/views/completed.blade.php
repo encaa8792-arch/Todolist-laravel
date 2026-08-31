@@ -56,8 +56,24 @@
     .completed-name {
         font-size: 14px;
         font-weight: 500;
-        color: #64748b;
-        text-decoration: line-through;
+        color: #94a3b8;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .completed-name::before {
+        content: '✓';
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 18px;
+        height: 18px;
+        background: #16a34a;
+        color: white;
+        border-radius: 50%;
+        font-size: 10px;
+        font-weight: 700;
+        flex-shrink: 0;
     }
     .completed-dates {
         display: flex;

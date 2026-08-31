@@ -18,10 +18,82 @@
     }
     .todo-form {
         display: flex;
-        gap: 10px;
+        flex-direction: column;
+        gap: 12px;
         margin-bottom: 20px;
+    }
+    .form-row {
+        display: flex;
+        gap: 10px;
         align-items: flex-end;
         flex-wrap: wrap;
+    }
+    .form-actions {
+        margin-left: auto;
+    }
+    .form-row-end {
+        justify-content: flex-start;
+    }
+    .form-spacer {
+        flex: 1;
+    }
+    .task-form-card {
+        background: white;
+        border-radius: 16px;
+        padding: 20px 24px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+        margin-bottom: 16px;
+    }
+    .filter-bar {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+    }
+    .search-box {
+        flex: 1;
+        min-width: 200px;
+        position: relative;
+    }
+    .search-box i {
+        position: absolute;
+        left: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #94a3b8;
+        font-size: 14px;
+    }
+    .search-box input {
+        width: 100%;
+        padding: 10px 14px 10px 38px;
+        border: 2px solid #f0f0f0;
+        border-radius: 10px;
+        font-size: 13px;
+        font-family: 'Poppins', sans-serif;
+        outline: none;
+        transition: all 0.2s;
+        background: white;
+    }
+    .search-box input:focus {
+        border-color: #ff6b9d;
+    }
+    .filter-group {
+        display: flex;
+        gap: 10px;
+    }
+    .filter-group select {
+        padding: 10px 14px;
+        border: 2px solid #f0f0f0;
+        border-radius: 10px;
+        font-size: 13px;
+        font-family: 'Poppins', sans-serif;
+        outline: none;
+        background: white;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    .filter-group select:focus {
+        border-color: #ff6b9d;
     }
     .todo-form .form-group {
         display: flex;
@@ -65,21 +137,23 @@
         background: var(--theme-primary);
         color: white;
         border: none;
-        padding: 10px 22px;
+        padding: 12px 24px;
         border-radius: 10px;
         cursor: pointer;
         font-weight: 600;
         font-family: 'Poppins', sans-serif;
-        font-size: 13px;
-        transition: filter 0.2s;
+        font-size: 14px;
+        transition: all 0.2s;
         white-space: nowrap;
         height: 42px;
         display: flex;
         align-items: center;
         gap: 6px;
+        box-shadow: 0 4px 12px rgba(255, 107, 157, 0.3);
     }
     .btn-tambah:hover {
-        filter: brightness(0.9);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(255, 107, 157, 0.4);
     }
     .task-list {
         display: flex;
@@ -93,6 +167,7 @@
         gap: 16px;
         padding: 14px 18px;
         border-radius: 12px;
+        overflow: hidden;
         transition: all 0.2s;
     }
     .task-item:hover {
@@ -106,8 +181,7 @@
         color: #aaa;
     }
     .task-item.overdue {
-        background: #fff5f5;
-        border-color: #ffcdd2;
+        background: #fef2f2;
     }
     .task-info {
         flex: 1;
@@ -131,10 +205,13 @@
     .task-name {
         font-size: 14px;
         font-weight: 500;
-        color: #333;
+        color: #1e293b;
+    }
+    .task-item.overdue {
+        border-left: 4px solid #dc2626;
     }
     .task-item.overdue .task-name {
-        color: #e74c3c;
+        color: #1e293b;
     }
     .task-dates {
         display: flex;
@@ -264,6 +341,10 @@
         .todo-form input[type="date"] {
             width: 100%;
         }
+        .form-actions {
+            margin-left: 0;
+            width: 100%;
+        }
         .btn-tambah {
             width: 100%;
             justify-content: center;
@@ -291,40 +372,73 @@
         <div class="success-msg">{{ session('success') }}</div>
     @endif
 
-    <div class="glass-card">
+    <div class="task-form-card">
         <form method="POST" action="/tasks" class="todo-form" style="margin-top: 0;">
             @csrf
-            <div class="form-group">
-                <label>Kategori</label>
-                <select name="category" required>
-                    <option value="">Pilih</option>
-                    <option value="Kerja">💼 Kerja</option>
-                    <option value="Kuliah">📚 Kuliah</option>
-                    <option value="Pribadi">💖 Pribadi</option>
-                    <option value="Sekolah">📓 Sekolah</option>
-                </select>
+            <div class="form-row">
+                <div class="form-group" style="flex: 1;">
+                    <label>Kategori</label>
+                    <select name="category" required>
+                        <option value="">Pilih</option>
+                        <option value="Kerja">💼 Kerja</option>
+                        <option value="Kuliah">📚 Kuliah</option>
+                        <option value="Pribadi">💖 Pribadi</option>
+                        <option value="Sekolah">📓 Sekolah</option>
+                    </select>
+                </div>
+                <div class="form-group" style="flex: 3;">
+                    <label>Tugas</label>
+                    <input name="task" required placeholder="Apa yang perlu dikerjakan?">
+                </div>
             </div>
-            <div class="form-group" style="flex: 1;">
-                <label>Tugas</label>
-                <input name="task" required placeholder="Apa yang perlu dikerjakan?">
+            <div class="form-row form-row-end">
+                <div class="form-group">
+                    <label>Mulai</label>
+                    <input type="date" name="start_date" id="startDate">
+                </div>
+                <div class="form-group">
+                    <label>Selesai</label>
+                    <input type="date" name="deadline" id="deadline">
+                </div>
+                <div class="form-spacer"></div>
+                <div class="form-actions">
+                    <button type="submit" class="btn-tambah">+ Tambah</button>
+                </div>
             </div>
-            <div class="form-group">
-                <label>Mulai</label>
-                <input type="date" name="start_date" id="startDate">
-            </div>
-            <div class="form-group">
-                <label>Selesai</label>
-                <input type="date" name="deadline" id="deadline">
-            </div>
-            <button type="submit" class="btn-tambah">+ Tambah</button>
         </form>
+    </div>
 
-        <div class="task-list">
+    <div class="filter-bar">
+        <div class="search-box">
+            <i class="bi bi-search"></i>
+            <input type="text" id="searchInput" placeholder="Cari tugas..." onkeyup="filterTasks()">
+        </div>
+        <div class="filter-group">
+            <select id="categoryFilter" onchange="filterTasks()">
+                <option value="">Semua Kategori</option>
+                <option value="Kerja">💼 Kerja</option>
+                <option value="Kuliah">📚 Kuliah</option>
+                <option value="Pribadi">💖 Pribadi</option>
+                <option value="Sekolah">📓 Sekolah</option>
+            </select>
+            <select id="statusFilter" onchange="filterTasks()">
+                <option value="">Semua Status</option>
+                <option value="pending">Belum Selesai</option>
+                <option value="done">Selesai</option>
+                <option value="overdue">Terlambat</option>
+            </select>
+        </div>
+    </div>
+
+        <div class="task-list" id="taskList">
             @forelse($tasks as $task)
                 @php
                     $isOverdue = $task->deadline && !$task->is_done && strtotime($task->deadline) < strtotime('today');
                 @endphp
-                <div class="task-item {{ $task->is_done ? 'done' : '' }} {{ $isOverdue ? 'overdue' : '' }}">
+                <div class="task-item {{ $task->is_done ? 'done' : '' }} {{ $isOverdue ? 'overdue' : '' }}"
+                     data-category="{{ $task->category ?? '' }}"
+                     data-status="{{ $isOverdue ? 'overdue' : ($task->is_done ? 'done' : 'pending') }}"
+                     data-task="{{ strtolower($task->task) }}">
                     <div class="task-info">
                         <div class="task-top">
                             @if($task->category)
@@ -405,5 +519,28 @@
                 deadline.removeAttribute('min');
             }
         });
+
+        function filterTasks() {
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const category = document.getElementById('categoryFilter').value;
+            const status = document.getElementById('statusFilter').value;
+            const tasks = document.querySelectorAll('.task-item');
+
+            tasks.forEach(task => {
+                const taskName = task.dataset.task;
+                const taskCategory = task.dataset.category;
+                const taskStatus = task.dataset.status;
+
+                const matchSearch = taskName.includes(search);
+                const matchCategory = !category || taskCategory === category;
+                const matchStatus = !status || taskStatus === status;
+
+                if (matchSearch && matchCategory && matchStatus) {
+                    task.style.display = '';
+                } else {
+                    task.style.display = 'none';
+                }
+            });
+        }
     </script>
 @endsection

@@ -37,9 +37,8 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/tasks/{id}', [TaskController::class, 'update'])->name('tasks.update');
     Route::delete('/tasks/{id}', [TaskController::class, 'destroy']);
     Route::get('/dashboard', [TaskController::class, 'dashboard'])->name('dashboard');
-    Route::get('/categories', function() {
-        return view('categories');
-    })->name('categories');
+    Route::get('/categories', [TaskController::class, 'categories'])->name('categories');
+    Route::post('/categories', [TaskController::class, 'storeCategory'])->name('categories.store');
     Route::get('/settings', function() {
         return view('settings');
     })->name('settings');

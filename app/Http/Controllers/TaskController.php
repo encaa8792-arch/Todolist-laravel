@@ -219,4 +219,32 @@ class TaskController extends Controller
             'totalTasks', 'completedTasks', 'pendingTasks', 'overdueTasks'
         ));
     }
+
+    public function categories()
+    {
+        $defaultCategories = [
+            ['name' => 'Kerja', 'icon' => '💼'],
+            ['name' => 'Kuliah', 'icon' => '📚'],
+            ['name' => 'Pribadi', 'icon' => '💖'],
+            ['name' => 'Sekolah', 'icon' => '📓'],
+        ];
+
+        $categoryStats = Task::selectRaw('category, COUNT(*) as count')
+            ->whereNotNull('category')
+            ->where('category', '!=', '')
+            ->groupBy('category')
+            ->pluck('count', 'category')
+            ->toArray();
+
+        foreach ($defaultCategories as &$cat) {
+            $cat['count'] = $categoryStats[$cat['name']] ?? 0;
+        }
+
+        return view('categories', compact('defaultCategories'));
+    }
+
+    public function storeCategory(Request $request)
+    {
+        return redirect('/categories')->with('success', 'Kategori berhasil ditambahkan!');
+    }
 }

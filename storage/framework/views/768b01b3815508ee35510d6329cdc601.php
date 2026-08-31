@@ -2,18 +2,10 @@
 <?php $__env->startSection('page-title', 'Tugas Selesai'); ?>
 
 <?php $__env->startSection('styles'); ?>
-    .completed-header {
-        text-align: center;
-        margin-bottom: 24px;
-    }
-    .completed-header h1 {
-        font-size: 26px;
-        font-weight: 700;
-        color: #2ecc71;
-        margin: 0;
-    }
-    .completed-header h1 span {
-        color: #27ae60;
+    .completed-page-header {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 16px;
     }
     .completed-list {
         display: flex;
@@ -27,7 +19,12 @@
         gap: 16px;
         padding: 14px 18px;
         border-radius: 12px;
+        border-left: 4px solid #16a34a;
+        background: #f0fdf4;
         transition: all 0.2s;
+    }
+    .completed-item .btn-icon {
+        overflow: visible;
     }
     .completed-item:hover {
         transform: translateY(-2px);
@@ -54,8 +51,25 @@
     .completed-name {
         font-size: 14px;
         font-weight: 500;
-        color: #64748b;
-        text-decoration: line-through;
+        color: #334155;
+        opacity: 0.75;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .completed-name::before {
+        content: '✓';
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 18px;
+        height: 18px;
+        background: #16a34a;
+        color: white;
+        border-radius: 50%;
+        font-size: 10px;
+        font-weight: 700;
+        flex-shrink: 0;
     }
     .completed-dates {
         display: flex;
@@ -92,6 +106,12 @@
         justify-content: center;
         transition: all 0.2s;
         position: relative;
+        overflow: visible;
+    }
+    .completed-btns {
+        display: flex;
+        gap: 6px;
+        flex-shrink: 0;
     }
     .btn-icon:hover {
         transform: scale(1.1);
@@ -135,6 +155,7 @@
         opacity: 0;
         pointer-events: none;
         transition: opacity 0.2s;
+        z-index: 1000;
     }
     .btn-icon:hover::after {
         opacity: 1;
@@ -303,21 +324,20 @@
 <?php $__env->stopSection(); ?>
 
 <?php $__env->startSection('content'); ?>
-    <div class="glass-card">
-        <div style="display: flex; justify-content: flex-end; margin-bottom: 16px;">
-            <div class="kebab-wrapper">
-                <button class="kebab-btn" type="button" onclick="toggleKebabMenu(this)">
-                    <span></span><span></span><span></span>
-                </button>
-                <div class="kebab-menu">
-                    <button type="button" onclick="toggleBulkMode()">Bulk Action</button>
-                    <div class="menu-divider"></div>
-                    <button type="button" onclick="toggleBulkDeleteMode()">Hapus Massal</button>
-                </div>
+    <div class="completed-page-header">
+        <div class="kebab-wrapper">
+            <button class="kebab-btn" type="button" onclick="toggleKebabMenu(this)">
+                <span></span><span></span><span></span>
+            </button>
+            <div class="kebab-menu">
+                <button type="button" onclick="toggleBulkMode()">Bulk Action</button>
+                <div class="menu-divider"></div>
+                <button type="button" onclick="toggleBulkDeleteMode()">Hapus Massal</button>
             </div>
         </div>
+    </div>
 
-        <form method="POST" action="/tasks/bulk-done" id="bulkForm" class="bulk-actions" style="display:none;">
+    <form method="POST" action="/tasks/bulk-done" id="bulkForm" class="bulk-actions" style="display:none;">
             <?php echo csrf_field(); ?>
             <input type="hidden" name="action" value="undo">
             <label>
@@ -378,8 +398,7 @@
                             <?php echo csrf_field(); ?>
                             <button type="submit" class="btn-icon batal" data-tooltip="Batalkan">↩️</button>
                         </form>
-                        <a href="/tasks/<?php echo e($task->id); ?>/edit" class="btn-icon edit" data-tooltip="Edit">✏️</a>
-                        <form method="POST" action="/tasks/<?php echo e($task->id); ?>?from=completed" style="display:inline;">
+                        <form method="POST" action="/tasks/<?php echo e($task->id); ?>?from=completed" style="display:inline; position: relative;">
                             <?php echo csrf_field(); ?>
                             <?php echo method_field('DELETE'); ?>
                             <button type="submit" class="btn-icon hapus" data-tooltip="Hapus" onclick="return confirm('Yakin mau hapus?')">🗑️</button>
@@ -400,7 +419,6 @@
 
             </div>
         <?php endif; ?>
-    </div>
 
     <script>
         let bulkMode = false;

@@ -4,18 +4,10 @@
 @section('page-title', 'Tugas Selesai')
 
 @section('styles')
-    .completed-header {
-        text-align: center;
-        margin-bottom: 24px;
-    }
-    .completed-header h1 {
-        font-size: 26px;
-        font-weight: 700;
-        color: #2ecc71;
-        margin: 0;
-    }
-    .completed-header h1 span {
-        color: #27ae60;
+    .completed-page-header {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 16px;
     }
     .completed-list {
         display: flex;
@@ -29,7 +21,12 @@
         gap: 16px;
         padding: 14px 18px;
         border-radius: 12px;
+        border-left: 4px solid #16a34a;
+        background: #f0fdf4;
         transition: all 0.2s;
+    }
+    .completed-item .btn-icon {
+        overflow: visible;
     }
     .completed-item:hover {
         transform: translateY(-2px);
@@ -56,7 +53,8 @@
     .completed-name {
         font-size: 14px;
         font-weight: 500;
-        color: #94a3b8;
+        color: #334155;
+        opacity: 0.75;
         display: flex;
         align-items: center;
         gap: 8px;
@@ -110,6 +108,12 @@
         justify-content: center;
         transition: all 0.2s;
         position: relative;
+        overflow: visible;
+    }
+    .completed-btns {
+        display: flex;
+        gap: 6px;
+        flex-shrink: 0;
     }
     .btn-icon:hover {
         transform: scale(1.1);
@@ -153,6 +157,7 @@
         opacity: 0;
         pointer-events: none;
         transition: opacity 0.2s;
+        z-index: 1000;
     }
     .btn-icon:hover::after {
         opacity: 1;
@@ -321,21 +326,20 @@
 @endsection
 
 @section('content')
-    <div class="glass-card">
-        <div style="display: flex; justify-content: flex-end; margin-bottom: 16px;">
-            <div class="kebab-wrapper">
-                <button class="kebab-btn" type="button" onclick="toggleKebabMenu(this)">
-                    <span></span><span></span><span></span>
-                </button>
-                <div class="kebab-menu">
-                    <button type="button" onclick="toggleBulkMode()">Bulk Action</button>
-                    <div class="menu-divider"></div>
-                    <button type="button" onclick="toggleBulkDeleteMode()">Hapus Massal</button>
-                </div>
+    <div class="completed-page-header">
+        <div class="kebab-wrapper">
+            <button class="kebab-btn" type="button" onclick="toggleKebabMenu(this)">
+                <span></span><span></span><span></span>
+            </button>
+            <div class="kebab-menu">
+                <button type="button" onclick="toggleBulkMode()">Bulk Action</button>
+                <div class="menu-divider"></div>
+                <button type="button" onclick="toggleBulkDeleteMode()">Hapus Massal</button>
             </div>
         </div>
+    </div>
 
-        <form method="POST" action="/tasks/bulk-done" id="bulkForm" class="bulk-actions" style="display:none;">
+    <form method="POST" action="/tasks/bulk-done" id="bulkForm" class="bulk-actions" style="display:none;">
             @csrf
             <input type="hidden" name="action" value="undo">
             <label>
@@ -393,8 +397,7 @@
                             @csrf
                             <button type="submit" class="btn-icon batal" data-tooltip="Batalkan">↩️</button>
                         </form>
-                        <a href="/tasks/{{ $task->id }}/edit" class="btn-icon edit" data-tooltip="Edit">✏️</a>
-                        <form method="POST" action="/tasks/{{ $task->id }}?from=completed" style="display:inline;">
+                        <form method="POST" action="/tasks/{{ $task->id }}?from=completed" style="display:inline; position: relative;">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn-icon hapus" data-tooltip="Hapus" onclick="return confirm('Yakin mau hapus?')">🗑️</button>
@@ -414,7 +417,6 @@
                 {{ $tasks->links('vendor.pagination.default') }}
             </div>
         @endif
-    </div>
 
     <script>
         let bulkMode = false;

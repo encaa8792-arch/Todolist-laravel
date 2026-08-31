@@ -215,8 +215,29 @@ class TaskController extends Controller
             ->where('deadline', '<', now())
             ->count();
 
+        $categoryStats = Task::selectRaw('category, COUNT(*) as count')
+            ->whereNotNull('category')
+            ->where('category', '!=', '')
+            ->groupBy('category')
+            ->pluck('count', 'category')
+            ->toArray();
+
+        $weekStart = now()->startOfWeek();
+        $weeklyStats = [];
+        for ($i = 0; $i < 7; $i++) {
+            $dayStart = $weekStart->copy()->addDays($i)->startOfDay();
+            $dayEnd = $weekStart->copy()->addDays($i)->endOfDay();
+            $weeklyStats[] = [
+                'day' => $dayStart->format('D'),
+                'created' => Task::whereBetween('created_at', [$dayStart, $dayEnd])->count(),
+                'completed' => Task::where('is_done', 1)
+                    ->whereBetween('updated_at', [$dayStart, $dayEnd])->count(),
+            ];
+        }
+
         return view('reports', compact(
-            'totalTasks', 'completedTasks', 'pendingTasks', 'overdueTasks'
+            'totalTasks', 'completedTasks', 'pendingTasks', 'overdueTasks',
+            'categoryStats', 'weeklyStats'
         ));
     }
 

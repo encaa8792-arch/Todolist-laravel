@@ -1407,6 +1407,7 @@
                     <span class="page-title"><?php echo $__env->yieldContent('page-title', 'Dashboard TodoList'); ?></span>
                 </div>
                 <div class="page-topbar-right">
+                    <?php echo $__env->yieldContent('header-actions'); ?>
                     <button class="topbar-btn" onclick="openBgModal()" data-tooltip="Ganti Latar Belakang">
                         🖼️
                     </button>

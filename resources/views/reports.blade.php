@@ -1,7 +1,6 @@
 @extends('layouts.app')
 @section('title', 'Laporan')
 @section('page-title', 'Laporan')
-
 @section('styles')
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     .flatpickr-input {
@@ -37,6 +36,8 @@
         transition: transform 0.2s, box-shadow 0.2s;
         position: relative;
         overflow: hidden;
+        background: white;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
     }
     .stat-card::before {
         content: '';
@@ -85,6 +86,8 @@
     .filter-section {
         padding: 20px;
         border-radius: 16px;
+        background: white;
+        margin-bottom: 16px;
     }
     .filter-row {
         display: flex;
@@ -122,6 +125,7 @@
     .filter-group select {
         min-width: 150px;
     }
+
     .filter-group input[type="date"] {
         min-width: 140px;
     }
@@ -173,6 +177,71 @@
         color: #334155;
     }
 
+    .charts-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        margin: 20px 0;
+    }
+    .chart-card {
+        background: white;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        border-radius: 16px;
+        padding: 20px;
+    }
+    .chart-card-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 16px;
+    }
+    .chart-card-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+    }
+    .chart-card-icon.purple { background: rgba(99, 102, 241, 0.15); }
+    .chart-card-icon.blue { background: rgba(59, 130, 246, 0.15); }
+    .chart-card-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #333;
+    }
+    .chart-container {
+        position: relative;
+        width: 100%;
+        min-height: 300px;
+        height: 300px;
+    }
+    .chart-container canvas {
+        display: block;
+        width: 100% !important;
+        height: 100% !important;
+    }
+    .chart-legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 16px;
+        justify-content: center;
+    }
+    .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 12px;
+        color: #64748b;
+    }
+    .legend-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+    }
+
     .report-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
@@ -182,6 +251,8 @@
         padding: 20px;
         border-radius: 16px;
         transition: transform 0.2s;
+        background: white;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
     }
     .report-card:hover {
         transform: translateY(-3px);
@@ -240,6 +311,9 @@
         .report-grid {
             grid-template-columns: repeat(2, 1fr);
         }
+        .charts-grid {
+            grid-template-columns: 1fr;
+        }
     }
     @media (max-width: 768px) {
         .stats-grid {
@@ -284,51 +358,44 @@
     }
 @endsection
 
+@section('header-actions')
+    <button class="topbar-btn" onclick="exportReport()" data-tooltip="Export Laporan">
+        📥
+    </button>
+@endsection
+
 @section('content')
-    <div class="glass-card">
-        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:15px;">
-            <button class="export-btn" onclick="exportReport()">
-                📥 Export Laporan
-            </button>
-        </div>
+    <div style="margin-bottom: 16px;">
 
-        <div class="stats-grid" style="margin-top: 20px;">
-            <div class="glass-card" style="padding: 20px; background: rgba(255, 255, 255, 0.88); border: 1px solid rgba(255, 255, 255, 0.7); box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
-                <div class="stat-card total">
-                    <span class="icon-bg">📋</span>
-                    <div class="number">{{ $totalTasks }}</div>
-                    <div class="label">Total Tugas</div>
-                    <div class="sublabel">Semua tugas dibuat</div>
-                </div>
-            </div>
-            <div class="glass-card" style="padding: 20px; background: rgba(255, 255, 255, 0.88); border: 1px solid rgba(255, 255, 255, 0.7); box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
-                <div class="stat-card completed">
-                    <span class="icon-bg">✓</span>
-                    <div class="number">{{ $completedTasks }}</div>
-                    <div class="label">Selesai</div>
-                    <div class="sublabel">Tugas selesai</div>
-                </div>
-            </div>
-            <div class="glass-card" style="padding: 20px; background: rgba(255, 255, 255, 0.88); border: 1px solid rgba(255, 255, 255, 0.7); box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
-                <div class="stat-card pending">
-                    <span class="icon-bg">⏳</span>
-                    <div class="number">{{ $pendingTasks }}</div>
-                    <div class="label">Belum Selesai</div>
-                    <div class="sublabel">Sedang berjalan</div>
-                </div>
-            </div>
-            <div class="glass-card" style="padding: 20px; background: rgba(255, 255, 255, 0.88); border: 1px solid rgba(255, 255, 255, 0.7); box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
-                <div class="stat-card overdue">
-                    <span class="icon-bg">⚠️</span>
-                    <div class="number">{{ $overdueTasks }}</div>
-                    <div class="label">Terlambat</div>
-                    <div class="sublabel">Melewati deadline</div>
-                </div>
-            </div>
+    <div class="stats-grid">
+        <div class="stat-card total">
+            <span class="icon-bg">📋</span>
+            <div class="number">{{ $totalTasks }}</div>
+            <div class="label">Total Tugas</div>
+            <div class="sublabel">Semua tugas dibuat</div>
         </div>
+        <div class="stat-card completed">
+            <span class="icon-bg">✓</span>
+            <div class="number">{{ $completedTasks }}</div>
+            <div class="label">Selesai</div>
+            <div class="sublabel">Tugas selesai</div>
+        </div>
+        <div class="stat-card pending">
+            <span class="icon-bg">⏳</span>
+            <div class="number">{{ $pendingTasks }}</div>
+            <div class="label">Belum Selesai</div>
+            <div class="sublabel">Sedang berjalan</div>
+        </div>
+        <div class="stat-card overdue">
+            <span class="icon-bg">⚠️</span>
+            <div class="number">{{ $overdueTasks }}</div>
+            <div class="label">Terlambat</div>
+            <div class="sublabel">Melewati deadline</div>
+        </div>
+    </div>
 
-        <div class="filter-section" style="background: rgba(255, 255, 255, 0.88); border: 1px solid rgba(255, 255, 255, 0.7);">
-            <div class="filter-row">
+    <div class="filter-section">
+        <div class="filter-row">
                 <div class="filter-group">
                     <label>Kategori</label>
                     <select id="filterCategory">
@@ -352,8 +419,30 @@
             </div>
         </div>
 
+        <div class="charts-grid">
+            <div class="chart-card">
+                <div class="chart-card-header">
+                    <div class="chart-card-icon purple">📊</div>
+                    <div class="chart-card-title">Proporsi Kategori</div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="categoryPieChart"></canvas>
+                </div>
+                <div class="chart-legend" id="categoryLegend"></div>
+            </div>
+            <div class="chart-card">
+                <div class="chart-card-header">
+                    <div class="chart-card-icon blue">📈</div>
+                    <div class="chart-card-title">Tren Mingguan</div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="weeklyBarChart"></canvas>
+                </div>
+            </div>
+        </div>
+
         <div class="report-grid">
-            <div class="report-card" style="background: rgba(255, 255, 255, 0.88); border: 1px solid rgba(255, 255, 255, 0.7); box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+            <div class="report-card">
                 <div class="report-card-header">
                     <div class="report-card-icon pink">📊</div>
                     <div class="report-card-title">Ringkasan</div>
@@ -372,7 +461,7 @@
                 </div>
             </div>
 
-            <div class="report-card" style="background: rgba(255, 255, 255, 0.88); border: 1px solid rgba(255, 255, 255, 0.7); box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+            <div class="report-card">
                 <div class="report-card-header">
                     <div class="report-card-icon green">✓</div>
                     <div class="report-card-title">Tugas Selesai</div>
@@ -391,7 +480,7 @@
                 </div>
             </div>
 
-            <div class="report-card" style="background: rgba(255, 255, 255, 0.88); border: 1px solid rgba(255, 255, 255, 0.7); box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+            <div class="report-card">
                 <div class="report-card-header">
                     <div class="report-card-icon orange">⏳</div>
                     <div class="report-card-title">Status Tugas</div>
@@ -410,15 +499,131 @@
                 </div>
             </div>
         </div>
-    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/id.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <script>
         flatpickr(".flatpickr-date", {
             dateFormat: "d-m-Y",
             locale: "id",
             allowInput: true
+        });
+
+        const categoryData = @json($categoryStats);
+        const weeklyData = @json($weeklyStats);
+
+        const categoryColors = ['#ff6b9d', '#667eea', '#16a34a', '#f59e0b', '#8b5cf6', '#06b6d4'];
+        const categoryLabels = Object.keys(categoryData);
+        const categoryCounts = Object.values(categoryData);
+
+        const totalCount = categoryCounts.reduce((a, b) => a + b, 0);
+
+        const pieCtx = document.getElementById('categoryPieChart').getContext('2d');
+        new Chart(pieCtx, {
+            type: 'doughnut',
+            data: {
+                labels: categoryLabels.length ? categoryLabels : ['Tidak Ada Data'],
+                datasets: [{
+                    data: categoryCounts.length ? categoryCounts : [1],
+                    backgroundColor: categoryLabels.length ? categoryColors.slice(0, categoryLabels.length) : ['#e2e8f0'],
+                    borderWidth: 0,
+                    hoverOffset: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                animation: { duration: 800 },
+                cutout: '65%',
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const value = context.raw;
+                                const percentage = totalCount > 0 ? Math.round((value / totalCount) * 100) : 0;
+                                return ` ${value} tugas (${percentage}%)`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        const legendContainer = document.getElementById('categoryLegend');
+        categoryLabels.forEach((label, i) => {
+            const item = document.createElement('div');
+            item.className = 'legend-item';
+            item.innerHTML = `<span class="legend-dot" style="background: ${categoryColors[i]}"></span> ${label} (${categoryCounts[i]})`;
+            legendContainer.appendChild(item);
+        });
+
+        const barCtx = document.getElementById('weeklyBarChart').getContext('2d');
+
+        const maxValue = Math.max(
+            ...weeklyData.map(d => Math.max(d.created, d.completed)),
+            1
+        );
+
+        new Chart(barCtx, {
+            type: 'bar',
+            data: {
+                labels: weeklyData.map(d => d.day),
+                datasets: [
+                    {
+                        label: 'Dibuat',
+                        data: weeklyData.map(d => d.created),
+                        backgroundColor: 'rgba(99, 102, 241, 0.8)',
+                        borderRadius: 6,
+                        borderSkipped: false
+                    },
+                    {
+                        label: 'Diselesaikan',
+                        data: weeklyData.map(d => d.completed),
+                        backgroundColor: 'rgba(22, 163, 74, 0.8)',
+                        borderRadius: 6,
+                        borderSkipped: false
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                animation: { duration: 800 },
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            usePointStyle: true,
+                            pointStyle: 'circle',
+                            padding: 20,
+                            font: { size: 11 }
+                        }
+                    },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: Math.ceil(maxValue * 1.2),
+                        ticks: {
+                            stepSize: 1,
+                            font: { size: 11 }
+                        },
+                        grid: {
+                            color: 'rgba(0,0,0,0.05)'
+                        }
+                    },
+                    x: {
+                        grid: { display: false },
+                        ticks: { font: { size: 11 } }
+                    }
+                }
+            }
         });
 
         function applyFilter() {

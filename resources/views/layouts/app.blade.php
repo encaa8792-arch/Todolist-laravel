@@ -1407,6 +1407,7 @@
                     <span class="page-title">@yield('page-title', 'Dashboard TodoList')</span>
                 </div>
                 <div class="page-topbar-right">
+                    @yield('header-actions')
                     <button class="topbar-btn" onclick="openBgModal()" data-tooltip="Ganti Latar Belakang">
                         🖼️
                     </button>

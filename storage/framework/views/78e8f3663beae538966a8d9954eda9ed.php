@@ -137,6 +137,27 @@
         align-items: center;
         justify-content: center;
         transition: all 0.2s;
+        position: relative;
+    }
+    .category-actions button::after {
+        content: attr(data-tooltip);
+        position: absolute;
+        top: calc(100% + 8px);
+        left: 50%;
+        transform: translateX(-50%);
+        background: #1e293b;
+        color: white;
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-size: 12px;
+        white-space: nowrap;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s;
+        z-index: 100;
+    }
+    .category-actions button:hover::after {
+        opacity: 1;
     }
     .category-actions .btn-edit {
         background: #f1f5f9;
@@ -290,8 +311,8 @@
                     </div>
                 </div>
                 <div class="category-actions">
-                    <button class="btn-edit" title="Edit">✏️</button>
-                    <button class="btn-delete" title="Hapus">🗑️</button>
+                    <button class="btn-edit" data-tooltip="Edit">✏️</button>
+                    <button class="btn-delete" data-tooltip="Hapus">🗑️</button>
                 </div>
             </div>
         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>

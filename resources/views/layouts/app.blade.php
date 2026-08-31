@@ -258,6 +258,9 @@
         border-radius: 14px;
         box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         margin-bottom: 12px;
+        overflow: visible !important;
+        position: relative;
+        z-index: 1000;
       }
       .page-topbar-left {
         display: flex;
@@ -274,6 +277,7 @@
         display: flex;
         gap: 8px;
         position: relative;
+        overflow: visible !important;
       }
       .topbar-btn {
         position: relative;
@@ -299,12 +303,13 @@
         background: var(--theme-primary);
         color: white;
       }
-      .topbar-btn .tooltip-text {
+      .topbar-btn::after {
+        content: attr(data-tooltip);
         position: absolute;
-        bottom: calc(100% + 8px);
+        top: 130%;
         left: 50%;
         transform: translateX(-50%);
-        background: #333;
+        background: #1e293b;
         color: white;
         padding: 6px 12px;
         border-radius: 8px;
@@ -314,18 +319,24 @@
         visibility: hidden;
         transition: all 0.2s;
         pointer-events: none;
-        z-index: 100;
+        z-index: 9999;
       }
-      .topbar-btn .tooltip-text::after {
+      .topbar-btn::before {
         content: '';
         position: absolute;
-        top: 100%;
+        top: calc(130% - 8px);
         left: 50%;
         transform: translateX(-50%);
         border: 6px solid transparent;
-        border-top-color: #333;
+        border-bottom-color: #1e293b;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.2s;
+        z-index: 9999;
+        pointer-events: none;
       }
-      .topbar-btn:hover .tooltip-text {
+      .topbar-btn:hover::after,
+      .topbar-btn:hover::before {
         opacity: 1;
         visibility: visible;
       }
@@ -1396,18 +1407,15 @@
                     <span class="page-title">@yield('page-title', 'Dashboard TodoList')</span>
                 </div>
                 <div class="page-topbar-right">
-                    <button class="topbar-btn" onclick="openBgModal()" title="Ganti Latar Belakang">
+                    <button class="topbar-btn" onclick="openBgModal()" data-tooltip="Ganti Latar Belakang">
                         🖼️
-                        <span class="tooltip-text">Ganti Latar Belakang</span>
                     </button>
-                    <button class="topbar-btn" onclick="openGuide()" title="Buku Panduan">
+                    <button class="topbar-btn" onclick="openGuide()" data-tooltip="Buku Panduan">
                         📖
-                        <span class="tooltip-text">Buku Panduan</span>
                     </button>
                     <div class="theme-palette">
-                        <button class="topbar-btn" id="themeBtn" onclick="toggleThemeDropdown()" title="Tema">
+                        <button class="topbar-btn" id="themeBtn" onclick="toggleThemeDropdown()" data-tooltip="Tema">
                             🎨
-                            <span class="tooltip-text">Tema</span>
                         </button>
                         <div class="theme-dropdown" id="themeDropdown">
                             <div class="theme-dropdown-title">Pilih Tema</div>

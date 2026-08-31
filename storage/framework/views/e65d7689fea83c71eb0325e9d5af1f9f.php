@@ -60,6 +60,26 @@
       * {
         box-sizing: border-box;
       }
+
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: rgba(0, 0, 0, 0.15);
+        border-radius: 10px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: rgba(0, 0, 0, 0.3);
+      }
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+      }
       body {
         background-image: url('/images/bg-tulip.jpg');
         background-size: cover;
@@ -67,11 +87,6 @@
         background-attachment: fixed;
         background-color: rgba(0,0,0,0.03);
         font-family: 'Poppins', sans-serif;
-        min-height: 100vh;
-        height: 100vh;
-        margin: 0;
-        padding: 0;
-        overflow: hidden;
       }
       body::before {
         content: '';
@@ -245,9 +260,13 @@
       }
       .main-content {
         flex: 1;
-        padding: 12px;
         margin-left: 248px;
         transition: margin-left 0.3s ease;
+        overflow-y: auto;
+        overflow-x: hidden;
+        scroll-behavior: smooth;
+        padding: 12px 16px 80px 16px;
+        height: 100vh;
       }
       .page-topbar {
         display: flex;
@@ -1020,6 +1039,8 @@
         body.sidebar-collapsed .main-content,
         .main-content {
           margin-left: 0;
+          overflow-y: auto;
+          padding-bottom: 80px;
         }
         .box {
           padding: 15px 12px;
@@ -1227,6 +1248,7 @@
         flex-direction: column;
         width: 100%;
         max-width: 95%;
+        flex-shrink: 0;
       }
       .glass-card {
         background: rgba(255, 255, 255, 0.78);

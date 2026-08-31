@@ -213,6 +213,7 @@
     .chart-container {
         position: relative;
         width: 100%;
+        min-height: 300px;
         height: 300px;
     }
     .chart-container canvas {
@@ -558,6 +559,12 @@
         });
 
         const barCtx = document.getElementById('weeklyBarChart').getContext('2d');
+
+        const maxValue = Math.max(
+            ...weeklyData.map(d => Math.max(d.created, d.completed)),
+            1
+        );
+
         new Chart(barCtx, {
             type: 'bar',
             data: {
@@ -601,6 +608,7 @@
                 scales: {
                     y: {
                         beginAtZero: true,
+                        max: Math.ceil(maxValue * 1.2),
                         ticks: {
                             stepSize: 1,
                             font: { size: 11 }

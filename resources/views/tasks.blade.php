@@ -130,8 +130,59 @@
         flex: 1;
         min-width: 180px;
     }
-    .todo-form input[type="date"] {
+    .date-input-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+    .date-input {
         width: 140px;
+        padding: 10px 36px 10px 14px;
+        border: 2px solid #f0f0f0;
+        border-radius: 10px;
+        font-size: 13px;
+        font-family: 'Poppins', sans-serif;
+        background: #fafafa;
+        outline: none;
+        transition: all 0.2s;
+        cursor: pointer;
+    }
+    .date-input:focus {
+        border-color: var(--theme-primary);
+        background: white;
+    }
+    .date-input::placeholder {
+        color: #94a3b8;
+    }
+    .date-icon {
+        position: absolute;
+        right: 12px;
+        font-size: 14px;
+        pointer-events: none;
+        color: #94a3b8;
+    }
+    .flatpickr-alt-input {
+        width: 140px;
+        padding: 10px 36px 10px 14px;
+        border: 2px solid #f0f0f0;
+        border-radius: 10px;
+        font-size: 13px;
+        font-family: 'Poppins', sans-serif;
+        background: #fafafa;
+        outline: none;
+        transition: all 0.2s;
+        cursor: pointer;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+    .flatpickr-alt-input:focus {
+        border-color: var(--theme-primary);
+        background: white;
+    }
+    .flatpickr-active {
+        border-color: var(--theme-primary);
+        background: white;
     }
     .btn-tambah {
         background: var(--theme-primary);
@@ -412,7 +463,8 @@
         }
         .todo-form select,
         .todo-form input[type="text"],
-        .todo-form input[type="date"] {
+        .date-input,
+        .flatpickr-alt-input {
             width: 100%;
         }
         .form-actions {
@@ -468,11 +520,17 @@
             <div class="form-row form-row-end">
                 <div class="form-group">
                     <label>Mulai</label>
-                    <input type="date" name="start_date" id="startDate">
+                    <div class="date-input-wrapper">
+                        <input type="text" name="start_date" id="startDate" class="date-input" placeholder="Pilih Tgl Mulai" readonly>
+                        <span class="date-icon">📅</span>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label>Selesai</label>
-                    <input type="date" name="deadline" id="deadline">
+                    <div class="date-input-wrapper">
+                        <input type="text" name="deadline" id="deadline" class="date-input" placeholder="Pilih Tgl Selesai" readonly>
+                        <span class="date-icon">📅</span>
+                    </div>
                 </div>
                 <div class="form-spacer"></div>
                 <div class="form-actions">
@@ -574,33 +632,48 @@
     </div>
 
     <script>
-        document.getElementById('deadline').addEventListener('change', function() {
-            const startDate = document.getElementById('startDate');
-            if (startDate.value && this.value) {
-                if (new Date(startDate.value) > new Date(this.value)) {
-                    showToast('Peringatan', 'Tanggal mulai tidak boleh lebih besar dari tanggal selesai!', 'warning');
-                    startDate.value = this.value;
-                }
-            }
-            if (this.value) {
-                startDate.max = this.value;
-            } else {
-                startDate.removeAttribute('max');
-            }
-        });
+        // Flatpickr date validation for form
+        document.addEventListener('DOMContentLoaded', function() {
+            const startPicker = document.getElementById('startDate');
+            const endPicker = document.getElementById('deadline');
 
-        document.getElementById('startDate').addEventListener('change', function() {
-            const deadline = document.getElementById('deadline');
-            if (this.value && deadline.value) {
-                if (new Date(this.value) > new Date(deadline.value)) {
-                    showToast('Peringatan', 'Tanggal mulai tidak boleh lebih besar dari tanggal selesai!', 'warning');
-                    deadline.value = this.value;
-                }
-            }
-            if (this.value) {
-                deadline.min = this.value;
-            } else {
-                deadline.removeAttribute('min');
+            if (startPicker && endPicker && typeof flatpickr !== 'undefined') {
+                const locale = {
+                    weekdays: {
+                        shorthand: ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'],
+                        longhand: ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu']
+                    },
+                    months: {
+                        shorthand: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'],
+                        longhand: ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember']
+                    }
+                };
+
+                flatpickr('#startDate', {
+                    dateFormat: 'Y-m-d',
+                    altInput: true,
+                    altFormat: 'd M Y',
+                    disableMobile: true,
+                    locale: locale,
+                    onChange: function(selectedDates, dateStr, instance) {
+                        if (dateStr && endPicker._flatpickr) {
+                            endPicker._flatpickr.set('minDate', dateStr);
+                        }
+                    }
+                });
+
+                flatpickr('#deadline', {
+                    dateFormat: 'Y-m-d',
+                    altInput: true,
+                    altFormat: 'd M Y',
+                    disableMobile: true,
+                    locale: locale,
+                    onChange: function(selectedDates, dateStr, instance) {
+                        if (dateStr && startPicker._flatpickr) {
+                            startPicker._flatpickr.set('maxDate', dateStr);
+                        }
+                    }
+                });
             }
         });
 

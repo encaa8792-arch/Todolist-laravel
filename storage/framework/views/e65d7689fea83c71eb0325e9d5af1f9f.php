@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <style>
       :root {
         --theme-primary: #ff6b9d;
@@ -2207,7 +2208,36 @@
                 }
             }, 3500);
         }
+
+        // Initialize Flatpickr for date inputs
+        function initDatePickers() {
+            const locale = {
+                weekdays: {
+                    shorthand: ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'],
+                    longhand: ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu']
+                },
+                months: {
+                    shorthand: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'],
+                    longhand: ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember']
+                }
+            };
+
+            flatpickr('.date-input', {
+                dateFormat: 'd M Y',
+                altInput: true,
+                altFormat: 'd M Y',
+                disableMobile: true,
+                locale: locale,
+                onOpen: function(selectedDates, dateStr, instance) {
+                    instance.altInput.classList.add('flatpickr-active');
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', initDatePickers);
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/id.js"></script>
     <div id="toast-container" class="toast-container"></div>
 </body>
 </html>

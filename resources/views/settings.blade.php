@@ -148,29 +148,6 @@
     .toggle-switch input:checked + .toggle-slider:before {
         transform: translateX(20px);
     }
-    .logout-btn {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        width: 100%;
-        background: white;
-        color: #ff6b6b;
-        border: 2px solid var(--theme-danger);
-        padding: 12px;
-        border-radius: 12px;
-        font-size: 14px;
-        font-weight: 600;
-        font-family: 'Poppins', sans-serif;
-        cursor: pointer;
-        transition: all 0.2s;
-        text-decoration: none;
-        margin-top: auto;
-    }
-    .logout-btn:hover {
-        background: #ffeaea;
-        border-color: #ff6b6b;
-    }
     .preference-grid {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
@@ -230,27 +207,87 @@
     .btn-panduan {
         display: inline-flex;
         align-items: center;
-        gap: 6px;
+        gap: 4px;
         background: var(--theme-primary);
         color: white;
         border: none;
-        padding: 10px 18px;
-        border-radius: 10px;
-        font-size: 12px;
+        padding: 8px 14px;
+        border-radius: 8px;
+        font-size: 11px;
         font-weight: 600;
         font-family: 'Poppins', sans-serif;
         cursor: pointer;
         transition: filter 0.2s;
-        margin-top: 14px;
     }
     .btn-panduan:hover {
         filter: brightness(0.9);
     }
+    .profile-avatar-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+    .profile-avatar-wrapper {
+        position: relative;
+        width: 80px;
+        height: 80px;
+    }
+    .profile-avatar {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--theme-primary), var(--theme-secondary));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 32px;
+        color: white;
+        font-weight: 600;
+        object-fit: cover;
+        border: 3px solid white;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    .profile-avatar-img {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid white;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    .btn-change-photo {
+        margin-top: 10px;
+        padding: 6px 14px;
+        background: white;
+        border: 2px solid var(--theme-border);
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 600;
+        font-family: 'Poppins', sans-serif;
+        color: #666;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+    .btn-change-photo:hover {
+        border-color: var(--theme-primary);
+        color: var(--theme-primary);
+        background: rgba(255,107,157,0.05);
+    }
+    .avatar-input {
+        display: none;
+    }
 
     .settings-cards-row {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
+        display: flex;
+        align-items: stretch;
         gap: 16px;
+    }
+    .settings-card {
+        flex: 1;
     }
     .about-full-width {
         background: rgba(255, 255, 255, 0.8);
@@ -262,6 +299,7 @@
         padding: 24px;
         transition: transform 0.2s, box-shadow 0.2s;
         margin-top: 16px;
+        margin-bottom: 16px;
     }
     .about-full-width:hover {
         transform: translateY(-3px);
@@ -274,22 +312,24 @@
     }
 
     @media (max-width: 1200px) {
-        .settings-section {
-            grid-template-columns: repeat(2, 1fr);
-        }
         .settings-cards-row {
-            grid-template-columns: repeat(2, 1fr);
+            flex-wrap: wrap;
+        }
+        .settings-card {
+            flex: 1 1 calc(50% - 8px);
+            min-width: 280px;
         }
         .about-horizontal {
             gap: 40px;
         }
     }
     @media (max-width: 768px) {
-        .settings-section {
-            grid-template-columns: 1fr;
-        }
         .settings-cards-row {
-            grid-template-columns: 1fr;
+            flex-direction: column;
+        }
+        .settings-card {
+            flex: none;
+            width: 100%;
         }
         .preference-grid {
             grid-template-columns: 1fr;
@@ -302,8 +342,7 @@
 @endsection
 
 @section('content')
-    <div class="glass-card">
-        @if(session('success'))
+    @if(session('success'))
             <div class="success-message" style="background:#d4edda; color:#155724; padding:12px 16px; border-radius:12px; margin-bottom:10px; font-size:13px; display:flex; align-items:center; gap:8px;">
                 <span>✓</span> {{ session('success') }}
             </div>
@@ -316,9 +355,16 @@
                     <div class="settings-card-title">Profil</div>
                 </div>
                 <div class="settings-card-body">
-                    <form method="POST" action="/settings/profile">
+                    <form method="POST" action="/settings/profile" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
+                        <div class="profile-avatar-section">
+                            <div class="profile-avatar-wrapper">
+                                <div class="profile-avatar">{{ substr(auth()->user()->name ?? 'P', 0, 1) }}</div>
+                            </div>
+                            <label class="btn-change-photo" for="avatarInput">📷 Ubah Foto</label>
+                            <input type="file" id="avatarInput" class="avatar-input" name="avatar" accept="image/*">
+                        </div>
                         <div class="form-group">
                             <label>Nama</label>
                             <input type="text" name="name" value="{{ auth()->user()->name ?? 'Pengguna' }}">
@@ -438,22 +484,29 @@
                         <div class="about-value">TodoList Team</div>
                     </div>
                 </div>
-                <p style="text-align:center; margin:16px 0 0; font-size:13px; color:#666; line-height:1.6;">
-                    Aplikasi TodoList membantu Anda mengelola tugas harian dengan mudah.
-                </p>
-                <button type="button" class="btn-panduan" onclick="openGuide()" style="margin:16px auto 0; display:flex;">
-                    📖 Lihat Panduan
-                </button>
+                <div style="text-align:center; margin-top:14px;">
+                    <p style="font-size:13px; color:#666; margin:0 0 12px;">Aplikasi TodoList membantu Anda mengelola tugas harian dengan mudah.</p>
+                    <button type="button" class="btn-panduan" onclick="openGuide()">📖 Lihat Panduan</button>
+                </div>
             </div>
         </div>
-    </div>
-    
-    <div class="glass-card" style="display:flex; justify-content:center; margin-top:0;">
-        <a href="/logout" class="logout-btn" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" style="max-width:300px;">
-            🚪 Logout
-        </a>
-        <form id="logout-form" action="/logout" method="POST" style="display: none;">
-            @csrf
-        </form>
-    </div>
+
+        <script>
+            document.getElementById('avatarInput').addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        const wrapper = document.querySelector('.profile-avatar-wrapper');
+                        const existing = wrapper.querySelector('.profile-avatar, .profile-avatar-img');
+                        if (existing) existing.remove();
+                        const img = document.createElement('img');
+                        img.src = event.target.result;
+                        img.className = 'profile-avatar-img';
+                        wrapper.appendChild(img);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        </script>
 @endsection

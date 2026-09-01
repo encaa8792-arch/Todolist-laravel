@@ -334,6 +334,77 @@
         font-size: 13px;
         font-weight: 500;
     }
+    .bulk-action-bar {
+        display: none;
+        background: white;
+        border-radius: 14px;
+        padding: 12px 16px;
+        margin-bottom: 16px;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+        align-items: center;
+        gap: 12px;
+        animation: slideDown 0.2s ease;
+    }
+    .bulk-action-bar.show {
+        display: flex;
+    }
+    @keyframes slideDown {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .bulk-selected-count {
+        font-size: 13px;
+        font-weight: 600;
+        color: #1e293b;
+        flex: 1;
+    }
+    .bulk-actions {
+        display: flex;
+        gap: 8px;
+    }
+    .bulk-btn {
+        padding: 8px 14px;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        border: none;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-family: 'Poppins', sans-serif;
+    }
+    .bulk-btn.select-all {
+        background: #f1f5f9;
+        color: #64748b;
+    }
+    .bulk-btn.select-all:hover {
+        background: #e2e8f0;
+    }
+    .bulk-btn.done {
+        background: #d1fae5;
+        color: #059669;
+    }
+    .bulk-btn.done:hover {
+        background: #059669;
+        color: white;
+    }
+    .bulk-btn.delete {
+        background: #fee2e2;
+        color: #dc2626;
+    }
+    .bulk-btn.delete:hover {
+        background: #dc2626;
+        color: white;
+    }
+    .task-checkbox {
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+        accent-color: var(--theme-primary);
+        flex-shrink: 0;
+    }
     @media (max-width: 768px) {
         .todo-form {
             flex-direction: column;
@@ -433,6 +504,15 @@
         </div>
     </div>
 
+    <div class="bulk-action-bar" id="bulkActionBar">
+        <span class="bulk-selected-count" id="bulkSelectedCount">0 Tugas Dipilih</span>
+        <div class="bulk-actions">
+            <button type="button" class="bulk-btn select-all" onclick="toggleSelectAll()">☑️ Pilih Semua</button>
+            <button type="button" class="bulk-btn done" onclick="bulkMarkDone()">✓ Tandai Selesai</button>
+            <button type="button" class="bulk-btn delete" onclick="bulkDelete()">🗑 Hapus</button>
+        </div>
+    </div>
+
         <div class="task-list" id="taskList">
             @forelse($tasks as $task)
                 @php
@@ -442,6 +522,7 @@
                      data-category="{{ $task->category ?? '' }}"
                      data-status="{{ $isOverdue ? 'overdue' : ($task->is_done ? 'done' : 'pending') }}"
                      data-task="{{ strtolower($task->task) }}" id="task-{{ $task->id }}">
+                    <input type="checkbox" class="task-checkbox" data-id="{{ $task->id }}" onchange="updateBulkBar()">
                     <div class="task-info">
                         <div class="task-top">
                             @if($task->category)
@@ -647,5 +728,107 @@
                 });
             });
         });
+
+        // Bulk Action Functions
+        function updateBulkBar() {
+            const checkboxes = document.querySelectorAll('.task-checkbox:checked');
+            const bulkBar = document.getElementById('bulkActionBar');
+            const countSpan = document.getElementById('bulkSelectedCount');
+            const count = checkboxes.length;
+
+            if (count > 0) {
+                bulkBar.classList.add('show');
+                countSpan.textContent = count + ' Tugas Dipilih';
+            } else {
+                bulkBar.classList.remove('show');
+            }
+        }
+
+        function toggleSelectAll() {
+            const allCheckboxes = document.querySelectorAll('.task-checkbox');
+            const allChecked = document.querySelectorAll('.task-checkbox:checked').length === allCheckboxes.length;
+
+            allCheckboxes.forEach(cb => {
+                cb.checked = !allChecked;
+            });
+            updateBulkBar();
+        }
+
+        function bulkMarkDone() {
+            const checkboxes = document.querySelectorAll('.task-checkbox:checked');
+            if (checkboxes.length === 0) return;
+
+            const count = checkboxes.length;
+            let completed = 0;
+
+            checkboxes.forEach(cb => {
+                const taskId = cb.dataset.id;
+                fetch('/tasks/' + taskId + '/done', {
+                    method: 'POST',
+                    body: new FormData(),
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    completed++;
+                    cb.checked = false;
+                    const taskItem = cb.closest('.task-item');
+                    taskItem.classList.add('done');
+                    taskItem.querySelector('.task-name').style.textDecoration = 'line-through';
+                    taskItem.querySelector('.task-name').style.color = '#aaa';
+
+                    if (completed === count) {
+                        showToast('Selesai', count + ' Tugas berhasil diselesaikan!', 'success');
+                        document.getElementById('bulkActionBar').classList.remove('show');
+                    }
+                })
+                .catch(() => {
+                    showToast('Gagal', 'Terjadi kesalahan', 'error');
+                });
+            });
+        }
+
+        function bulkDelete() {
+            const checkboxes = document.querySelectorAll('.task-checkbox:checked');
+            if (checkboxes.length === 0) return;
+            if (!confirm('Yakin ingin menghapus ' + checkboxes.length + ' tugas?')) return;
+
+            const count = checkboxes.length;
+            let deleted = 0;
+
+            checkboxes.forEach(cb => {
+                const taskId = cb.dataset.id;
+                const taskItem = cb.closest('.task-item');
+                const formData = new FormData();
+                formData.append('_token', '{{ csrf_token() }}');
+                formData.append('_method', 'DELETE');
+
+                fetch('/tasks/' + taskId, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    deleted++;
+                    taskItem.style.animation = 'fadeOut 0.3s ease forwards';
+                    setTimeout(() => {
+                        taskItem.remove();
+                        if (deleted === count) {
+                            showToast('Dihapus', count + ' Tugas telah dihapus', 'error');
+                            document.getElementById('bulkActionBar').classList.remove('show');
+                        }
+                    }, 300);
+                })
+                .catch(() => {
+                    showToast('Gagal', 'Terjadi kesalahan saat menghapus', 'error');
+                });
+            });
+        }
     </script>
 @endsection

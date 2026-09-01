@@ -362,6 +362,123 @@
       .theme-palette {
         position: relative;
       }
+      .notification-wrapper {
+        position: relative;
+      }
+      .notif-badge {
+        position: absolute;
+        top: 2px;
+        right: 2px;
+        background-color: #ef4444;
+        color: #ffffff;
+        font-size: 10px;
+        font-weight: bold;
+        min-width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2px;
+        display: none;
+      }
+      .notif-badge.show {
+        display: flex;
+      }
+      .notif-dropdown {
+        position: absolute;
+        top: 45px;
+        right: 0;
+        width: 320px;
+        background: #ffffff;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+        display: none;
+        z-index: 1001;
+        padding: 16px;
+        max-height: 400px;
+        overflow-y: auto;
+      }
+      .notif-dropdown.show {
+        display: block;
+      }
+      .notif-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid #f0f0f0;
+      }
+      .notif-header h4 {
+        font-size: 14px;
+        font-weight: 600;
+        color: #1e293b;
+        margin: 0;
+      }
+      .mark-as-read {
+        font-size: 11px;
+        color: var(--theme-primary);
+        cursor: pointer;
+        font-weight: 500;
+      }
+      .mark-as-read:hover {
+        text-decoration: underline;
+      }
+      .notif-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .notif-item {
+        display: flex;
+        gap: 12px;
+        padding: 10px;
+        border-radius: 12px;
+        transition: background 0.2s;
+        cursor: pointer;
+      }
+      .notif-item:hover {
+        background: #f8f9fa;
+      }
+      .notif-item.unread {
+        background: rgba(255, 107, 157, 0.05);
+        border-left: 3px solid var(--theme-primary);
+      }
+      .notif-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        flex-shrink: 0;
+      }
+      .notif-icon.warning { background: #fef3c7; }
+      .notif-icon.success { background: #d1fae5; }
+      .notif-icon.error { background: #fee2e2; }
+      .notif-icon.info { background: #dbeafe; }
+      .notif-text {
+        flex: 1;
+        min-width: 0;
+      }
+      .notif-title {
+        font-size: 13px;
+        font-weight: 600;
+        color: #1e293b;
+        margin: 0 0 2px;
+      }
+      .notif-desc {
+        font-size: 12px;
+        color: #64748b;
+        margin: 0 0 4px;
+        line-height: 1.4;
+      }
+      .notif-time {
+        font-size: 11px;
+        color: #94a3b8;
+      }
       .theme-dropdown {
         position: absolute;
         top: calc(100% + 8px);
@@ -1381,6 +1498,83 @@
         opacity: 0.7;
       }
 
+      /* Toast Notification Styles */
+      .toast-container {
+        position: fixed;
+        top: 24px;
+        right: 24px;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .toast {
+        background: white;
+        border-radius: 14px;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+        padding: 14px 16px;
+        min-width: 280px;
+        max-width: 360px;
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        border-left: 4px solid #3b82f6;
+        animation: slideIn 0.3s ease forwards;
+        overflow: hidden;
+      }
+      .toast.success { border-left-color: #22c55e; }
+      .toast.warning { border-left-color: #f59e0b; }
+      .toast.error { border-left-color: #ef4444; }
+      .toast.info { border-left-color: #3b82f6; }
+      .toast-icon {
+        font-size: 20px;
+        flex-shrink: 0;
+        width: 24px;
+        text-align: center;
+      }
+      .toast-content {
+        flex: 1;
+      }
+      .toast-title {
+        font-size: 13px;
+        font-weight: 600;
+        color: #1e293b;
+        margin-bottom: 2px;
+      }
+      .toast-message {
+        font-size: 12px;
+        color: #64748b;
+        line-height: 1.4;
+      }
+      .toast-close {
+        background: none;
+        border: none;
+        padding: 4px;
+        cursor: pointer;
+        color: #94a3b8;
+        font-size: 16px;
+        line-height: 1;
+        transition: color 0.2s;
+      }
+      .toast-close:hover {
+        color: #475569;
+      }
+      .toast.removing {
+        animation: slideOut 0.3s ease forwards;
+      }
+      @keyframes slideIn {
+        from { opacity: 0; transform: translateX(100px); }
+        to { opacity: 1; transform: translateX(0); }
+      }
+      @keyframes fadeOut {
+        from { opacity: 1; transform: translateY(0); }
+        to { opacity: 0; transform: translateY(-10px); }
+      }
+      @keyframes slideOut {
+        from { opacity: 1; transform: translateX(0); }
+        to { opacity: 0; transform: translateX(100px); }
+      }
+
       <?php echo $__env->yieldContent('styles'); ?>
     </style>
 </head>
@@ -1433,6 +1627,44 @@
                 </div>
                 <div class="page-topbar-right">
                     <?php echo $__env->yieldContent('header-actions'); ?>
+                    <div class="notification-wrapper">
+                        <button class="topbar-btn" id="notifBellBtn" onclick="toggleNotifDropdown()" data-tooltip="Notifikasi">
+                            🔔
+                            <span class="notif-badge" id="notifBadge">3</span>
+                        </button>
+                        <div class="notif-dropdown" id="notifDropdown">
+                            <div class="notif-header">
+                                <h4>Notifikasi</h4>
+                                <span class="mark-as-read" onclick="markAllRead()">Tandai Dibaca</span>
+                            </div>
+                            <div class="notif-list" id="notifList">
+                                <div class="notif-item unread">
+                                    <div class="notif-icon warning">⚠️</div>
+                                    <div class="notif-text">
+                                        <p class="notif-title">Deadline Mendatang</p>
+                                        <p class="notif-desc">Praktek Kimia tersisa 8 hari lagi.</p>
+                                        <span class="notif-time">10 menit yang lalu</span>
+                                    </div>
+                                </div>
+                                <div class="notif-item unread">
+                                    <div class="notif-icon success">✅</div>
+                                    <div class="notif-text">
+                                        <p class="notif-title">Tugas Selesai</p>
+                                        <p class="notif-desc">Tugas Presentasi berhasil diselesaikan.</p>
+                                        <span class="notif-time">1 jam yang lalu</span>
+                                    </div>
+                                </div>
+                                <div class="notif-item">
+                                    <div class="notif-icon info">💡</div>
+                                    <div class="notif-text">
+                                        <p class="notif-title">Tips Hari Ini</p>
+                                        <p class="notif-desc">Jangan lupa selesaikan tugas tepat waktu!</p>
+                                        <span class="notif-time">2 jam yang lalu</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <button class="topbar-btn" onclick="openBgModal()" data-tooltip="Ganti Latar Belakang">
                         🖼️
                     </button>
@@ -1630,6 +1862,52 @@
         function toggleThemeDropdown() {
             var dropdown = document.getElementById('themeDropdown');
             dropdown.classList.toggle('show');
+        }
+
+        function toggleNotifDropdown() {
+            var dropdown = document.getElementById('notifDropdown');
+            dropdown.classList.toggle('show');
+            if (dropdown.classList.contains('show')) {
+                document.getElementById('notifBadge').style.display = 'none';
+            }
+        }
+
+        function markAllRead() {
+            var items = document.querySelectorAll('.notif-item.unread');
+            items.forEach(function(item) {
+                item.classList.remove('unread');
+            });
+            var badge = document.getElementById('notifBadge');
+            badge.style.display = 'none';
+            badge.textContent = '0';
+        }
+
+        function updateNotifBadge(count) {
+            var badge = document.getElementById('notifBadge');
+            if (count > 0) {
+                badge.textContent = count > 9 ? '9+' : count;
+                badge.style.display = 'flex';
+            } else {
+                badge.style.display = 'none';
+            }
+        }
+
+        function addNotification(title, desc, type, time) {
+            var list = document.getElementById('notifList');
+            var badge = document.getElementById('notifBadge');
+            var item = document.createElement('div');
+            item.className = 'notif-item unread';
+            var iconClass = type === 'warning' ? 'warning' : (type === 'success' ? 'success' : 'info');
+            var icons = { warning: '⚠️', success: '✅', error: '❌', info: '💡' };
+            item.innerHTML = '<div class="notif-icon ' + iconClass + '">' + icons[type] + '</div>' +
+                '<div class="notif-text"><p class="notif-title">' + title + '</p><p class="notif-desc">' + desc + '</p><span class="notif-time">' + time + '</span></div>';
+            list.insertBefore(item, list.firstChild);
+            var currentCount = parseInt(badge.textContent) || 0;
+            if (!isNaN(currentCount)) {
+                updateNotifBadge(currentCount + 1);
+            } else {
+                updateNotifBadge(1);
+            }
         }
         
         function setTheme(theme) {
@@ -1847,7 +2125,7 @@
                         photoPreview.innerHTML = '<img src="' + result.data.photo_url + '" style="width:100px; height:100px; border-radius:50%; object-fit:cover; border:3px solid var(--theme-border);">';
                     }
                     closePhotoModal();
-                    alert('Foto profil berhasil diperbarui!');
+                    showToast('Berhasil', 'Foto profil berhasil diperbarui!', 'success');
                 } else if (result.data && result.data.message) {
                     alert(result.data.message);
                 } else if (result.status === 422 && result.data && result.data.errors) {
@@ -1882,6 +2160,11 @@
                     menu.classList.remove('show');
                 }
             });
+            document.querySelectorAll('.notif-dropdown.show, .theme-dropdown.show, .user-dropdown.show').forEach(function(dropdown) {
+                if (!dropdown.parentElement.contains(e.target)) {
+                    dropdown.classList.remove('show');
+                }
+            });
         });
         document.querySelectorAll('.kebab-btn').forEach(function(btn) {
             btn.addEventListener('click', function(e) {
@@ -1893,7 +2176,43 @@
                 menu.classList.toggle('show');
             });
         });
+
+        // Toast Notification Functions
+        function showToast(title, message, type = 'info') {
+            var container = document.getElementById('toast-container');
+            if (!container) {
+                container = document.createElement('div');
+                container.id = 'toast-container';
+                container.className = 'toast-container';
+                document.body.appendChild(container);
+            }
+
+            var icons = {
+                success: '✅',
+                warning: '⚠️',
+                error: '❌',
+                info: '💡'
+            };
+
+            var toast = document.createElement('div');
+            toast.className = 'toast ' + type;
+            toast.innerHTML = '<span class="toast-icon">' + icons[type] + '</span>' +
+                '<div class="toast-content"><div class="toast-title">' + title + '</div><div class="toast-message">' + message + '</div></div>' +
+                '<button class="toast-close" onclick="this.parentElement.remove()">×</button>';
+
+            container.appendChild(toast);
+
+            setTimeout(function() {
+                if (toast.parentElement) {
+                    toast.classList.add('removing');
+                    setTimeout(function() {
+                        if (toast.parentElement) toast.remove();
+                    }, 300);
+                }
+            }, 3500);
+        }
     </script>
+    <div id="toast-container" class="toast-container"></div>
 </body>
 </html>
 <?php /**PATH C:\laragon\www\Todolist\resources\views/layouts/app.blade.php ENDPATH**/ ?>

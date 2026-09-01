@@ -372,12 +372,12 @@
     <?php endif; ?>
 
     <div class="task-form-card">
-        <form method="POST" action="/tasks" class="todo-form" style="margin-top: 0;">
+        <form method="POST" action="/tasks" class="todo-form" id="addTaskForm" style="margin-top: 0;">
             <?php echo csrf_field(); ?>
             <div class="form-row">
                 <div class="form-group" style="flex: 1;">
                     <label>Kategori</label>
-                    <select name="category" required>
+                    <select name="category" id="taskCategory" required>
                         <option value="">Pilih</option>
                         <option value="Kerja">💼 Kerja</option>
                         <option value="Kuliah">📚 Kuliah</option>
@@ -387,7 +387,7 @@
                 </div>
                 <div class="form-group" style="flex: 3;">
                     <label>Tugas</label>
-                    <input name="task" required placeholder="Apa yang perlu dikerjakan?">
+                    <input name="task" id="taskName" required placeholder="Apa yang perlu dikerjakan?">
                 </div>
             </div>
             <div class="form-row form-row-end">
@@ -437,7 +437,7 @@
                 <div class="task-item <?php echo e($task->is_done ? 'done' : ''); ?> <?php echo e($isOverdue ? 'overdue' : ''); ?>"
                      data-category="<?php echo e($task->category ?? ''); ?>"
                      data-status="<?php echo e($isOverdue ? 'overdue' : ($task->is_done ? 'done' : 'pending')); ?>"
-                     data-task="<?php echo e(strtolower($task->task)); ?>">
+                     data-task="<?php echo e(strtolower($task->task)); ?>" id="task-<?php echo e($task->id); ?>">
                     <div class="task-info">
                         <div class="task-top">
                             <?php if($task->category): ?>
@@ -461,17 +461,17 @@
                         </div>
                     </div>
                     <div class="task-btns">
-                        <form method="POST" action="/tasks/<?php echo e($task->id); ?>/done">
+                        <form method="POST" action="/tasks/<?php echo e($task->id); ?>/done" class="ajax-form-done">
                             <?php echo csrf_field(); ?>
                             <button type="submit" class="btn-icon <?php echo e($task->is_done ? 'batal' : 'selesai'); ?>" data-tooltip="<?php echo e($task->is_done ? 'Batalkan' : 'Tandai Selesai'); ?>">
                                 ✓
                             </button>
                         </form>
                         <a href="/tasks/<?php echo e($task->id); ?>/edit" class="btn-icon edit" data-tooltip="Edit Tugas">✏</a>
-                        <form method="POST" action="/tasks/<?php echo e($task->id); ?>">
+                        <form method="POST" action="/tasks/<?php echo e($task->id); ?>" class="ajax-form-delete">
                             <?php echo csrf_field(); ?>
                             <?php echo method_field('DELETE'); ?>
-                            <button type="submit" class="btn-icon hapus" data-tooltip="Hapus Tugas" onclick="return confirm('Yakin mau hapus?')">🗑</button>
+                            <button type="submit" class="btn-icon hapus" data-tooltip="Hapus Tugas">🗑</button>
                         </form>
                     </div>
                 </div>
@@ -496,7 +496,7 @@
             const startDate = document.getElementById('startDate');
             if (startDate.value && this.value) {
                 if (new Date(startDate.value) > new Date(this.value)) {
-                    alert('Tanggal mulai tidak boleh lebih besar dari tanggal selesai!');
+                    showToast('Peringatan', 'Tanggal mulai tidak boleh lebih besar dari tanggal selesai!', 'warning');
                     startDate.value = this.value;
                 }
             }
@@ -511,7 +511,7 @@
             const deadline = document.getElementById('deadline');
             if (this.value && deadline.value) {
                 if (new Date(this.value) > new Date(deadline.value)) {
-                    alert('Tanggal mulai tidak boleh lebih besar dari tanggal selesai!');
+                    showToast('Peringatan', 'Tanggal mulai tidak boleh lebih besar dari tanggal selesai!', 'warning');
                     deadline.value = this.value;
                 }
             }
@@ -544,6 +544,108 @@
                 }
             });
         }
+
+        // Add Task via AJAX
+        document.getElementById('addTaskForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const form = this;
+            const formData = new FormData(form);
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '⏳';
+            submitBtn.disabled = true;
+
+            fetch('/tasks', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRF-TOKEN': '<?php echo e(csrf_token()); ?>',
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success || data.id) {
+                    showToast('Berhasil', 'Tugas baru telah ditambahkan', 'success');
+                    addNotification('Tugas Baru', 'Tugas "' + document.getElementById('taskName').value + '" berhasil ditambahkan', 'success', 'Baru saja');
+                    form.reset();
+                    setTimeout(() => location.reload(), 500);
+                } else {
+                    showToast('Gagal', 'Gagal menambahkan tugas', 'error');
+                }
+            })
+            .catch(() => {
+                showToast('Gagal', 'Terjadi kesalahan saat menambahkan tugas', 'error');
+            })
+            .finally(() => {
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            });
+        });
+
+        // Done/Cancel Task via AJAX
+        document.querySelectorAll('.ajax-form-done').forEach(form => {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                const taskItem = this.closest('.task-item');
+
+                fetch(this.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': '<?php echo e(csrf_token()); ?>',
+                        'Accept': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    const isDone = this.querySelector('button').classList.contains('batal');
+                    if (isDone) {
+                        showToast('Dibatalkan', 'Tugas dikembalikan ke daftar', 'info');
+                    } else {
+                        showToast('Selesai', 'Tugas berhasil diselesaikan!', 'success');
+                    }
+                    setTimeout(() => location.reload(), 500);
+                })
+                .catch(() => {
+                    showToast('Gagal', 'Terjadi kesalahan', 'error');
+                });
+            });
+        });
+
+        // Delete Task via AJAX
+        document.querySelectorAll('.ajax-form-delete').forEach(form => {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                if (!confirm('Yakin mau hapus?')) return;
+                const taskItem = this.closest('.task-item');
+                const formData = new FormData(this);
+
+                fetch(this.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': '<?php echo e(csrf_token()); ?>',
+                        'Accept': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    showToast('Dihapus', 'Tugas telah dihapus', 'error');
+                    taskItem.style.animation = 'fadeOut 0.3s ease forwards';
+                    setTimeout(() => {
+                        taskItem.remove();
+                        if (document.querySelectorAll('.task-item').length === 0) {
+                            location.reload();
+                        }
+                    }, 300);
+                })
+                .catch(() => {
+                    showToast('Gagal', 'Terjadi kesalahan saat menghapus', 'error');
+                });
+            });
+        });
     </script>
 <?php $__env->stopSection(); ?>
 

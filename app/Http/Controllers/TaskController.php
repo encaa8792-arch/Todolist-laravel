@@ -235,9 +235,18 @@ class TaskController extends Controller
             ];
         }
 
+        $topCategory = !empty($categoryStats) ? array_keys($categoryStats, max($categoryStats))[0] : null;
+
+        $overdueTaskList = Task::where('is_done', 0)
+            ->whereNotNull('deadline')
+            ->where('deadline', '<', now())
+            ->orderBy('deadline')
+            ->limit(5)
+            ->get(['id', 'task', 'deadline', 'category']);
+
         return view('reports', compact(
             'totalTasks', 'completedTasks', 'pendingTasks', 'overdueTasks',
-            'categoryStats', 'weeklyStats'
+            'categoryStats', 'weeklyStats', 'topCategory', 'overdueTaskList'
         ));
     }
 

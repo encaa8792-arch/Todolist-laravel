@@ -1613,10 +1613,6 @@
                     <i class="bi bi-bar-chart"></i>
                     <span class="label">Laporan</span>
                 </a>
-                <a href="/settings" class="menu-item <?php echo e(request()->is('settings') ? 'active' : ''); ?>" data-tooltip="Pengaturan">
-                    <i class="bi bi-gear"></i>
-                    <span class="label">Pengaturan</span>
-                </a>
             </nav>
         </aside>
 

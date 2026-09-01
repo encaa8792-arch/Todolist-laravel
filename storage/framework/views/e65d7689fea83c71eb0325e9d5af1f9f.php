@@ -119,46 +119,13 @@
         overflow: visible;
         border-radius: 0 20px 20px 0;
         border-right: 1px solid #e5e7eb;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
+        padding: 16px 0;
       }
       .sidebar.collapsed {
         width: 72px;
         border-radius: 16px;
       }
       .sidebar.collapsed .sidebar-header {
-        display: none;
-      }
-      .sidebar-bottom {
-        padding: 12px;
-        border-top: 1px solid #f0f0f0;
-      }
-      .sidebar-logout-btn {
-        width: 100%;
-        padding: 12px 16px;
-        background: #fef2f2;
-        border: 2px solid #ef4444;
-        border-radius: 12px;
-        color: #ef4444;
-        font-size: 13px;
-        font-weight: 600;
-        font-family: 'Poppins', sans-serif;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        transition: all 0.2s;
-      }
-      .sidebar-logout-btn:hover {
-        background: #ef4444;
-        color: #ffffff;
-      }
-      .sidebar.collapsed .sidebar-logout-btn {
-        padding: 12px;
-      }
-      .sidebar.collapsed .sidebar-logout-btn span {
         display: none;
       }
       .sidebar-header {
@@ -1060,15 +1027,13 @@
         }
         .sidebar {
           transform: translateX(-100%);
-          width: 240px;
+          width: 240px !important;
+          min-width: 240px !important;
+          height: 100vh;
           top: 0;
           bottom: 0;
           border-radius: 0 20px 20px 0;
           z-index: 1000;
-          justify-content: flex-start;
-        }
-        .sidebar-bottom {
-          display: none;
         }
         .sidebar.mobile-open {
           transform: translateX(0);
@@ -1076,6 +1041,7 @@
         body.sidebar-collapsed .main-content,
         .main-content {
           margin-left: 0;
+          width: 100%;
           overflow-y: auto;
           padding-bottom: 80px;
         }
@@ -1458,12 +1424,6 @@
                     <span class="label">Pengaturan</span>
                 </a>
             </nav>
-            <div class="sidebar-bottom">
-                <button class="sidebar-logout-btn" onclick="confirmLogout();">
-                    <i class="bi bi-box-arrow-right"></i>
-                    <span>Logout</span>
-                </button>
-            </div>
         </aside>
 
         <main class="main-content">

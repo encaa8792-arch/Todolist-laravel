@@ -166,7 +166,8 @@
         gap: 16px;
         padding: 14px 18px;
         border-radius: 12px;
-        overflow: hidden;
+        overflow: visible !important;
+        position: relative;
         transition: all 0.2s;
     }
     .task-item:hover {
@@ -293,14 +294,16 @@
         bottom: calc(100% + 8px);
         left: 50%;
         transform: translateX(-50%);
-        background: #333;
-        color: white;
-        padding: 5px 10px;
-        border-radius: 6px;
+        background-color: #1e293b;
+        color: #ffffff;
+        padding: 4px 8px;
         font-size: 11px;
+        border-radius: 6px;
         white-space: nowrap;
-        opacity: 0;
+        z-index: 9999 !important;
         pointer-events: none;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        opacity: 0;
         transition: opacity 0.2s;
     }
     .btn-icon:hover::after {

@@ -746,6 +746,7 @@
                 e.preventDefault();
                 const formData = new FormData(this);
                 const taskItem = this.closest('.task-item');
+                const isDone = this.querySelector('button').classList.contains('batal');
 
                 fetch(this.action, {
                     method: 'POST',
@@ -757,13 +758,13 @@
                 })
                 .then(response => response.json())
                 .then(data => {
-                    const isDone = this.querySelector('button').classList.contains('batal');
                     if (isDone) {
                         showToast('Dibatalkan', 'Tugas dikembalikan ke daftar', 'info');
+                        setTimeout(() => location.reload(), 500);
                     } else {
                         showToast('Selesai', 'Tugas berhasil diselesaikan!', 'success');
+                        setTimeout(() => window.location.href = '/tasks/completed', 500);
                     }
-                    setTimeout(() => location.reload(), 500);
                 })
                 .catch(() => {
                     showToast('Gagal', 'Terjadi kesalahan', 'error');

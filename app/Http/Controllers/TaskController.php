@@ -161,17 +161,23 @@ class TaskController extends Controller
     public function done(Request $request, $id)
     {
         $task = Task::findOrFail($id);
-        
+
         if ($task->is_done) {
             $task->is_done = false;
             $message = 'Oke dibatalin, bisa dikerjain lagi 💪';
+            $redirect = '/tasks';
         } else {
             $task->is_done = true;
             $message = 'Yey tugas selesai! 🎉';
+            $redirect = '/tasks/completed';
         }
-        
+
         $task->save();
-        return redirect('/tasks')->with('success', $message);
+
+        if ($request->expectsJson()) {
+            return response()->json(['success' => true, 'message' => $message, 'redirect' => $redirect]);
+        }
+        return redirect($redirect)->with('success', $message);
     }
 
     public function clearCompleted()

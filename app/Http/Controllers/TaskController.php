@@ -91,17 +91,37 @@ class TaskController extends Controller
         $validated = $request->validate([
             'task' => 'required|string|max:255',
             'category' => 'nullable|string|max:50',
-            'start_date' => 'nullable|date',
-            'deadline' => 'nullable|date',
+            'start_date' => 'nullable',
+            'deadline' => 'nullable',
         ]);
-        
-        if ($validated['start_date'] && $validated['deadline']) {
+
+        $monthMap = [
+            'Jan' => 'January', 'Feb' => 'February', 'Mar' => 'March', 'Apr' => 'April',
+            'Mei' => 'May', 'Jun' => 'June', 'Jul' => 'July', 'Agu' => 'August',
+            'Sep' => 'September', 'Okt' => 'October', 'Nov' => 'November', 'Des' => 'December'
+        ];
+
+        if (!empty($validated['start_date'])) {
+            $date = str_replace(array_keys($monthMap), array_values($monthMap), $validated['start_date']);
+            $validated['start_date'] = \Carbon\Carbon::parse($date)->format('Y-m-d');
+        }
+        if (!empty($validated['deadline'])) {
+            $date = str_replace(array_keys($monthMap), array_values($monthMap), $validated['deadline']);
+            $validated['deadline'] = \Carbon\Carbon::parse($date)->format('Y-m-d');
+        }
+
+        if (!empty($validated['start_date']) && !empty($validated['deadline'])) {
             if (strtotime($validated['start_date']) > strtotime($validated['deadline'])) {
                 return back()->withErrors(['deadline' => 'Tanggal selesai harus setelah tanggal mulai'])->withInput();
             }
         }
-        
+
+        $validated['is_done'] = false;
         Task::create($validated);
+
+        if ($request->expectsJson()) {
+            return response()->json(['success' => true, 'message' => 'Tugas berhasil ditambah!']);
+        }
         return redirect('/tasks')->with('success', 'Tugas berhasil ditambah! ✨');
     }
 

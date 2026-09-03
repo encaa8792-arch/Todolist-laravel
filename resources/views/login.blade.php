@@ -7,6 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <style>
         * {
             box-sizing: border-box;
@@ -214,12 +215,24 @@
             border: none;
             cursor: pointer;
             font-size: 18px;
-            opacity: 0.5;
-            transition: opacity 0.2s;
-            padding: 0;
+            opacity: 0.6;
+            transition: opacity 0.2s, transform 0.2s;
+            padding: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
         }
         .password-toggle:hover {
             opacity: 1;
+            transform: translateY(-50%) scale(1.1);
+        }
+        .password-toggle .bi {
+            font-size: 20px;
+            color: #555;
+        }
+        .password-toggle:hover .bi {
+            color: #333;
         }
         .remember-row {
             display: flex;
@@ -374,7 +387,9 @@
                     <label>Password</label>
                     <div class="password-wrapper">
                         <input type="password" name="password" id="passwordInput" placeholder="Masukkan password" required>
-                        <button type="button" class="password-toggle" onclick="togglePassword()">👁️</button>
+                        <button type="button" class="password-toggle" onclick="togglePassword()" aria-label="Toggle password visibility">
+                            <i class="bi bi-eye-slash" id="toggleIcon"></i>
+                        </button>
                     </div>
                 </div>
                 <div class="remember-row">
@@ -402,13 +417,15 @@
     <script>
         function togglePassword() {
             const input = document.getElementById('passwordInput');
-            const toggle = document.querySelector('.password-toggle');
+            const icon = document.getElementById('toggleIcon');
             if (input.type === 'password') {
                 input.type = 'text';
-                toggle.textContent = '🙈';
+                icon.classList.remove('bi-eye-slash');
+                icon.classList.add('bi-eye');
             } else {
                 input.type = 'password';
-                toggle.textContent = '👁️';
+                icon.classList.remove('bi-eye');
+                icon.classList.add('bi-eye-slash');
             }
         }
     </script>

@@ -509,6 +509,9 @@
                         <option value="Kuliah">📚 Kuliah</option>
                         <option value="Pribadi">💖 Pribadi</option>
                         <option value="Sekolah">📓 Sekolah</option>
+                        <?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $cat): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <option value="<?php echo e($cat->name); ?>"><?php echo e($cat->icon); ?> <?php echo e($cat->name); ?></option>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </select>
                 </div>
                 <div class="form-group" style="flex: 3;">
@@ -551,6 +554,9 @@
                 <option value="Kuliah">📚 Kuliah</option>
                 <option value="Pribadi">💖 Pribadi</option>
                 <option value="Sekolah">📓 Sekolah</option>
+                <?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $cat): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <option value="<?php echo e($cat->name); ?>"><?php echo e($cat->icon); ?> <?php echo e($cat->name); ?></option>
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
             </select>
             <select id="statusFilter" onchange="filterTasks()">
                 <option value="">Semua Status</option>
@@ -702,6 +708,51 @@
             });
         }
 
+        async function fetchCategories() {
+            try {
+                const response = await fetch('/api/categories', {
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': '<?php echo e(csrf_token()); ?>'
+                    }
+                });
+                const data = await response.json();
+                if (data.categories) {
+                    const taskCategorySelect = document.getElementById('taskCategory');
+                    const filterCategorySelect = document.getElementById('categoryFilter');
+                    const defaults = ['Kerja', 'Kuliah', 'Pribadi', 'Sekolah'];
+
+                    taskCategorySelect.innerHTML = '<option value="">Pilih</option>';
+                    filterCategorySelect.innerHTML = '<option value="">Semua Kategori</option>';
+
+                    defaults.forEach((name, i) => {
+                        const icons = { 'Kerja': '💼', 'Kuliah': '📚', 'Pribadi': '💖', 'Sekolah': '📓' };
+                        taskCategorySelect.innerHTML += `<option value="${name}">${icons[name]} ${name}</option>`;
+                        filterCategorySelect.innerHTML += `<option value="${name}">${icons[name]} ${name}</option>`;
+                    });
+
+                    data.categories.forEach(cat => {
+                        if (!defaults.includes(cat.name)) {
+                            const opt1 = new Option(cat.icon + ' ' + cat.name, cat.name);
+                            const opt2 = new Option(cat.icon + ' ' + cat.name, cat.name);
+                            taskCategorySelect.appendChild(opt1);
+                            filterCategorySelect.appendChild(opt2);
+                        }
+                    });
+                }
+            } catch (error) {
+                console.error('Error fetching categories:', error);
+            }
+        }
+
+        function checkCategoriesUpdate() {
+            const lastUpdate = localStorage.getItem('categoriesUpdated');
+            if (lastUpdate) {
+                fetchCategories();
+            }
+        }
+        checkCategoriesUpdate();
+
         // Add Task via AJAX
         document.getElementById('addTaskForm').addEventListener('submit', function(e) {
             e.preventDefault();
@@ -726,6 +777,7 @@
                     showToast('Berhasil', 'Tugas baru telah ditambahkan', 'success');
                     addNotification('Tugas Baru', 'Tugas "' + document.getElementById('taskName').value + '" berhasil ditambahkan', 'success', 'Baru saja');
                     form.reset();
+                    fetchCategories();
                     setTimeout(() => location.reload(), 500);
                 } else {
                     showToast('Gagal', 'Gagal menambahkan tugas', 'error');

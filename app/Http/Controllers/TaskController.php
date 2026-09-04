@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Task;
+use App\Models\Category;
 use Illuminate\Http\Request;
 
 class TaskController extends Controller
@@ -70,14 +71,15 @@ class TaskController extends Controller
     public function index()
     {
         $tasks = Task::where('is_done', 0)
-            ->orderByRaw("CASE 
-                WHEN deadline IS NOT NULL AND DATE(deadline) < CURDATE() THEN 0 
-                ELSE 1 
+            ->orderByRaw("CASE
+                WHEN deadline IS NOT NULL AND DATE(deadline) < CURDATE() THEN 0
+                ELSE 1
             END")
             ->orderBy('deadline')
             ->latest()
             ->paginate(5);
-        return view('tasks', compact('tasks'));
+        $categories = Category::where('user_id', auth()->id())->get();
+        return view('tasks', compact('tasks', 'categories'));
     }
 
     public function completed()
@@ -279,11 +281,22 @@ class TaskController extends Controller
     public function categories()
     {
         $defaultCategories = [
-            ['name' => 'Kerja', 'icon' => '💼'],
-            ['name' => 'Kuliah', 'icon' => '📚'],
-            ['name' => 'Pribadi', 'icon' => '💖'],
-            ['name' => 'Sekolah', 'icon' => '📓'],
+            ['name' => 'Kerja', 'icon' => '💼', 'is_default' => true],
+            ['name' => 'Kuliah', 'icon' => '📚', 'is_default' => true],
+            ['name' => 'Pribadi', 'icon' => '💖', 'is_default' => true],
+            ['name' => 'Sekolah', 'icon' => '📓', 'is_default' => true],
         ];
+
+        $customCategories = Category::all()->map(function($cat) {
+            return [
+                'id' => $cat->id,
+                'name' => $cat->name,
+                'icon' => $cat->icon,
+                'is_default' => false
+            ];
+        })->toArray();
+
+        $allCategories = array_merge($defaultCategories, $customCategories);
 
         $categoryStats = Task::selectRaw('category, COUNT(*) as count')
             ->whereNotNull('category')
@@ -292,15 +305,74 @@ class TaskController extends Controller
             ->pluck('count', 'category')
             ->toArray();
 
-        foreach ($defaultCategories as &$cat) {
+        foreach ($allCategories as &$cat) {
             $cat['count'] = $categoryStats[$cat['name']] ?? 0;
         }
 
-        return view('categories', compact('defaultCategories'));
+        return view('categories', compact('allCategories'));
     }
 
     public function storeCategory(Request $request)
     {
+        $validated = $request->validate([
+            'name' => 'required|string|max:50|unique:categories,name',
+            'icon' => 'nullable|string|max:10',
+        ]);
+
+        $validated['icon'] = $validated['icon'] ?? '📁';
+        $validated['user_id'] = auth()->id();
+
+        $category = Category::create($validated);
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Kategori berhasil ditambahkan!',
+                'category' => $category
+            ], 201);
+        }
+
         return redirect('/categories')->with('success', 'Kategori berhasil ditambahkan!');
+    }
+
+    public function destroyCategory(Request $request, $id)
+    {
+        $category = Category::where('user_id', auth()->id())->findOrFail($id);
+        $category->delete();
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Kategori berhasil dihapus!'
+            ]);
+        }
+
+        return redirect('/categories')->with('success', 'Kategori berhasil dihapus!');
+    }
+
+    public function updateCategory(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:50|unique:categories,name,' . $id,
+        ]);
+
+        $category = Category::where('user_id', auth()->id())->findOrFail($id);
+        $category->update($validated);
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Kategori berhasil diperbarui!',
+                'category' => $category
+            ]);
+        }
+
+        return redirect('/categories')->with('success', 'Kategori berhasil diperbarui!');
+    }
+
+    public function apiCategories()
+    {
+        $categories = Category::where('user_id', auth()->id())->get(['id', 'name', 'icon']);
+        return response()->json(['categories' => $categories]);
     }
 }

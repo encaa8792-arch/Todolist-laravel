@@ -462,17 +462,6 @@
                 @endforelse
             </div>
             </div>
-
-            <div class="dashboard-widget">
-                <div class="widget-header">
-                    <i class="bi bi-lightbulb"></i>
-                    <span>Inspirasi Hari Ini</span>
-                </div>
-                <div class="widget-content">
-                    <p class="widget-quote">"Kesuksesan adalah jumlah dari usaha kecil yang diulang setiap hari."</p>
-                    <span class="widget-author">— Robert Collier</span>
-                </div>
-            </div>
         </div>
     </div>
 </div>

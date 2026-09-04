@@ -18,10 +18,10 @@ Route::get('/debug-tasks', function() {
     $html .= '<style>.btn-action{padding:8px 12px;border:none;border-radius:5px;cursor:pointer;margin-right:5px;}.btn-done-action{background:#4CAF50;color:white;}.btn-edit-action{background:#a0c4ff;color:white;}.btn-delete-action{background:#ff8fa3;color:white;}</style>';
     return $html;
 });
-Route::get('/login', function() {
-    return view('login');
-})->name('login');
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
+Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
+Route::post('/register', [AuthController::class, 'register']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/', function() {
     return redirect(auth()->check() ? '/dashboard' : '/login');

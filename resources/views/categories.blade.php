@@ -508,7 +508,6 @@
         document.getElementById('addCategoryForm').addEventListener('submit', async function(e) {
             e.preventDefault();
 
-            const form = this;
             const submitBtn = document.getElementById('submitBtn');
             const nameInput = document.getElementById('categoryName');
             const iconInput = document.getElementById('categoryIcon');
@@ -519,28 +518,28 @@
             nameError.style.display = 'none';
             nameInput.classList.remove('error');
 
-            const formData = new FormData();
-            formData.append('_token', document.querySelector('meta[name="csrf-token"]').content);
-            formData.append('name', nameInput.value.trim());
-            if (iconInput.value.trim()) {
-                formData.append('icon', iconInput.value.trim());
-            }
+            const formData = new FormData(this);
 
             try {
                 const response = await fetch('/categories', {
                     method: 'POST',
-                    body: formData,
-                    headers: {
-                        'Accept': 'application/json'
-                    }
+                    body: formData
                 });
 
-                const data = await response.json();
+                const text = await response.text();
+                let data;
+                try {
+                    data = JSON.parse(text);
+                } catch (e) {
+                    console.error('Invalid JSON response:', text.substring(0, 500));
+                    showToast('Terjadi kesalahan server. Silakan refresh halaman.', 'error');
+                    return;
+                }
 
                 if (!response.ok) {
-                    if (response.status === 422 && data.errors && data.errors.name) {
+                    if (response.status === 422) {
                         nameInput.classList.add('error');
-                        nameError.textContent = data.errors.name[0];
+                        nameError.textContent = data.message || 'Nama kategori sudah digunakan';
                         nameError.style.display = 'block';
                     } else {
                         showToast(data.message || 'Terjadi kesalahan', 'error');
@@ -556,12 +555,11 @@
                 const emptyState = categoryList.querySelector('.empty-state');
                 if (emptyState) emptyState.remove();
 
-                const isDefault = data.category && data.category.is_default;
                 const newItem = document.createElement('div');
                 newItem.className = 'category-item new-item';
                 newItem.dataset.name = data.category.name.toLowerCase();
                 newItem.dataset.id = data.category.id;
-                newItem.dataset.default = isDefault ? 'true' : 'false';
+                newItem.dataset.default = 'false';
 
                 newItem.innerHTML = `
                     <div class="category-left">
@@ -572,10 +570,8 @@
                         </div>
                     </div>
                     <div class="category-actions">
-                        ${!isDefault
-                            ? `<button class="btn-delete" data-tooltip="Hapus" onclick="deleteCategory('${data.category.id}', this)">🗑️</button>`
-                            : `<button class="btn-default-delete" data-tooltip="Kategori default">🔒</button>`
-                        }
+                        <button class="btn-edit" data-tooltip="Edit" onclick="openEditModal('${data.category.id}', '${data.category.name}', '${data.category.icon}')">✏️</button>
+                        <button class="btn-delete" data-tooltip="Hapus" onclick="deleteCategory('${data.category.id}', this)">🗑️</button>
                     </div>
                 `;
 
@@ -615,18 +611,23 @@
             try {
                 const response = await fetch(`/categories/${id}`, {
                     method: 'POST',
-                    body: formData,
-                    headers: {
-                        'Accept': 'application/json'
-                    }
+                    body: formData
                 });
 
-                const data = await response.json();
+                const text = await response.text();
+                let data;
+                try {
+                    data = JSON.parse(text);
+                } catch (e) {
+                    console.error('Invalid JSON response:', text.substring(0, 500));
+                    showToast('Terjadi kesalahan server. Silakan refresh halaman.', 'error');
+                    return;
+                }
 
                 if (!response.ok) {
-                    if (response.status === 422 && data.errors && data.errors.name) {
+                    if (response.status === 422) {
                         nameInput.classList.add('error');
-                        nameError.textContent = data.errors.name[0];
+                        nameError.textContent = data.message || 'Nama kategori sudah digunakan';
                         nameError.style.display = 'block';
                     } else {
                         showToast(data.message || 'Terjadi kesalahan', 'error');
@@ -664,12 +665,21 @@
                 const response = await fetch(`/categories/${id}`, {
                     method: 'DELETE',
                     headers: {
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                        'Accept': 'application/json'
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
                     }
                 });
 
-                const data = await response.json();
+                const text = await response.text();
+                let data;
+                try {
+                    data = JSON.parse(text);
+                } catch (e) {
+                    console.error('Invalid JSON response:', text.substring(0, 500));
+                    showToast('Terjadi kesalahan server. Silakan refresh halaman.', 'error');
+                    button.disabled = false;
+                    button.textContent = '🗑️';
+                    return;
+                }
 
                 if (!response.ok) {
                     showToast(data.message || 'Gagal menghapus kategori', 'error');

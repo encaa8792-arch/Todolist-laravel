@@ -10,20 +10,25 @@ class TaskController extends Controller
 {
     public function dashboard()
     {
-        $totalTasks = Task::count();
-        $completedTasks = Task::where('is_done', 1)->count();
-        $pendingTasks = Task::where('is_done', 0)->count();
-        $overdueTasks = Task::where('is_done', 0)
+        $userId = auth()->id();
+
+        $totalTasks = Task::where('user_id', $userId)->count();
+        $completedTasks = Task::where('user_id', $userId)->where('is_done', 1)->count();
+        $pendingTasks = Task::where('user_id', $userId)->where('is_done', 0)->count();
+        $overdueTasks = Task::where('user_id', $userId)
+            ->where('is_done', 0)
             ->whereNotNull('deadline')
             ->where('deadline', '<', now())
             ->count();
 
-        $categoryStats = Task::selectRaw('category, COUNT(*) as total, SUM(is_done) as completed')
+        $categoryStats = Task::where('user_id', $userId)
+            ->selectRaw('category, COUNT(*) as total, SUM(is_done) as completed')
             ->groupBy('category')
             ->get();
 
-        $recentTasks = Task::latest()->take(5)->get();
-        $upcomingDeadlines = Task::where('is_done', 0)
+        $recentTasks = Task::where('user_id', $userId)->latest()->take(5)->get();
+        $upcomingDeadlines = Task::where('user_id', $userId)
+            ->where('is_done', 0)
             ->whereNotNull('deadline')
             ->where('deadline', '>=', now())
             ->orderBy('deadline')
@@ -35,17 +40,20 @@ class TaskController extends Controller
         $prevWeekStart = now()->subWeek()->startOfWeek();
         $prevWeekEnd = now()->subWeek()->endOfWeek();
 
-        $weeklyTotal = Task::whereBetween('created_at', [$weekStart, $weekEnd])->count();
-        $weeklyCompleted = Task::where('is_done', 1)
+        $weeklyTotal = Task::where('user_id', $userId)->whereBetween('created_at', [$weekStart, $weekEnd])->count();
+        $weeklyCompleted = Task::where('user_id', $userId)
+            ->where('is_done', 1)
             ->whereBetween('updated_at', [$weekStart, $weekEnd])->count();
-        $weeklyPending = Task::where('is_done', 0)
+        $weeklyPending = Task::where('user_id', $userId)
+            ->where('is_done', 0)
             ->whereBetween('created_at', [$weekStart, $weekEnd])->count();
 
-        $prevWeekCompleted = Task::where('is_done', 1)
+        $prevWeekCompleted = Task::where('user_id', $userId)
+            ->where('is_done', 1)
             ->whereBetween('updated_at', [$prevWeekStart, $prevWeekEnd])->count();
 
-        $weeklyTrend = $prevWeekCompleted > 0 
-            ? round((($weeklyCompleted - $prevWeekCompleted) / $prevWeekCompleted) * 100) 
+        $weeklyTrend = $prevWeekCompleted > 0
+            ? round((($weeklyCompleted - $prevWeekCompleted) / $prevWeekCompleted) * 100)
             : ($weeklyCompleted > 0 ? 100 : 0);
 
         $dailyStats = [];
@@ -54,14 +62,15 @@ class TaskController extends Controller
             $dayEnd = $weekStart->copy()->addDays($i)->endOfDay();
             $dailyStats[] = [
                 'day' => $dayStart->format('D'),
-                'created' => Task::whereBetween('created_at', [$dayStart, $dayEnd])->count(),
-                'completed' => Task::where('is_done', 1)
+                'created' => Task::where('user_id', $userId)->whereBetween('created_at', [$dayStart, $dayEnd])->count(),
+                'completed' => Task::where('user_id', $userId)
+                    ->where('is_done', 1)
                     ->whereBetween('updated_at', [$dayStart, $dayEnd])->count(),
             ];
         }
 
         return view('dashboard', compact(
-            'totalTasks', 'completedTasks', 'pendingTasks', 
+            'totalTasks', 'completedTasks', 'pendingTasks',
             'overdueTasks', 'categoryStats', 'recentTasks', 'upcomingDeadlines',
             'weeklyTotal', 'weeklyCompleted', 'weeklyPending', 'weeklyTrend', 'dailyStats',
             'weekStart', 'weekEnd'
@@ -70,7 +79,9 @@ class TaskController extends Controller
 
     public function index()
     {
-        $tasks = Task::where('is_done', 0)
+        $userId = auth()->id();
+        $tasks = Task::where('user_id', $userId)
+            ->where('is_done', 0)
             ->orderByRaw("CASE
                 WHEN deadline IS NOT NULL AND DATE(deadline) < CURDATE() THEN 0
                 ELSE 1
@@ -78,13 +89,13 @@ class TaskController extends Controller
             ->orderBy('deadline')
             ->latest()
             ->paginate(5);
-        $categories = Category::where('user_id', auth()->id())->get();
+        $categories = Category::where('user_id', $userId)->get();
         return view('tasks', compact('tasks', 'categories'));
     }
 
     public function completed()
     {
-        $tasks = Task::where('is_done', 1)->latest()->paginate(10);
+        $tasks = Task::where('user_id', auth()->id())->where('is_done', 1)->latest()->paginate(10);
         return view('completed', compact('tasks'));
     }
 
@@ -118,6 +129,7 @@ class TaskController extends Controller
             }
         }
 
+        $validated['user_id'] = auth()->id();
         $validated['is_done'] = false;
         Task::create($validated);
 
@@ -129,7 +141,7 @@ class TaskController extends Controller
 
     public function edit($id)
     {
-        $task = Task::findOrFail($id);
+        $task = Task::where('user_id', auth()->id())->findOrFail($id);
         return view('edit', compact('task'));
     }
 
@@ -141,28 +153,28 @@ class TaskController extends Controller
             'start_date' => 'nullable|date',
             'deadline' => 'nullable|date',
         ]);
-        
+
         if ($validated['start_date'] && $validated['deadline']) {
             if (strtotime($validated['start_date']) > strtotime($validated['deadline'])) {
                 return back()->withErrors(['deadline' => 'Tanggal selesai harus setelah tanggal mulai'])->withInput();
             }
         }
-        
-        $task = Task::findOrFail($id);
+
+        $task = Task::where('user_id', auth()->id())->findOrFail($id);
         $task->update($validated);
         return redirect('/tasks')->with('success', 'Tugas berhasil diupdate! ✏️');
     }
 
     public function destroy(Request $request, $id)
     {
-        Task::destroy($id);
+        Task::where('user_id', auth()->id())->where('id', $id)->delete();
         $redirect = $request->query('from') === 'completed' ? '/tasks/completed' : '/tasks';
         return redirect($redirect)->with('success', 'Tugas dihapus 🗑️');
     }
 
     public function done(Request $request, $id)
     {
-        $task = Task::findOrFail($id);
+        $task = Task::where('user_id', auth()->id())->findOrFail($id);
 
         if ($task->is_done) {
             $task->is_done = false;
@@ -184,22 +196,22 @@ class TaskController extends Controller
 
     public function clearCompleted()
     {
-        $count = Task::where('is_done', 1)->count();
-        Task::where('is_done', 1)->delete();
+        $count = Task::where('user_id', auth()->id())->where('is_done', 1)->count();
+        Task::where('user_id', auth()->id())->where('is_done', 1)->delete();
         return redirect('/tasks')->with('success', "{$count} tugas selesai berhasil dihapus! 🧹");
     }
 
     public function markAllDone()
     {
-        $count = Task::where('is_done', 0)->count();
-        Task::where('is_done', 0)->update(['is_done' => true]);
+        $count = Task::where('user_id', auth()->id())->where('is_done', 0)->count();
+        Task::where('user_id', auth()->id())->where('is_done', 0)->update(['is_done' => true]);
         return redirect('/tasks')->with('success', "{$count} tugas ditandai selesai! 🎉");
     }
 
     public function deleteAll()
     {
-        $count = Task::count();
-        Task::truncate();
+        $count = Task::where('user_id', auth()->id())->count();
+        Task::where('user_id', auth()->id())->delete();
         return redirect('/tasks')->with('success', "Semua tugas ($count) berhasil dihapus! 🗑️");
     }
 
@@ -213,11 +225,11 @@ class TaskController extends Controller
         }
 
         if ($action === 'undo') {
-            $count = Task::whereIn('id', $taskIds)->update(['is_done' => false]);
+            $count = Task::where('user_id', auth()->id())->whereIn('id', $taskIds)->update(['is_done' => false]);
             return redirect('/tasks')->with('success', "{$count} tugas dibatalkan! ↩️");
         }
 
-        $count = Task::whereIn('id', $taskIds)->update(['is_done' => true]);
+        $count = Task::where('user_id', auth()->id())->whereIn('id', $taskIds)->update(['is_done' => true]);
         return redirect('/tasks')->with('success', "{$count} tugas ditandai selesai! 🎉");
     }
 
@@ -229,21 +241,25 @@ class TaskController extends Controller
             return redirect('/tasks')->with('error', 'Pilih tugas dulu! 📋');
         }
 
-        $count = Task::whereIn('id', $taskIds)->delete();
+        $count = Task::where('user_id', auth()->id())->whereIn('id', $taskIds)->delete();
         return redirect('/tasks')->with('success', "{$count} tugas berhasil dihapus! 🗑️");
     }
 
     public function reports()
     {
-        $totalTasks = Task::count();
-        $completedTasks = Task::where('is_done', 1)->count();
-        $pendingTasks = Task::where('is_done', 0)->count();
-        $overdueTasks = Task::where('is_done', 0)
+        $userId = auth()->id();
+
+        $totalTasks = Task::where('user_id', $userId)->count();
+        $completedTasks = Task::where('user_id', $userId)->where('is_done', 1)->count();
+        $pendingTasks = Task::where('user_id', $userId)->where('is_done', 0)->count();
+        $overdueTasks = Task::where('user_id', $userId)
+            ->where('is_done', 0)
             ->whereNotNull('deadline')
             ->where('deadline', '<', now())
             ->count();
 
-        $categoryStats = Task::selectRaw('category, COUNT(*) as count')
+        $categoryStats = Task::where('user_id', $userId)
+            ->selectRaw('category, COUNT(*) as count')
             ->whereNotNull('category')
             ->where('category', '!=', '')
             ->groupBy('category')
@@ -257,15 +273,17 @@ class TaskController extends Controller
             $dayEnd = $weekStart->copy()->addDays($i)->endOfDay();
             $weeklyStats[] = [
                 'day' => $dayStart->format('D'),
-                'created' => Task::whereBetween('created_at', [$dayStart, $dayEnd])->count(),
-                'completed' => Task::where('is_done', 1)
+                'created' => Task::where('user_id', $userId)->whereBetween('created_at', [$dayStart, $dayEnd])->count(),
+                'completed' => Task::where('user_id', $userId)
+                    ->where('is_done', 1)
                     ->whereBetween('updated_at', [$dayStart, $dayEnd])->count(),
             ];
         }
 
         $topCategory = !empty($categoryStats) ? array_keys($categoryStats, max($categoryStats))[0] : null;
 
-        $overdueTaskList = Task::where('is_done', 0)
+        $overdueTaskList = Task::where('user_id', $userId)
+            ->where('is_done', 0)
             ->whereNotNull('deadline')
             ->where('deadline', '<', now())
             ->orderBy('deadline')
@@ -280,6 +298,8 @@ class TaskController extends Controller
 
     public function categories()
     {
+        $userId = auth()->id();
+
         $defaultCategories = [
             ['name' => 'Kerja', 'icon' => '💼', 'is_default' => true],
             ['name' => 'Kuliah', 'icon' => '📚', 'is_default' => true],
@@ -287,7 +307,7 @@ class TaskController extends Controller
             ['name' => 'Sekolah', 'icon' => '📓', 'is_default' => true],
         ];
 
-        $customCategories = Category::all()->map(function($cat) {
+        $customCategories = Category::where('user_id', $userId)->get()->map(function($cat) {
             return [
                 'id' => $cat->id,
                 'name' => $cat->name,
@@ -298,7 +318,8 @@ class TaskController extends Controller
 
         $allCategories = array_merge($defaultCategories, $customCategories);
 
-        $categoryStats = Task::selectRaw('category, COUNT(*) as count')
+        $categoryStats = Task::where('user_id', $userId)
+            ->selectRaw('category, COUNT(*) as count')
             ->whereNotNull('category')
             ->where('category', '!=', '')
             ->groupBy('category')
@@ -314,25 +335,45 @@ class TaskController extends Controller
 
     public function storeCategory(Request $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:50|unique:categories,name',
-            'icon' => 'nullable|string|max:10',
-        ]);
+        try {
+            $request->validate([
+                'name' => 'required|string|max:50',
+                'icon' => 'nullable|string|max:10',
+            ]);
 
-        $validated['icon'] = $validated['icon'] ?? '📁';
-        $validated['user_id'] = auth()->id();
+            $exists = Category::where('user_id', auth()->id())
+                ->where('name', $request->name)
+                ->exists();
 
-        $category = Category::create($validated);
+            if ($exists) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Kategori dengan nama tersebut sudah ada!'
+                ], 422);
+            }
 
-        if ($request->expectsJson()) {
+            $category = Category::create([
+                'user_id' => auth()->id(),
+                'name' => $request->name,
+                'icon' => $request->icon ?? '📁'
+            ]);
+
             return response()->json([
                 'success' => true,
                 'message' => 'Kategori berhasil ditambahkan!',
                 'category' => $category
-            ], 201);
+            ], 200);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->errors()['name'][0] ?? 'Validasi gagal'
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menyimpan kategori: ' . $e->getMessage()
+            ], 500);
         }
-
-        return redirect('/categories')->with('success', 'Kategori berhasil ditambahkan!');
     }
 
     public function destroyCategory(Request $request, $id)
@@ -340,34 +381,42 @@ class TaskController extends Controller
         $category = Category::where('user_id', auth()->id())->findOrFail($id);
         $category->delete();
 
-        if ($request->expectsJson()) {
-            return response()->json([
-                'success' => true,
-                'message' => 'Kategori berhasil dihapus!'
-            ]);
-        }
-
-        return redirect('/categories')->with('success', 'Kategori berhasil dihapus!');
+        return response()->json([
+            'success' => true,
+            'message' => 'Kategori berhasil dihapus!'
+        ]);
     }
 
     public function updateCategory(Request $request, $id)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:50|unique:categories,name,' . $id,
+        $request->validate([
+            'name' => 'required|string|max:50',
         ]);
 
         $category = Category::where('user_id', auth()->id())->findOrFail($id);
-        $category->update($validated);
 
-        if ($request->expectsJson()) {
+        $exists = Category::where('user_id', auth()->id())
+            ->where('name', $request->name)
+            ->where('id', '!=', $id)
+            ->exists();
+
+        if ($exists) {
             return response()->json([
-                'success' => true,
-                'message' => 'Kategori berhasil diperbarui!',
-                'category' => $category
-            ]);
+                'success' => false,
+                'message' => 'Kategori dengan nama tersebut sudah ada!'
+            ], 422);
         }
 
-        return redirect('/categories')->with('success', 'Kategori berhasil diperbarui!');
+        $category->update([
+            'name' => $request->name,
+            'icon' => $request->icon ?? $category->icon
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Kategori berhasil diperbarui!',
+            'category' => $category
+        ]);
     }
 
     public function apiCategories()

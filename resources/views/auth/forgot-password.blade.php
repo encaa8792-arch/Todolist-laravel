@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - TodoList</title>
+    <title>Lupa Password - TodoList</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -109,25 +109,24 @@
             0% { transform: translateX(0) rotate(0deg); }
             100% { transform: translateX(100vw) rotate(360deg); }
         }
-        .login-wrapper {
+        .forgot-wrapper {
             position: relative;
             z-index: 1;
             width: 100%;
-            max-width: 400px;
+            max-width: 420px;
         }
-        .login-card {
-            background: rgba(255, 255, 255, 0.92);
+        .forgot-card {
+            background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
             border-radius: 20px;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.5);
             padding: 40px 32px;
         }
-        .login-header {
+        .forgot-header {
             text-align: center;
-            margin-bottom: 32px;
+            margin-bottom: 28px;
         }
-        .login-logo {
+        .forgot-logo {
             width: 72px;
             height: 72px;
             background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
@@ -139,13 +138,13 @@
             font-size: 36px;
             box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
         }
-        .login-title {
+        .forgot-title {
             font-size: 24px;
             font-weight: 700;
             color: #1e293b;
             margin-bottom: 4px;
         }
-        .login-subtitle {
+        .forgot-subtitle {
             font-size: 13px;
             color: #64748b;
         }
@@ -161,87 +160,30 @@
         }
         .form-group input {
             width: 100%;
-            padding: 14px 16px;
-            border: 2px solid #e2e8f0;
+            padding: 12px 16px;
+            border: 2px solid transparent;
             border-radius: 12px;
             font-size: 14px;
             font-family: 'Poppins', sans-serif;
-            background: #ffffff;
+            background: #f1f5f9;
             color: #1e293b;
             outline: none;
             transition: all 0.2s;
         }
         .form-group input:focus {
             border-color: #6366f1;
+            background: #fff;
             box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
         }
         .form-group input::placeholder {
             color: #94a3b8;
         }
-        .password-wrapper {
-            position: relative;
-        }
-        .password-wrapper input {
-            padding-right: 48px;
-        }
-        .password-toggle {
-            position: absolute;
-            right: 14px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 18px;
-            opacity: 0.5;
-            transition: opacity 0.2s, transform 0.2s;
-            padding: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #64748b;
-        }
-        .password-toggle:hover {
-            opacity: 1;
-            transform: translateY(-50%) scale(1.1);
-        }
-        .remember-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
-        }
-        .remember-me {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-        }
-        .remember-me input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            accent-color: #6366f1;
-            cursor: pointer;
-        }
-        .remember-me span {
-            font-size: 13px;
-            color: #1e293b;
-        }
-        .forgot-link {
-            font-size: 13px;
-            color: #6366f1;
-            text-decoration: none;
-            font-weight: 500;
-        }
-        .forgot-link:hover {
-            text-decoration: underline;
-        }
-        .btn-login {
+        .btn-submit {
             width: 100%;
-            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+            background: #6366f1;
             color: white;
             border: none;
-            padding: 14px;
+            padding: 12px;
             border-radius: 12px;
             font-size: 15px;
             font-weight: 600;
@@ -250,19 +192,25 @@
             transition: all 0.2s;
             box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
         }
-        .btn-login:hover {
-            background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
+        .btn-submit:hover {
+            background: #4f46e5;
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
         }
-        .btn-login:active {
+        .btn-submit:active {
             transform: translateY(1px);
             box-shadow: 0 2px 10px rgba(99, 102, 241, 0.3);
+        }
+        .btn-submit:disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
         }
         .divider {
             display: flex;
             align-items: center;
-            margin: 32px 0 28px 0;
+            margin: 24px 0 20px 0;
         }
         .divider-line {
             flex: 1;
@@ -274,17 +222,17 @@
             font-size: 12px;
             color: #94a3b8;
         }
-        .register-link {
+        .back-login-link {
             text-align: center;
             font-size: 13px;
             color: #64748b;
         }
-        .register-link a {
+        .back-login-link a {
             color: #6366f1;
             text-decoration: none;
             font-weight: 600;
         }
-        .register-link a:hover {
+        .back-login-link a:hover {
             text-decoration: underline;
         }
         .alert {
@@ -293,27 +241,33 @@
             margin-bottom: 20px;
             font-size: 13px;
         }
-        .alert-error {
-            background: rgba(239, 68, 68, 0.1);
-            color: #dc2626;
-            border: 1px solid rgba(239, 68, 68, 0.2);
-        }
         .alert-success {
             background: rgba(34, 197, 94, 0.1);
             color: #16a34a;
             border: 1px solid rgba(34, 197, 94, 0.2);
         }
+        .alert-error {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+        .info-text {
+            font-size: 12px;
+            color: #64748b;
+            text-align: center;
+            margin-top: 8px;
+        }
 
         @media (max-width: 480px) {
-            .login-card {
+            .forgot-card {
                 padding: 32px 24px;
             }
-            .login-logo {
+            .forgot-logo {
                 width: 60px;
                 height: 60px;
                 font-size: 30px;
             }
-            .login-title {
+            .forgot-title {
                 font-size: 20px;
             }
         }
@@ -327,80 +281,49 @@
         <span></span>
         <span></span>
     </div>
-    <div class="login-wrapper">
-        <div class="login-card">
-            <div class="login-header">
-                <div class="login-logo">📋</div>
-                <h1 class="login-title">Masuk ke TodoList</h1>
-                <p class="login-subtitle">Kelola tugasmu dengan lebih mudah</p>
+    <div class="forgot-wrapper">
+        <div class="forgot-card">
+            <div class="forgot-header">
+                <div class="forgot-logo"><i class="bi bi-journal-bookmark-fill"></i></div>
+                <h1 class="forgot-title">Lupa Password</h1>
+                <p class="forgot-subtitle">Kelola tugasmu dengan lebih mudah</p>
             </div>
 
-            <?php if($errors->any()): ?>
-                <div class="alert alert-error">
-                    <?php echo e($errors->first()); ?>
-
-                </div>
-            <?php endif; ?>
-
-            <?php if(session('success')): ?>
+            @if(session('success'))
                 <div class="alert alert-success">
-                    <?php echo e(session('success')); ?>
+                    {{ session('success') }}
+                </div>
+            @endif
 
+            @if($errors->any())
+                <div class="alert alert-error">
+                    {{ $errors->first() }}
                 </div>
-            <?php endif; ?>
+            @endif
 
-            <form method="POST" action="/login">
-                <?php echo csrf_field(); ?>
+            <form method="POST" action="{{ route('password.email') }}">
+                @csrf
                 <div class="form-group">
-                    <label>Email atau Username</label>
-                    <input type="text" name="email" placeholder="Masukkan email atau username" value="<?php echo e(old('email')); ?>" required autofocus>
+                    <label>Email</label>
+                    <input type="email" name="email" placeholder="Masukkan email terdaftar" value="{{ old('email') }}" required autofocus>
                 </div>
-                <div class="form-group">
-                    <label>Password</label>
-                    <div class="password-wrapper">
-                        <input type="password" name="password" id="passwordInput" placeholder="Masukkan password" required>
-                        <button type="button" class="password-toggle" onclick="togglePassword()" aria-label="Toggle password visibility">
-                            <i class="bi bi-eye-slash" id="toggleIcon"></i>
-                        </button>
-                    </div>
+                <button type="submit" class="btn-submit" id="submitBtn">Kirim Link Reset</button>
+                <p class="info-text">Kami akan mengirim link reset password ke email Anda</p>
+
+                <div class="divider">
+                    <span class="divider-line"></span>
+                    <span class="divider-text">atau</span>
+                    <span class="divider-line"></span>
                 </div>
-                <div class="remember-row">
-                    <label class="remember-me">
-                        <input type="checkbox" name="remember">
-                        <span>Ingat saya</span>
-                    </label>
-                    <a href="<?php echo e(route('password.request')); ?>" class="forgot-link">Lupa password?</a>
+
+                <div class="back-login-link">
+                    Sudah ingat password? <a href="{{ route('login') }}">Masuk di sini</a>
                 </div>
-                <button type="submit" class="btn-login">Masuk</button>
             </form>
-
-            <div class="divider">
-                <span class="divider-line"></span>
-                <span class="divider-text">atau</span>
-                <span class="divider-line"></span>
-            </div>
-
-            <p class="register-link">
-                Belum punya akun? <a href="/register">Daftar sekarang</a>
-            </p>
         </div>
     </div>
 
     <script>
-        function togglePassword() {
-            const input = document.getElementById('passwordInput');
-            const icon = document.getElementById('toggleIcon');
-            if (input.type === 'password') {
-                input.type = 'text';
-                icon.classList.remove('bi-eye-slash');
-                icon.classList.add('bi-eye');
-            } else {
-                input.type = 'password';
-                icon.classList.remove('bi-eye');
-                icon.classList.add('bi-eye-slash');
-            }
-        }
-
         document.addEventListener('DOMContentLoaded', function() {
             const savedBg = localStorage.getItem('userSelectedBg');
             if (savedBg) {
@@ -408,9 +331,11 @@
                 document.body.style.backgroundSize = 'cover';
                 document.body.style.backgroundPosition = 'center';
                 document.body.style.backgroundAttachment = 'fixed';
+            } else {
+                document.body.style.backgroundImage = "url('/images/bg-tulip.jpg')";
+                document.body.style.backgroundSize = 'cover';
             }
         });
     </script>
 </body>
 </html>
-<?php /**PATH C:\laragon\www\Todolist\resources\views/login.blade.php ENDPATH**/ ?>

@@ -296,6 +296,20 @@
         .login-link a:hover {
             text-decoration: underline;
         }
+        .back-login-link {
+            text-align: center;
+            margin-top: 16px;
+            font-size: 13px;
+            color: #94a3b8;
+        }
+        .back-login-link a {
+            color: #6366f1;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .back-login-link a:hover {
+            text-decoration: underline;
+        }
         .alert {
             padding: 12px 16px;
             border-radius: 10px;
@@ -404,17 +418,11 @@
                     <span class="error-text" id="confirmError">Konfirmasi password tidak cocok</span>
                 </div>
                 <button type="submit" class="btn-register" id="submitBtn">Daftar</button>
+
+                <div class="back-login-link">
+                    Sudah punya akun? <a href="<?php echo e(route('login')); ?>">Masuk di sini</a>
+                </div>
             </form>
-
-            <div class="divider">
-                <span class="divider-line"></span>
-                <span class="divider-text">atau</span>
-                <span class="divider-line"></span>
-            </div>
-
-            <p class="login-link">
-                Sudah punya akun? <a href="/login">Masuk sekarang</a>
-            </p>
         </div>
     </div>
 

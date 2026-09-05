@@ -1954,12 +1954,14 @@
             document.body.style.backgroundPosition = 'center';
             document.body.style.backgroundAttachment = 'fixed';
             localStorage.setItem('bgChoice', JSON.stringify({url: url, name: name}));
+            localStorage.setItem('userSelectedBg', url);
             document.querySelectorAll('.bg-option').forEach(el => el.classList.remove('active'));
             document.querySelector('.bg-option[data-bg="' + name + '"]')?.classList.add('active');
             closeBgModal();
         }
         function resetBackground() {
             setBackground('/images/bg-tulip.jpg', 'tulip');
+            localStorage.removeItem('userSelectedBg');
         }
         function handleCustomBgUpload(event) {
             const file = event.target.files[0];
@@ -1969,12 +1971,14 @@
                 const base64 = e.target.result;
                 setBackground(base64, 'custom');
                 localStorage.setItem('customBg', base64);
+                localStorage.setItem('userSelectedBg', base64);
                 document.getElementById('customBgActions').style.display = 'block';
             };
             reader.readAsDataURL(file);
         }
         function deleteCustomBg() {
             localStorage.removeItem('customBg');
+            localStorage.removeItem('userSelectedBg');
             document.getElementById('customBgActions').style.display = 'none';
             resetBackground();
         }
@@ -1996,6 +2000,7 @@
                     document.body.style.backgroundSize = 'cover';
                     document.body.style.backgroundPosition = 'center';
                     document.body.style.backgroundAttachment = 'fixed';
+                    localStorage.setItem('userSelectedBg', data.url);
                 } catch(e) {}
             }
             const sidebarCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';

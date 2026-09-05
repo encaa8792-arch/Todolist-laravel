@@ -115,17 +115,13 @@
             width: 100%;
             max-width: 400px;
         }
-        .login-wrapper {
-            width: 100%;
-            max-width: 400px;
-        }
         .login-card {
-            background: rgba(20, 20, 30, 0.85);
-            border-radius: 24px;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.5);
             padding: 40px 32px;
-            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255,255,255,0.1) inset;
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255,255,255,0.1);
         }
         .login-header {
             text-align: center;
@@ -134,27 +130,24 @@
         .login-logo {
             width: 72px;
             height: 72px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
             border-radius: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0 auto 16px;
             font-size: 36px;
-            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
         }
         .login-title {
             font-size: 24px;
             font-weight: 700;
-            color: #fff;
+            color: #1e293b;
             margin-bottom: 4px;
-        }
-        .login-title span {
-            color: #f093fb;
         }
         .login-subtitle {
             font-size: 13px;
-            color: rgba(255,255,255,0.7);
+            color: #64748b;
         }
         .form-group {
             margin-bottom: 20px;
@@ -163,42 +156,27 @@
             display: block;
             font-size: 13px;
             font-weight: 500;
-            color: rgba(255,255,255,0.9);
+            color: #1e293b;
             margin-bottom: 8px;
         }
         .form-group input {
             width: 100%;
-            padding: 14px 16px 14px 16px;
-            border: 2px solid rgba(255,255,255,0.2);
+            padding: 14px 16px;
+            border: 2px solid #e2e8f0;
             border-radius: 12px;
             font-size: 14px;
             font-family: 'Poppins', sans-serif;
-            background: rgba(255,255,255,0.08);
-            color: #2d3748;
+            background: #ffffff;
+            color: #1e293b;
             outline: none;
             transition: all 0.2s;
-            -webkit-box-shadow: none;
-            box-shadow: none;
         }
         .form-group input:focus {
-            border-color: #f093fb;
-            box-shadow: 0 0 0 3px rgba(240, 147, 251, 0.2);
-            background: rgba(255,255,255,0.12);
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
         }
         .form-group input::placeholder {
-            color: rgba(255,255,255,0.4);
-        }
-        .form-group input:-webkit-autofill,
-        .form-group input:-webkit-autofill:hover,
-        .form-group input:-webkit-autofill:focus,
-        .form-group input:-webkit-autofill:active {
-            -webkit-box-shadow: 0 0 0 1000px rgba(255,255,255,0.08) inset !important;
-            -webkit-text-fill-color: #2d3748 !important;
-            caret-color: #2d3748 !important;
-            border: 2px solid rgba(255,255,255,0.2);
-        }
-        .form-group input:-internal-autofill-selected {
-            background-color: rgba(255,255,255,0.08) !important;
+            color: #94a3b8;
         }
         .password-wrapper {
             position: relative;
@@ -215,24 +193,17 @@
             border: none;
             cursor: pointer;
             font-size: 18px;
-            opacity: 0.6;
+            opacity: 0.5;
             transition: opacity 0.2s, transform 0.2s;
             padding: 4px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #333;
+            color: #64748b;
         }
         .password-toggle:hover {
             opacity: 1;
             transform: translateY(-50%) scale(1.1);
-        }
-        .password-toggle .bi {
-            font-size: 20px;
-            color: #555;
-        }
-        .password-toggle:hover .bi {
-            color: #333;
         }
         .remember-row {
             display: flex;
@@ -249,16 +220,16 @@
         .remember-me input[type="checkbox"] {
             width: 18px;
             height: 18px;
-            accent-color: #ff6b9d;
+            accent-color: #6366f1;
             cursor: pointer;
         }
         .remember-me span {
             font-size: 13px;
-            color: rgba(255,255,255,0.8);
+            color: #1e293b;
         }
         .forgot-link {
             font-size: 13px;
-            color: #f093fb;
+            color: #6366f1;
             text-decoration: none;
             font-weight: 500;
         }
@@ -267,7 +238,7 @@
         }
         .btn-login {
             width: 100%;
-            background: linear-gradient(135deg, #ff6b9d, #ff8fa3);
+            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
             color: white;
             border: none;
             padding: 14px;
@@ -277,17 +248,16 @@
             font-family: 'Poppins', sans-serif;
             cursor: pointer;
             transition: all 0.2s;
-            box-shadow: 0 4px 15px rgba(255, 107, 157, 0.3);
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
         }
         .btn-login:hover {
-            background: linear-gradient(135deg, #ff4d8a, #ff7a93);
+            background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(255, 107, 157, 0.5);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
         }
         .btn-login:active {
-            background: linear-gradient(135deg, #e55a87, #ff6d83);
             transform: translateY(1px);
-            box-shadow: 0 2px 10px rgba(255, 107, 157, 0.3);
+            box-shadow: 0 2px 10px rgba(99, 102, 241, 0.3);
         }
         .divider {
             display: flex;
@@ -297,20 +267,20 @@
         .divider-line {
             flex: 1;
             height: 0.5px;
-            background: rgba(255,255,255,0.2);
+            background: #e2e8f0;
         }
         .divider-text {
             padding: 0 16px;
             font-size: 12px;
-            color: rgba(255,255,255,0.5);
+            color: #94a3b8;
         }
         .register-link {
             text-align: center;
             font-size: 13px;
-            color: rgba(255,255,255,0.7);
+            color: #64748b;
         }
         .register-link a {
-            color: #f093fb;
+            color: #6366f1;
             text-decoration: none;
             font-weight: 600;
         }
@@ -324,14 +294,14 @@
             font-size: 13px;
         }
         .alert-error {
-            background: rgba(255, 100, 100, 0.2);
-            color: #ff8a8a;
-            border: 1px solid rgba(255, 100, 100, 0.3);
+            background: rgba(239, 68, 68, 0.1);
+            color: #dc2626;
+            border: 1px solid rgba(239, 68, 68, 0.2);
         }
         .alert-success {
-            background: rgba(100, 255, 150, 0.2);
-            color: #8affaa;
-            border: 1px solid rgba(100, 255, 150, 0.3);
+            background: rgba(34, 197, 94, 0.1);
+            color: #16a34a;
+            border: 1px solid rgba(34, 197, 94, 0.2);
         }
 
         @media (max-width: 480px) {
@@ -361,7 +331,7 @@
         <div class="login-card">
             <div class="login-header">
                 <div class="login-logo">📋</div>
-                <h1 class="login-title">Masuk ke <span>TodoList</span></h1>
+                <h1 class="login-title">Masuk ke TodoList</h1>
                 <p class="login-subtitle">Kelola tugasmu dengan lebih mudah</p>
             </div>
 
@@ -399,7 +369,7 @@
                     </label>
                     <a href="#" class="forgot-link">Lupa password?</a>
                 </div>
-                <button type="submit" class="btn-login"> Masuk </button>
+                <button type="submit" class="btn-login">Masuk</button>
             </form>
 
             <div class="divider">
@@ -428,6 +398,16 @@
                 icon.classList.add('bi-eye-slash');
             }
         }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedBg = localStorage.getItem('userSelectedBg');
+            if (savedBg) {
+                document.body.style.backgroundImage = `url('${savedBg}')`;
+                document.body.style.backgroundSize = 'cover';
+                document.body.style.backgroundPosition = 'center';
+                document.body.style.backgroundAttachment = 'fixed';
+            }
+        });
     </script>
 </body>
 </html>

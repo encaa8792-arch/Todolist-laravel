@@ -279,6 +279,38 @@
     .avatar-input {
         display: none;
     }
+    .background-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+        margin-top: 16px;
+    }
+    .bg-option {
+        aspect-ratio: 16/9;
+        border-radius: 10px;
+        cursor: pointer;
+        border: 3px solid transparent;
+        transition: all 0.2s;
+        background-size: cover;
+        background-position: center;
+    }
+    .bg-option:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    .bg-option.active {
+        border-color: var(--theme-primary);
+        box-shadow: 0 0 0 2px var(--theme-primary);
+    }
+    .bg-option.default {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 11px;
+        font-weight: 600;
+    }
 
     .settings-cards-row {
         display: flex;
@@ -461,6 +493,26 @@
             </div>
         </div>
 
+        <div class="settings-card" style="margin-top: 16px;">
+            <div class="settings-card-header">
+                <div class="settings-card-icon purple">🖼️</div>
+                <div class="settings-card-title">Background Halaman Login</div>
+            </div>
+            <div class="settings-card-body">
+                <p style="font-size:12px; color:#666; margin-bottom:8px;">Pilih background untuk halaman login</p>
+                <div class="background-grid">
+                    <div class="bg-option default active" data-bg="" onclick="selectBg(this)">Default</div>
+                    <div class="bg-option" style="background-image: url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400');" data-bg="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920" onclick="selectBg(this)"></div>
+                    <div class="bg-option" style="background-image: url('https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=400');" data-bg="https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=1920" onclick="selectBg(this)"></div>
+                    <div class="bg-option" style="background-image: url('https://images.unsplash.com/photo-1518173946687-a4c036bc6e1c?w=400');" data-bg="https://images.unsplash.com/photo-1518173946687-a4c036bc6e1c?w=1920" onclick="selectBg(this)"></div>
+                    <div class="bg-option" style="background-image: url('https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=400');" data-bg="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=1920" onclick="selectBg(this)"></div>
+                    <div class="bg-option" style="background-image: url('https://images.unsplash.com/photo-1507400492013-162706c8c05e?w=400');" data-bg="https://images.unsplash.com/photo-1507400492013-162706c8c05e?w=1920" onclick="selectBg(this)"></div>
+                    <div class="bg-option" style="background-image: url('https://images.unsplash.com/photo-1519681393784-d120267933ba?w=400');" data-bg="https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1920" onclick="selectBg(this)"></div>
+                    <div class="bg-option" style="background-image: url('https://images.unsplash.com/photo-1502082553048-f009c37129b9?w=400');" data-bg="https://images.unsplash.com/photo-1502082553048-f009c37129b9?w=1920" onclick="selectBg(this)"></div>
+                </div>
+            </div>
+        </div>
+
         <div class="settings-card about-full-width">
             <div class="settings-card-header">
                 <div class="settings-card-icon gray">ℹ️</div>
@@ -506,6 +558,25 @@
                         wrapper.appendChild(img);
                     };
                     reader.readAsDataURL(file);
+                }
+            });
+
+            function selectBg(el) {
+                document.querySelectorAll('.bg-option').forEach(opt => opt.classList.remove('active'));
+                el.classList.add('active');
+                const bgUrl = el.dataset.bg;
+                localStorage.setItem('userSelectedBg', bgUrl);
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+                const savedBg = localStorage.getItem('userSelectedBg');
+                if (savedBg) {
+                    document.querySelectorAll('.bg-option').forEach(opt => {
+                        opt.classList.remove('active');
+                        if (opt.dataset.bg === savedBg) {
+                            opt.classList.add('active');
+                        }
+                    });
                 }
             });
         </script>

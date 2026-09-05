@@ -116,12 +116,12 @@
             max-width: 400px;
         }
         .register-card {
-            background: rgba(20, 20, 30, 0.85);
-            border-radius: 24px;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.5);
             padding: 40px 32px;
-            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255,255,255,0.1) inset;
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255,255,255,0.1);
         }
         .register-header {
             text-align: center;
@@ -130,27 +130,24 @@
         .register-logo {
             width: 72px;
             height: 72px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
             border-radius: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0 auto 16px;
             font-size: 36px;
-            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
         }
         .register-title {
             font-size: 24px;
             font-weight: 700;
-            color: #fff;
+            color: #1e293b;
             margin-bottom: 4px;
-        }
-        .register-title span {
-            color: #f093fb;
         }
         .register-subtitle {
             font-size: 13px;
-            color: rgba(255,255,255,0.7);
+            color: #64748b;
         }
         .form-group {
             margin-bottom: 20px;
@@ -159,37 +156,34 @@
             display: block;
             font-size: 13px;
             font-weight: 500;
-            color: rgba(255,255,255,0.9);
+            color: #1e293b;
             margin-bottom: 8px;
         }
         .form-group input {
             width: 100%;
             padding: 14px 16px;
-            border: 2px solid rgba(255,255,255,0.2);
+            border: 2px solid #e2e8f0;
             border-radius: 12px;
             font-size: 14px;
             font-family: 'Poppins', sans-serif;
-            background: rgba(255,255,255,0.95);
-            color: #2d3748;
+            background: #ffffff;
+            color: #1e293b;
             outline: none;
             transition: all 0.2s;
-            -webkit-box-shadow: none;
-            box-shadow: none;
         }
         .form-group input:focus {
-            border-color: #f093fb;
-            box-shadow: 0 0 0 3px rgba(240, 147, 251, 0.2);
-            background: #fff;
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
         }
         .form-group input::placeholder {
-            color: rgba(100, 100, 120, 0.5);
+            color: #94a3b8;
         }
         .form-group input.is-invalid {
-            border-color: #ff6b6b;
-            box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.2);
+            border-color: #ef4444;
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
         }
         .form-group .error-text {
-            color: #ff8a8a;
+            color: #ef4444;
             font-size: 12px;
             margin-top: 6px;
             display: none;
@@ -218,14 +212,11 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            color: #64748b;
         }
         .password-toggle:hover {
             opacity: 1;
             transform: translateY(-50%) scale(1.1);
-        }
-        .password-toggle .bi {
-            font-size: 18px;
-            color: #666;
         }
         .password-strength {
             margin-top: 8px;
@@ -235,7 +226,7 @@
         .strength-bar {
             flex: 1;
             height: 4px;
-            background: rgba(255,255,255,0.2);
+            background: #e2e8f0;
             border-radius: 2px;
             transition: background 0.2s;
         }
@@ -250,12 +241,12 @@
         }
         .strength-text {
             font-size: 11px;
-            color: rgba(255,255,255,0.5);
+            color: #64748b;
             margin-top: 4px;
         }
         .btn-register {
             width: 100%;
-            background: linear-gradient(135deg, #ff6b9d, #ff8fa3);
+            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
             color: white;
             border: none;
             padding: 14px;
@@ -265,18 +256,17 @@
             font-family: 'Poppins', sans-serif;
             cursor: pointer;
             transition: all 0.2s;
-            box-shadow: 0 4px 15px rgba(255, 107, 157, 0.3);
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
             margin-top: 8px;
         }
         .btn-register:hover {
-            background: linear-gradient(135deg, #ff4d8a, #ff7a93);
+            background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(255, 107, 157, 0.5);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
         }
         .btn-register:active {
-            background: linear-gradient(135deg, #e55a87, #ff6d83);
             transform: translateY(1px);
-            box-shadow: 0 2px 10px rgba(255, 107, 157, 0.3);
+            box-shadow: 0 2px 10px rgba(99, 102, 241, 0.3);
         }
         .divider {
             display: flex;
@@ -286,20 +276,20 @@
         .divider-line {
             flex: 1;
             height: 0.5px;
-            background: rgba(255,255,255,0.2);
+            background: #e2e8f0;
         }
         .divider-text {
             padding: 0 16px;
             font-size: 12px;
-            color: rgba(255,255,255,0.5);
+            color: #94a3b8;
         }
         .login-link {
             text-align: center;
             font-size: 13px;
-            color: rgba(255,255,255,0.7);
+            color: #64748b;
         }
         .login-link a {
-            color: #f093fb;
+            color: #6366f1;
             text-decoration: none;
             font-weight: 600;
         }
@@ -313,18 +303,18 @@
             font-size: 13px;
         }
         .alert-error {
-            background: rgba(255, 100, 100, 0.2);
-            color: #ff8a8a;
-            border: 1px solid rgba(255, 100, 100, 0.3);
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.2);
         }
         .alert-success {
-            background: rgba(100, 255, 150, 0.2);
-            color: #8affaa;
-            border: 1px solid rgba(100, 255, 150, 0.3);
+            background: rgba(34, 197, 94, 0.1);
+            color: #16a34a;
+            border: 1px solid rgba(34, 197, 94, 0.2);
         }
         .password-hint {
             font-size: 11px;
-            color: rgba(255,255,255,0.4);
+            color: #94a3b8;
             margin-top: 4px;
         }
 
@@ -355,7 +345,7 @@
         <div class="register-card">
             <div class="register-header">
                 <div class="register-logo">📋</div>
-                <h1 class="register-title">Daftar ke <span>TodoList</span></h1>
+                <h1 class="register-title">Daftar ke TodoList</h1>
                 <p class="register-subtitle">Buat akun untuk mulai mengelola tugas</p>
             </div>
 
@@ -506,6 +496,19 @@
                 confirmInput.parentElement.parentElement.classList.add('has-error');
                 confirmError.style.display = 'block';
                 confirmInput.focus();
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedBg = localStorage.getItem('userSelectedBg');
+            if (savedBg) {
+                document.body.style.backgroundImage = `url('${savedBg}')`;
+                document.body.style.backgroundSize = 'cover';
+                document.body.style.backgroundPosition = 'center';
+                document.body.style.backgroundAttachment = 'fixed';
+            } else {
+                document.body.style.backgroundImage = "url('/images/bg-tulip.jpg')";
+                document.body.style.backgroundSize = 'cover';
             }
         });
     </script>

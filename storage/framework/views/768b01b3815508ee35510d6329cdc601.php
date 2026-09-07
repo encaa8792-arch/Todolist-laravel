@@ -356,14 +356,20 @@
 
                 fetch('/tasks/' + taskId + '/done', {
                     method: 'POST',
-                    body: formData
+                    body: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': '<?php echo e(csrf_token()); ?>',
+                        'Accept': 'application/json'
+                    }
                 })
                 .then(response => response.json())
                 .then(data => {
                     restored++;
                     cb.checked = false;
                     const taskItem = document.getElementById('completed-task-' + taskId);
-                    taskItem.style.animation = 'fadeOut 0.3s ease forwards';
+                    taskItem.style.transition = 'all 0.3s ease';
+                    taskItem.style.opacity = '0';
+                    taskItem.style.transform = 'translateX(-20px)';
                     setTimeout(() => {
                         taskItem.remove();
                         if (restored === count) {
@@ -395,12 +401,18 @@
 
                 fetch('/tasks/' + taskId, {
                     method: 'POST',
-                    body: formData
+                    body: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': '<?php echo e(csrf_token()); ?>',
+                        'Accept': 'application/json'
+                    }
                 })
                 .then(response => response.json())
                 .then(data => {
                     deleted++;
-                    taskItem.style.animation = 'fadeOut 0.3s ease forwards';
+                    taskItem.style.transition = 'all 0.3s ease';
+                    taskItem.style.opacity = '0';
+                    taskItem.style.transform = 'translateX(20px)';
                     setTimeout(() => {
                         taskItem.remove();
                         if (deleted === count) {
@@ -424,13 +436,26 @@
 
                 fetch(this.action, {
                     method: 'POST',
-                    body: formData
+                    body: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': '<?php echo e(csrf_token()); ?>',
+                        'Accept': 'application/json'
+                    }
                 })
                 .then(response => response.json())
                 .then(data => {
-                    showToast('Dikembalikan', 'Tugas dikembalikan ke daftar aktif', 'success');
-                    taskItem.style.animation = 'fadeOut 0.3s ease forwards';
-                    setTimeout(() => taskItem.remove(), 300);
+                    if (data.success) {
+                        showToast('Dikembalikan', data.message, 'success');
+                        taskItem.style.transition = 'all 0.3s ease';
+                        taskItem.style.opacity = '0';
+                        taskItem.style.transform = 'translateX(-20px)';
+                        setTimeout(() => {
+                            taskItem.remove();
+                            if (document.querySelectorAll('.completed-item').length === 0) {
+                                location.reload();
+                            }
+                        }, 300);
+                    }
                 })
                 .catch(() => {
                     showToast('Gagal', 'Terjadi kesalahan', 'error');
@@ -447,16 +472,27 @@
 
                 fetch(this.action, {
                     method: 'POST',
-                    body: formData
+                    body: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': '<?php echo e(csrf_token()); ?>',
+                        'Accept': 'application/json'
+                    }
                 })
                 .then(response => response.json())
                 .then(data => {
                     showToast('Dihapus', 'Tugas dihapus secara permanen', 'error');
-                    taskItem.style.animation = 'fadeOut 0.3s ease forwards';
-                    setTimeout(() => taskItem.remove(), 300);
+                    taskItem.style.transition = 'all 0.3s ease';
+                    taskItem.style.opacity = '0';
+                    taskItem.style.transform = 'translateX(20px)';
+                    setTimeout(() => {
+                        taskItem.remove();
+                        if (document.querySelectorAll('.completed-item').length === 0) {
+                            location.reload();
+                        }
+                    }, 300);
                 })
                 .catch(() => {
-                    showToast('Gagal', 'Terjadi kesalahan', 'error');
+                    showToast('Gagal', 'Terjadi kesalahan saat menghapus', 'error');
                 });
             });
         });

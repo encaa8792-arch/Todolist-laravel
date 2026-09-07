@@ -168,30 +168,30 @@ class TaskController extends Controller
     public function destroy(Request $request, $id)
     {
         Task::where('user_id', auth()->id())->where('id', $id)->delete();
-        $redirect = $request->query('from') === 'completed' ? '/tasks/completed' : '/tasks';
-        return redirect($redirect)->with('success', 'Tugas dihapus 🗑️');
+        return response()->json(['success' => true, 'message' => 'Tugas berhasil dihapus']);
     }
 
     public function done(Request $request, $id)
     {
         $task = Task::where('user_id', auth()->id())->findOrFail($id);
+        $wasDone = $task->is_done;
 
         if ($task->is_done) {
             $task->is_done = false;
-            $message = 'Oke dibatalin, bisa dikerjain lagi 💪';
-            $redirect = '/tasks';
+            $message = 'Tugas dikembalikan ke daftar aktif';
         } else {
             $task->is_done = true;
-            $message = 'Yey tugas selesai! 🎉';
-            $redirect = '/tasks/completed';
+            $message = 'Tugas berhasil diselesaikan!';
         }
 
         $task->save();
 
-        if ($request->expectsJson()) {
-            return response()->json(['success' => true, 'message' => $message, 'redirect' => $redirect]);
-        }
-        return redirect($redirect)->with('success', $message);
+        return response()->json([
+            'success' => true,
+            'message' => $message,
+            'is_done' => $task->is_done,
+            'was_done' => $wasDone
+        ]);
     }
 
     public function clearCompleted()

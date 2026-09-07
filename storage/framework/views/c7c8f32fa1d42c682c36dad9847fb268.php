@@ -798,7 +798,7 @@
                 e.preventDefault();
                 const formData = new FormData(this);
                 const taskItem = this.closest('.task-item');
-                const isDone = this.querySelector('button').classList.contains('batal');
+                const btn = this.querySelector('button');
 
                 fetch(this.action, {
                     method: 'POST',
@@ -810,12 +810,17 @@
                 })
                 .then(response => response.json())
                 .then(data => {
-                    if (isDone) {
-                        showToast('Dibatalkan', 'Tugas dikembalikan ke daftar', 'info');
-                        setTimeout(() => location.reload(), 500);
-                    } else {
-                        showToast('Selesai', 'Tugas berhasil diselesaikan!', 'success');
-                        setTimeout(() => window.location.href = '/tasks/completed', 500);
+                    if (data.success) {
+                        showToast('Berhasil', data.message, 'success');
+                        taskItem.style.transition = 'all 0.3s ease';
+                        taskItem.style.opacity = '0';
+                        taskItem.style.transform = 'translateX(20px)';
+                        setTimeout(() => {
+                            taskItem.remove();
+                            if (document.querySelectorAll('.task-item').length === 0) {
+                                location.reload();
+                            }
+                        }, 300);
                     }
                 })
                 .catch(() => {

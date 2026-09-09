@@ -123,7 +123,7 @@
     .btn-icon::after {
         content: attr(data-tooltip);
         position: absolute;
-        bottom: calc(100% + 8px);
+        top: calc(100% + 8px);
         left: 50%;
         transform: translateX(-50%);
         background-color: #1e293b;

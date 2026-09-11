@@ -83,14 +83,14 @@ class AuthController extends Controller
             ], 401);
         }
 
-        if (!$request->hasFile('profile_photo')) {
+        if (!$request->hasFile('avatar')) {
             return response()->json([
                 'success' => false,
                 'message' => 'Tidak ada file yang dipilih'
             ], 400);
         }
 
-        $file = $request->file('profile_photo');
+        $file = $request->file('avatar');
 
         if (!$file->isValid()) {
             return response()->json([
@@ -99,7 +99,7 @@ class AuthController extends Controller
             ], 400);
         }
 
-        $allowedMimes = ['jpeg', 'png', 'jpg', 'webp'];
+        $allowedMimes = ['jpeg', 'png', 'jpg', 'gif', 'webp'];
         $extension = strtolower($file->getClientOriginalExtension());
 
         if (!in_array($extension, $allowedMimes)) {
@@ -118,14 +118,13 @@ class AuthController extends Controller
 
         $user = Auth::user();
 
-        if ($user->profile_photo) {
-            Storage::disk('public')->delete($user->profile_photo);
+        if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
+            Storage::disk('public')->delete($user->avatar);
         }
 
-        $filename = 'profile_' . $user->id . '_' . time() . '.' . $extension;
-        $path = $file->storeAs('profile', $filename, 'public');
+        $path = $file->store('avatars', 'public');
 
-        $user->profile_photo = $path;
+        $user->avatar = $path;
         $user->save();
 
         return response()->json([
@@ -140,11 +139,21 @@ class AuthController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . Auth::id(),
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
 
         $user = Auth::user();
         $user->name = $request->name;
         $user->email = $request->email;
+
+        if ($request->hasFile('avatar')) {
+            if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
+                Storage::disk('public')->delete($user->avatar);
+            }
+            $path = $request->file('avatar')->store('avatars', 'public');
+            $user->avatar = $path;
+        }
+
         $user->save();
 
         return back()->with('success', 'Profil berhasil diperbarui!');

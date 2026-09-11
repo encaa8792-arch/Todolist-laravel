@@ -1696,10 +1696,10 @@
                         </div>
                     </div>
                     <div class="user-profile" id="userProfileBtn">
-                        <?php if(auth()->user()->profile_photo): ?>
-                            <img src="<?php echo e(asset('storage/' . auth()->user()->profile_photo)); ?>" class="user-avatar-img" alt="Profil">
+                        <?php if(auth()->user()->avatar && \Illuminate\Support\Facades\Storage::disk('public')->exists(auth()->user()->avatar)): ?>
+                            <img src="<?php echo e(asset('storage/' . auth()->user()->avatar)); ?>" class="user-avatar-img" alt="Profil">
                         <?php else: ?>
-                            <div class="user-avatar"><?php echo e(substr(auth()->user()->name ?? 'U', 0, 1)); ?></div>
+                            <div class="user-avatar"><?php echo e(strtoupper(substr(auth()->user()->name ?? 'U', 0, 1))); ?></div>
                         <?php endif; ?>
                         <span class="user-name"><?php echo e(auth()->user()->name ?? 'User'); ?></span>
                         <span class="dropdown-arrow">▼</span>
@@ -1736,17 +1736,17 @@
                 <p style="color:#999; margin:0; font-size:13px;">Pilih foto dari komputer Anda</p>
             </div>
             <div style="text-align:center;">
-                <?php if(auth()->user()->profile_photo): ?>
-                    <img id="photoPreview" src="<?php echo e(asset('storage/' . auth()->user()->profile_photo)); ?>" style="width:100px; height:100px; border-radius:50%; object-fit:cover; margin-bottom:20px; border:3px solid var(--theme-border);">
+                <?php if(auth()->user()->avatar && \Illuminate\Support\Facades\Storage::disk('public')->exists(auth()->user()->avatar)): ?>
+                    <img id="photoPreview" src="<?php echo e(asset('storage/' . auth()->user()->avatar)); ?>" style="width:100px; height:100px; border-radius:50%; object-fit:cover; margin-bottom:20px; border:3px solid var(--theme-border);">
                 <?php else: ?>
                     <div id="photoPreview" style="width:100px; height:100px; border-radius:50%; background:linear-gradient(135deg, var(--theme-primary), var(--theme-secondary)); margin:0 auto 20px; display:flex; align-items:center; justify-content:center; color:white; font-size:36px; font-weight:600; border:3px solid var(--theme-border);">
-                        <?php echo e(substr(auth()->user()->name ?? 'U', 0, 1)); ?>
+                        <?php echo e(strtoupper(substr(auth()->user()->name ?? 'U', 0, 1))); ?>
 
                     </div>
                 <?php endif; ?>
                 <form id="photoForm" enctype="multipart/form-data">
                     <?php echo csrf_field(); ?>
-                    <input type="file" id="photoInput" name="profile_photo" accept="image/*" style="display:none;" onchange="previewImage(this);">
+                    <input type="file" id="photoInput" name="avatar" accept="image/*" style="display:none;" onchange="previewImage(this);">
                     <button type="button" onclick="document.getElementById('photoInput').click()" style="background:var(--theme-bg); color:var(--theme-primary); border:2px dashed var(--theme-border); padding:12px 20px; border-radius:10px; font-size:13px; font-weight:500; font-family:'Poppins',sans-serif; cursor:pointer; width:100%; margin-bottom:15px; transition:all 0.2s;">
                         📁 Pilih Foto
                     </button>

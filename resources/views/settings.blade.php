@@ -360,7 +360,11 @@
                         @method('PUT')
                         <div class="profile-avatar-section">
                             <div class="profile-avatar-wrapper">
-                                <div class="profile-avatar">{{ substr(auth()->user()->name ?? 'P', 0, 1) }}</div>
+                                @if(auth()->user()->avatar && \Illuminate\Support\Facades\Storage::disk('public')->exists(auth()->user()->avatar))
+                                    <img src="{{ asset('storage/' . auth()->user()->avatar) }}" class="profile-avatar-img" alt="Foto Profil">
+                                @else
+                                    <div class="profile-avatar">{{ strtoupper(substr(auth()->user()->name ?? 'P', 0, 1)) }}</div>
+                                @endif
                             </div>
                             <label class="btn-change-photo" for="avatarInput">📷 Ubah Foto</label>
                             <input type="file" id="avatarInput" class="avatar-input" name="avatar" accept="image/*">
